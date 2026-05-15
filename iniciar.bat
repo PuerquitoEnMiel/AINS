@@ -1,0 +1,6 @@
+@echo off
+echo Iniciando servidor de desarrollo Vite...
+start /b npm run dev
+
+echo Iniciando servidor PHP Laravel...
+php -S 127.0.0.1:8000 -t public
