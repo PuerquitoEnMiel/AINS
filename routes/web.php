@@ -7,12 +7,19 @@ Route::get('/', function () {
     return view('welcome', compact('tools'));
 });
 
-// Teacher: Suggest a tool
-Route::get('/solicitudes/nueva', [\App\Http\Controllers\ToolRequestController::class, 'create']);
-Route::post('/solicitudes', [\App\Http\Controllers\ToolRequestController::class, 'store']);
+// Google SSO
+Route::get('/auth/google', [\App\Http\Controllers\Auth\GoogleController::class, 'redirect'])->name('login');
+Route::get('/auth/google/callback', [\App\Http\Controllers\Auth\GoogleController::class, 'callback']);
+Route::post('/logout', [\App\Http\Controllers\Auth\GoogleController::class, 'logout'])->name('logout');
 
-// Admin panel
-Route::prefix('admin')->group(function () {
+// Teacher: Suggest a tool (Requires Auth)
+Route::middleware('auth')->group(function () {
+    Route::get('/solicitudes/nueva', [\App\Http\Controllers\ToolRequestController::class, 'create']);
+    Route::post('/solicitudes', [\App\Http\Controllers\ToolRequestController::class, 'store']);
+});
+
+// Admin panel (Requires Auth and Admin role)
+Route::middleware(['auth', 'is_admin'])->prefix('admin')->group(function () {
     Route::get('/solicitudes', [\App\Http\Controllers\Admin\ToolRequestController::class, 'index']);
     Route::post('/solicitudes/{toolRequest}/approve', [\App\Http\Controllers\Admin\ToolRequestController::class, 'approve']);
     Route::post('/solicitudes/{toolRequest}/reject', [\App\Http\Controllers\Admin\ToolRequestController::class, 'reject']);
