@@ -11,6 +11,7 @@ class GoogleController extends Controller
 {
     public function redirect()
     {
+        /** @var \Laravel\Socialite\Two\AbstractProvider $driver */
         $driver = Socialite::driver('google');
         $driver->setHttpClient(new \GuzzleHttp\Client(['verify' => false]));
         return $driver->redirect();
@@ -19,25 +20,32 @@ class GoogleController extends Controller
     public function callback()
     {
         try {
+            /** @var \Laravel\Socialite\Two\AbstractProvider $driver */
             $driver = Socialite::driver('google');
             $driver->setHttpClient(new \GuzzleHttp\Client(['verify' => false]));
             $googleUser = $driver->user();
 
-            // Validate domain (optional, if you only want ans.edu.ni users)
-            // if (!str_ends_with($googleUser->email, '@ans.edu.ni')) {
-            //     return redirect('/')->with('error', 'Solo se permiten cuentas institucionales.');
-            // }
+            // Only allow institutional @ans.edu.ni accounts
+            if (!str_ends_with($googleUser->getEmail(), '@ans.edu.ni')) {
+                return redirect('/')->with('error', 'Solo se permiten cuentas institucionales (@ans.edu.ni).');
+            }
 
             $user = User::updateOrCreate(
-                ['email' => $googleUser->email],
+                ['email' => $googleUser->getEmail()],
                 [
-                    'name' => $googleUser->name,
-                    'google_id' => $googleUser->id,
-                    'avatar' => $googleUser->avatar,
-                    // If they already exist, we don't overwrite the role. 
-                    // If they are new, they default to 'teacher' per migration.
+                    'name' => $googleUser->getName(),
+                    'google_id' => $googleUser->getId(),
+                    'avatar' => $googleUser->getAvatar(),
+                    // New users get 'student' role by default.
+                    // Existing users keep their current role (admin/teacher).
                 ]
             );
+
+            // Set default role for brand-new users (no role assigned yet)
+            if (!$user->role) {
+                $user->role = 'student';
+                $user->save();
+            }
 
             Auth::login($user);
 

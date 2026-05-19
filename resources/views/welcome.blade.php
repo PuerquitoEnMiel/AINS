@@ -131,6 +131,7 @@
         <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-ans-orange/5 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer animate-fade-in-up"
              style="animation-delay: 0.05s;"
              data-tool="{{ json_encode([
+                 'id' => $stitchDb ? $stitchDb->id : null,
                  'name' => 'Stitch',
                  'desc' => $stitchDb ? $stitchDb->description : 'Centralized platform for integrations and workflow automation. Curated and approved for the ANS community.',
                  'url' => $stitchDb ? $stitchDb->url : 'https://ans.edu.ni',
@@ -159,6 +160,7 @@
         <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-ans-orange/5 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer animate-fade-in-up"
              style="animation-delay: 0.1s;"
              data-tool="{{ json_encode([
+                 'id' => $pomeloDb ? $pomeloDb->id : null,
                  'name' => 'Pomelo',
                  'desc' => $pomeloDb ? $pomeloDb->description : 'Intelligent learning management and academic assessment system tailored for ANS students and faculty.',
                  'url' => $pomeloDb ? $pomeloDb->url : 'https://ans.edu.ni',
@@ -187,6 +189,7 @@
         <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-ans-orange/5 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer animate-fade-in-up"
              style="animation-delay: 0.15s;"
              data-tool="{{ json_encode([
+                 'id' => $antigravityDb ? $antigravityDb->id : null,
                  'name' => 'Antigravity',
                  'desc' => $antigravityDb ? $antigravityDb->description : 'AI-powered programming and infrastructure assistant designed for advanced developer workflows at ANS.',
                  'url' => $antigravityDb ? $antigravityDb->url : 'https://ans.edu.ni',
@@ -215,6 +218,7 @@
         <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-ans-orange/5 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer animate-fade-in-up"
              style="animation-delay: 0.2s;"
              data-tool="{{ json_encode([
+                 'id' => $flowDb ? $flowDb->id : null,
                  'name' => 'Flow',
                  'desc' => $flowDb ? $flowDb->description : 'Collaborative tool for planning, organizing, and tracking educational workflows and school tasks at ANS.',
                  'url' => $flowDb ? $flowDb->url : 'https://ans.edu.ni',
@@ -267,6 +271,9 @@
             <button class="text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all" id="filter-design">Image &amp; Design</button>
             <button class="text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all" id="filter-video">Video &amp; Animation</button>
             <button class="text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all" id="filter-data">Data &amp; Analysis</button>
+            <button class="text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all" id="filter-presentations">Presentations</button>
+            <button class="text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all" id="filter-music">Music</button>
+            <button class="text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all" id="filter-others">Others</button>
             
             <div class="h-4 w-[1px] bg-gray-200 mx-1"></div>
             
@@ -284,7 +291,7 @@
         @endif
         <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer animate-fade-in-up"
              style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
-             data-tool="{{ json_encode(['name'=>$tool->name,'desc'=>$tool->description,'url'=>$tool->url,'cat'=>$tool->category,'type'=>$tool->is_google_workspace?'Google Workspace':'3rd Party','logo'=>$tool->logo_url?asset($tool->logo_url):null]) }}"
+             data-tool="{{ json_encode(['id'=>$tool->id,'name'=>$tool->name,'desc'=>$tool->description,'url'=>$tool->url,'cat'=>$tool->category,'type'=>$tool->is_google_workspace?'Google Workspace':'3rd Party','logo'=>$tool->logo_url?asset($tool->logo_url):null]) }}"
              onclick="openToolModal(JSON.parse(this.dataset.tool))">
             <div class="flex items-start justify-between mb-4">
                 @if($tool->logo_url)
@@ -313,14 +320,14 @@
         <!-- Demo Cards when DB is empty -->
         @php
             $demoTools = [
-                ['name' => 'ChatGPT', 'desc' => 'Advanced language model for general-purpose assistance and content creation.', 'color' => 'from-emerald-500 to-emerald-700', 'shadow' => 'shadow-emerald-500/20', 'type' => '3rd Party'],
-                ['name' => 'Gemini', 'desc' => 'Google\'s multimodal AI for research, analysis and creative tasks.', 'color' => 'from-ans-blue to-ans-light-blue', 'shadow' => 'shadow-ans-blue/20', 'type' => 'Workspace'],
-                ['name' => 'Canva AI', 'desc' => 'AI-powered design tool for presentations, posters and visual content.', 'color' => 'from-ans-purple to-pink-600', 'shadow' => 'shadow-ans-purple/20', 'type' => '3rd Party'],
-                ['name' => 'Gamma', 'desc' => 'AI-powered presentation and document builder for educators.', 'color' => 'from-ans-orange to-ans-yellow', 'shadow' => 'shadow-ans-orange/20', 'type' => '3rd Party'],
-                ['name' => 'NotebookLM', 'desc' => 'Google\'s AI research assistant for summarizing and exploring documents.', 'color' => 'from-ans-dark-green to-ans-2nd-green', 'shadow' => 'shadow-ans-dark-green/20', 'type' => 'Workspace'],
-                ['name' => 'Claude', 'desc' => 'AI assistant optimized for analysis, writing, and safe conversations.', 'color' => 'from-amber-500 to-orange-600', 'shadow' => 'shadow-amber-500/20', 'type' => '3rd Party'],
-                ['name' => 'Perplexity', 'desc' => 'AI-powered search engine with cited sources for academic research.', 'color' => 'from-cyan-500 to-blue-600', 'shadow' => 'shadow-cyan-500/20', 'type' => '3rd Party'],
-                ['name' => 'Suno AI', 'desc' => 'AI music generation tool for creative audio projects.', 'color' => 'from-pink-500 to-rose-600', 'shadow' => 'shadow-pink-500/20', 'type' => '3rd Party'],
+                ['name' => 'ChatGPT', 'desc' => 'Advanced language model for general-purpose assistance and content creation.', 'color' => 'from-emerald-500 to-emerald-700', 'shadow' => 'shadow-emerald-500/20', 'type' => '3rd Party', 'cat' => 'Text & Writing'],
+                ['name' => 'Gemini', 'desc' => 'Google\'s multimodal AI for research, analysis and creative tasks.', 'color' => 'from-ans-blue to-ans-light-blue', 'shadow' => 'shadow-ans-blue/20', 'type' => 'Workspace', 'cat' => 'Text & Writing'],
+                ['name' => 'Canva AI', 'desc' => 'AI-powered design tool for presentations, posters and visual content.', 'color' => 'from-ans-purple to-pink-600', 'shadow' => 'shadow-ans-purple/20', 'type' => '3rd Party', 'cat' => 'Image & Design'],
+                ['name' => 'Gamma', 'desc' => 'AI-powered presentation and document builder for educators.', 'color' => 'from-ans-orange to-ans-yellow', 'shadow' => 'shadow-ans-orange/20', 'type' => '3rd Party', 'cat' => 'Image & Design'],
+                ['name' => 'NotebookLM', 'desc' => 'Google\'s AI research assistant for summarizing and exploring documents.', 'color' => 'from-ans-dark-green to-ans-2nd-green', 'shadow' => 'shadow-ans-dark-green/20', 'type' => 'Workspace', 'cat' => 'Data & Analysis'],
+                ['name' => 'Claude', 'desc' => 'AI assistant optimized for analysis, writing, and safe conversations.', 'color' => 'from-amber-500 to-orange-600', 'shadow' => 'shadow-amber-500/20', 'type' => '3rd Party', 'cat' => 'Text & Writing'],
+                ['name' => 'Perplexity', 'desc' => 'AI-powered search engine with cited sources for academic research.', 'color' => 'from-cyan-500 to-blue-600', 'shadow' => 'shadow-cyan-500/20', 'type' => '3rd Party', 'cat' => 'Data & Analysis'],
+                ['name' => 'Suno AI', 'desc' => 'AI music generation tool for creative audio projects.', 'color' => 'from-pink-500 to-rose-600', 'shadow' => 'shadow-pink-500/20', 'type' => '3rd Party', 'cat' => 'Video & Animation'],
             ];
         @endphp
         @php
@@ -329,7 +336,7 @@
         @foreach($demoTools as $index => $demo)
         <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer animate-fade-in-up"
              style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
-             data-tool="{{ json_encode(['name'=>$demo['name'],'desc'=>$demo['desc'],'url'=>$demoUrls[$demo['name']]??'#','cat'=>'General','type'=>$demo['type'],'logo'=>null]) }}"
+             data-tool="{{ json_encode(['name'=>$demo['name'],'desc'=>$demo['desc'],'url'=>$demoUrls[$demo['name']]??'#','cat'=>$demo['cat'],'type'=>$demo['type'],'logo'=>null]) }}"
              onclick="openToolModal(JSON.parse(this.dataset.tool))">
             <div class="flex items-start justify-between mb-4">
                 <div class="w-12 h-12 bg-gradient-to-br {{ $demo['color'] }} rounded-xl flex items-center justify-center {{ $demo['shadow'] }} shadow-lg group-hover:scale-110 transition-transform duration-300">
@@ -435,11 +442,15 @@
             </div>
         </div>
         <!-- Footer -->
-        <div class="p-6 border-t border-gray-100 flex-shrink-0">
+        <div class="p-6 border-t border-gray-100 flex-shrink-0 space-y-3">
             <a id="modal-open-btn" href="#" target="_blank"
                class="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-ans-dark-green to-ans-seal-green hover:from-ans-seal-green hover:to-ans-dark-green text-white font-bold py-4 rounded-xl shadow-lg shadow-ans-dark-green/20 hover:shadow-xl transition-all text-sm">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 Open Tool
+            </a>
+            <a id="modal-reviews-btn" href="#"
+               class="flex items-center justify-center gap-2 w-full border-2 border-ans-dark-green text-ans-dark-green hover:bg-ans-dark-green/5 font-bold py-3 rounded-xl transition-all text-sm">
+                ⭐ View Reviews &amp; Ratings
             </a>
         </div>
     </div>
@@ -466,7 +477,10 @@ let activeTool = null;
                 'text & writing': 'filter-text',
                 'image & design': 'filter-design',
                 'video & animation': 'filter-video',
-                'data & analysis': 'filter-data'
+                'data & analysis': 'filter-data',
+                'presentations': 'filter-presentations',
+                'music': 'filter-music',
+                'others': 'filter-others'
             };
             const activeId = pills[cat.toLowerCase()] || null;
             if (activeId) {
@@ -495,10 +509,13 @@ document.getElementById('filter-text').addEventListener('click', () => { current
 document.getElementById('filter-design').addEventListener('click', () => { currentCategory = 'Image & Design'; setActiveFilter('filter-design'); });
 document.getElementById('filter-video').addEventListener('click', () => { currentCategory = 'Video & Animation'; setActiveFilter('filter-video'); });
 document.getElementById('filter-data').addEventListener('click', () => { currentCategory = 'Data & Analysis'; setActiveFilter('filter-data'); });
+document.getElementById('filter-presentations').addEventListener('click', () => { currentCategory = 'Presentations'; setActiveFilter('filter-presentations'); });
+document.getElementById('filter-music').addEventListener('click', () => { currentCategory = 'Music'; setActiveFilter('filter-music'); });
+document.getElementById('filter-others').addEventListener('click', () => { currentCategory = 'Others'; setActiveFilter('filter-others'); });
 document.getElementById('filter-favs').addEventListener('click', () => { currentCategory = 'favs'; setActiveFilter('filter-favs'); });
 
 function setActiveFilter(id) {
-    const allFilters = ['filter-all', 'filter-workspace', 'filter-3rdparty', 'filter-text', 'filter-design', 'filter-video', 'filter-data', 'filter-favs'];
+    const allFilters = ['filter-all', 'filter-workspace', 'filter-3rdparty', 'filter-text', 'filter-design', 'filter-video', 'filter-data', 'filter-presentations', 'filter-music', 'filter-others', 'filter-favs'];
     allFilters.forEach(btnId => {
         const btn = document.getElementById(btnId);
         if (!btn) return;
@@ -722,6 +739,17 @@ function openToolModal(tool) {
     // Clicks metrics state
     const clickCount = getClicks(tool.name);
     document.getElementById('modal-clicks-count').textContent = clickCount;
+
+    // View reviews button link mapping
+    const reviewsBtn = document.getElementById('modal-reviews-btn');
+    if (reviewsBtn) {
+        if (tool.id) {
+            reviewsBtn.href = `/tools/${tool.id}`;
+            reviewsBtn.classList.remove('hidden');
+        } else {
+            reviewsBtn.classList.add('hidden'); // hidden for front-end fallback/demo items
+        }
+    }
 
     // Show modal
     const modal = document.getElementById('tool-modal');

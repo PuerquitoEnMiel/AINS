@@ -32,11 +32,14 @@ class ToolController extends Controller
         ]);
 
         if ($request->hasFile('logo')) {
-            $dir = public_path('tool-logos');
-            if (!is_dir($dir)) mkdir($dir, 0775, true);
-            $filename = uniqid('tool_') . '.' . $request->file('logo')->getClientOriginalExtension();
-            $request->file('logo')->move($dir, $filename);
-            $data['logo_url'] = 'tool-logos/' . $filename;
+            $disk = config('filesystems.default', 'public');
+            if ($disk === 'local') {
+                $disk = 'public';
+            }
+            $path = $request->file('logo')->store('tool-logos', $disk);
+            /** @var \Illuminate\Filesystem\FilesystemAdapter $storageDisk */
+            $storageDisk = \Illuminate\Support\Facades\Storage::disk($disk);
+            $data['logo_url'] = $storageDisk->url($path);
         }
 
         $data['is_google_workspace'] = $request->boolean('is_google_workspace');
@@ -64,16 +67,26 @@ class ToolController extends Controller
         ]);
 
         if ($request->hasFile('logo')) {
-            // Delete old logo if stored locally
+            // Delete old logo
             if ($tool->logo_url && !str_starts_with($tool->logo_url, 'http')) {
-                $old = public_path($tool->logo_url);
-                if (file_exists($old)) unlink($old);
+                // If local path, try to parse the path after /storage/
+                $oldPath = str_replace('/storage/', '', $tool->logo_url);
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            } elseif ($tool->logo_url && str_contains($tool->logo_url, 'storage.googleapis.com')) {
+                // If GCS path, extract path
+                $oldPath = parse_url($tool->logo_url, PHP_URL_PATH);
+                $oldPath = ltrim($oldPath, '/'.config('filesystems.disks.gcs.bucket').'/');
+                \Illuminate\Support\Facades\Storage::disk('gcs')->delete($oldPath);
             }
-            $dir = public_path('tool-logos');
-            if (!is_dir($dir)) mkdir($dir, 0775, true);
-            $filename = uniqid('tool_') . '.' . $request->file('logo')->getClientOriginalExtension();
-            $request->file('logo')->move($dir, $filename);
-            $data['logo_url'] = 'tool-logos/' . $filename;
+
+            $disk = config('filesystems.default', 'public');
+            if ($disk === 'local') {
+                $disk = 'public';
+            }
+            $path = $request->file('logo')->store('tool-logos', $disk);
+            /** @var \Illuminate\Filesystem\FilesystemAdapter $storageDisk */
+            $storageDisk = \Illuminate\Support\Facades\Storage::disk($disk);
+            $data['logo_url'] = $storageDisk->url($path);
         }
 
         $data['is_google_workspace'] = $request->boolean('is_google_workspace');
@@ -86,9 +99,14 @@ class ToolController extends Controller
     public function destroy(Tool $tool)
     {
         if ($tool->logo_url && !str_starts_with($tool->logo_url, 'http')) {
-            $path = public_path($tool->logo_url);
-            if (file_exists($path)) unlink($path);
+            $oldPath = str_replace('/storage/', '', $tool->logo_url);
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+        } elseif ($tool->logo_url && str_contains($tool->logo_url, 'storage.googleapis.com')) {
+            $oldPath = parse_url($tool->logo_url, PHP_URL_PATH);
+            $oldPath = ltrim($oldPath, '/'.config('filesystems.disks.gcs.bucket').'/');
+            \Illuminate\Support\Facades\Storage::disk('gcs')->delete($oldPath);
         }
+        
         $name = $tool->name;
         $tool->delete();
 
