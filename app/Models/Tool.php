@@ -10,6 +10,8 @@ class Tool extends Model
         'name',
         'description',
         'url',
+        'category',
+        'logo_url',
         'is_google_workspace',
         'approval_status',
     ];

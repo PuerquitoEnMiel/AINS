@@ -49,8 +49,8 @@ class GoogleController extends Controller
             return redirect('/')->with('success', 'Sesión iniciada con éxito.');
 
         } catch (\Exception $e) {
-            dd($e->getMessage(), $e->getTraceAsString());
-            return redirect('/')->with('error', 'Error al iniciar sesión con Google.');
+            \Illuminate\Support\Facades\Log::error('Google Auth Error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            return redirect('/')->with('error', 'Error al iniciar sesión con Google: ' . $e->getMessage());
         }
     }
 
