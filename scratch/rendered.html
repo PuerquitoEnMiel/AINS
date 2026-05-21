@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Curated AI Tools - ANS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script type="module" src="http://[::1]:5173/@vite/client"></script><link rel="stylesheet" href="http://[::1]:5173/resources/css/app.css" /><script type="module" src="http://[::1]:5173/resources/js/app.js"></script>    <style>
+        /* ─── Splash Screen Premium Fusion ─── */
+        #splash {
+            position: fixed; inset: 0; z-index: 9999;
+            background: linear-gradient(135deg, #007934 0%, #005624 50%, #003314 100%);
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; gap: 0;
+            transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.7s ease;
+        }
+        #splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        
+        .splash-logo-ans {
+            position: absolute;
+            left: 50%; top: 50%;
+            margin-left: -60px; margin-top: -60px;
+            width: 120px; height: 120px; border-radius: 50%;
+            overflow: hidden; border: 4px solid rgba(255,255,255,0.4);
+            box-shadow: 0 0 50px rgba(0,0,0,0.4);
+            transform: translate(-120px, 150px); opacity: 0;
+            animation: splashAnsMove 2.2s cubic-bezier(0.25, 1, 0.5, 1) 0.2s forwards;
+            z-index: 10;
+        }
+        .splash-logo-ans img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .splash-logo-gemini {
+            position: absolute;
+            left: 50%; top: 50%;
+            margin-left: -40px; margin-top: -40px;
+            width: 80px; height: 80px; border-radius: 50%;
+            background: white; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            transform: translate(120px, 180px); opacity: 0;
+            animation: splashGeminiMove 2.2s cubic-bezier(0.25, 1, 0.5, 1) 0.2s forwards;
+            z-index: 20;
+        }
+        
+        .splash-shockwave {
+            position: absolute;
+            left: 50%; top: 50%;
+            margin-left: -70px; margin-top: -70px;
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            border: 4px solid #FF8300;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: shockwavePulse 2.2s ease-out 0.2s forwards;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        .splash-text {
+            opacity: 0;
+            animation: splashFadeText 0.6s ease 1.7s forwards;
+            text-align: center; color: white; margin-top: 180px;
+        }
+        .splash-bar {
+            width: 180px; height: 3px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 99px; margin-top: 24px; overflow: hidden;
+            opacity: 0; animation: splashFadeText 0.4s ease 1.8s forwards;
+        }
+        .splash-bar-fill {
+            height: 100%; width: 0%; background: #FF8300;
+            border-radius: 99px;
+            animation: splashProgress 1.4s ease 1.9s forwards;
+        }
+        
+        @keyframes splashAnsMove {
+            0% { transform: translate(-150px, 100px) scale(0.8); opacity: 0; }
+            45% { transform: translate(-45px, 0px) scale(1); opacity: 1; }
+            70% { transform: translate(0px, 0px) scale(1); opacity: 1; border-color: rgba(255,255,255,0.4); }
+            80% { transform: translate(0px, 0px) scale(1.1); border-color: #FF8300; box-shadow: 0 0 80px rgba(255, 131, 0, 0.8), 0 0 120px rgba(0, 121, 52, 0.6); }
+            100% { transform: translate(0px, 0px) scale(1); opacity: 1; border-color: rgba(255,255,255,0.7); box-shadow: 0 0 40px rgba(0,0,0,0.3); }
+        }
+        
+        @keyframes splashGeminiMove {
+            0% { transform: translate(150px, 130px) scale(0.8); opacity: 0; }
+            45% { transform: translate(45px, 0px) scale(1); opacity: 1; }
+            70% { transform: translate(0px, 0px) scale(1); opacity: 1; }
+            80% { transform: translate(0px, 0px) scale(0.85); box-shadow: 0 0 50px rgba(255,255,255,0.9); }
+            100% { transform: translate(0px, 0px) scale(0.75); opacity: 0.95; box-shadow: 0 0 25px rgba(0,0,0,0.2); }
+        }
+        
+        @keyframes shockwavePulse {
+            0%, 65% { opacity: 0; transform: scale(0.5); }
+            72% { opacity: 1; border-color: #FF8300; box-shadow: 0 0 50px #FF8300; }
+            85% { opacity: 0.6; transform: scale(1.4); border-color: #007934; }
+            100% { opacity: 0; transform: scale(1.8); }
+        }
+        
+        @keyframes splashFadeText {
+            to { opacity: 1; }
+        }
+        @keyframes splashProgress {
+            to { width: 100%; }
+        }
+
+        /* ─── Sidebar Toggle ─── */
+        #sidebar {
+            transition: width 0.3s cubic-bezier(0.4,0,0.2,1),
+                        transform 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+        #sidebar.collapsed { width: 0 !important; overflow: hidden; }
+        #sidebar-inner { transition: opacity 0.2s ease; }
+        #sidebar.collapsed #sidebar-inner { opacity: 0; pointer-events: none; }
+        #toggle-sidebar {
+            transition: transform 0.3s ease;
+        }
+        body.sidebar-collapsed #toggle-sidebar svg {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased min-h-screen flex overflow-hidden">
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SPLASH SCREEN                                               -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div id="splash">
+    <!-- Logos container for absolute alignment of fusion -->
+    <div class="relative w-64 h-48 flex items-center justify-center">
+        <div class="splash-logo-ans">
+            <img src="http://:/logo.png" alt="ANS Logo">
+        </div>
+        <div class="splash-logo-gemini">
+            <!-- Gemini Logo SVG -->
+            <svg width="44" height="44" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#4285F4"/>
+                        <stop offset="100%" style="stop-color:#1967D2"/>
+                    </linearGradient>
+                </defs>
+                <path d="M96 20 C96 20 60 96 20 96 C60 96 96 172 96 172 C96 172 132 96 172 96 C132 96 96 20 96 20Z" fill="url(#g1)"/>
+            </svg>
+        </div>
+        <div class="splash-shockwave"></div>
+    </div>
+    <div class="splash-text">
+        <p class="font-heading font-extrabold text-2xl tracking-tight">AINS AI Portal</p>
+        <p style="color: rgba(255,255,255,0.6); font-size: 13px; margin-top: 4px;">American Nicaraguan School</p>
+    </div>
+    <div class="splash-bar">
+        <div class="splash-bar-fill"></div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SIDEBAR                                                     -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<aside id="sidebar" class="w-72 bg-gradient-to-b from-ans-dark-green to-ans-seal-green text-white flex-shrink-0 h-screen hidden md:flex flex-col shadow-xl z-20 relative">
+    <div id="sidebar-inner" class="flex flex-col h-full">
+        <!-- Logo Area -->
+        <div class="p-8 pb-4">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-12 h-12 bg-white rounded-xl overflow-hidden shadow-md border-2 border-white/20 flex-shrink-0">
+                    <img src="http://:/logo.png" alt="ANS Logo" class="w-full h-full object-cover scale-110">
+                </div>
+                <div>
+                    <h1 class="text-2xl font-heading font-extrabold tracking-tight text-white leading-none">AINS</h1>
+                    <span class="text-[10px] font-bold tracking-wider text-ans-light-green uppercase">AI Portal</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-4 mt-6 overflow-y-auto space-y-6">
+            <!-- Platform Links -->
+            <div class="space-y-1">
+                <p class="px-4 text-[10px] font-bold text-ans-light-green uppercase tracking-wider mb-2">Navigation</p>
+                <a href="/" class="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    <span class="whitespace-nowrap">Directory Hub</span>
+                </a>
+                <a href="/solicitudes/nueva" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="whitespace-nowrap">Suggest Tool</span>
+                </a>
+            </div>
+
+            <!-- Authenticated User Links -->
+                        <div class="space-y-1">
+                <p class="px-4 text-[10px] font-bold text-ans-light-green uppercase tracking-wider mb-2">My Account</p>
+                <a href="http://:/lesson-plans#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span class="whitespace-nowrap">AI Lesson Planner</span>
+                </a>
+                <a href="http://:/favorites#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                    <span class="whitespace-nowrap">My Favorites</span>
+                </a>
+                <a href="http://:/profile#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    <span class="whitespace-nowrap">My Profile</span>
+                </a>
+            </div>
+            
+            <!-- AI Honor Code Card -->
+            <div class="px-4 py-3.5 bg-white/5 border border-white/10 rounded-2xl space-y-2.5 shadow-sm">
+                <p class="text-[10px] font-bold text-ans-light-green uppercase tracking-wider flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    AI Honor Code
+                </p>
+                <div class="text-[11px] text-gray-300 space-y-2 leading-relaxed">
+                    <p>💡 <strong>Integrity first:</strong> AI is a partner to co-create, not to replace critical thinking.</p>
+                    <p>📝 <strong>Cite your agent:</strong> Document the tools and prompts used in assignments.</p>
+                    <p>🔒 <strong>Data privacy:</strong> Do not share personal documents or school details.</p>
+                </div>
+            </div>
+
+            <!-- Dynamic AI Tip Card -->
+            <div class="px-4 py-4 bg-gradient-to-r from-ans-orange/15 to-[#e67600]/10 border border-ans-orange/20 rounded-2xl relative overflow-hidden group shadow-sm">
+                <div class="absolute -right-3 -top-3 w-10 h-10 bg-ans-orange/10 rounded-full blur-md"></div>
+                <p class="text-[10px] font-bold text-ans-orange uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                    <svg class="w-4 h-4 text-ans-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    AI Micro-Tip
+                </p>
+                <p id="sidebar-ai-tip" class="text-[11px] text-gray-200 leading-relaxed italic">
+                    "Prompt tip: Ask AI to critique your essay from the perspective of an expert editor."
+                </p>
+            </div>
+
+            <!-- Admin Controls -->
+                                            </nav>
+
+        <!-- Footer -->
+        <div class="p-4 mt-auto">
+            <div class="bg-black/20 rounded-xl p-4 text-center border border-white/5">
+                <p class="text-[10px] text-white/50 leading-tight">ANS Educational AI Platform</p>
+                <p class="text-[9px] text-white/30 mt-1">© 2026 All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- MOBILE DRAWER                                               -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div id="mobile-drawer" class="fixed inset-0 z-50 hidden" onclick="if(event.target===this) toggleMobileDrawer()">
+    <!-- Glass Backdrop -->
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="mobile-drawer-backdrop"></div>
+    
+    <!-- Panel -->
+    <div class="absolute left-0 top-0 bottom-0 w-72 bg-gradient-to-b from-ans-dark-green to-ans-seal-green text-white flex flex-col shadow-2xl transform -translate-x-full transition-transform duration-300" id="mobile-drawer-panel">
+        <!-- Close Button -->
+        <button onclick="toggleMobileDrawer()" class="absolute top-4 right-4 w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/80 hover:text-white transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <!-- Logo Area -->
+        <div class="p-8 pb-4">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 bg-white rounded-xl overflow-hidden shadow-md border-2 border-white/20 flex-shrink-0">
+                    <img src="http://:/logo.png" alt="ANS Logo" class="w-full h-full object-cover scale-110">
+                </div>
+                <div>
+                    <h1 class="text-xl font-heading font-extrabold tracking-tight text-white leading-none">AINS</h1>
+                    <span class="text-[9px] font-bold tracking-wider text-ans-light-green uppercase">AI Portal</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-4 mt-4 overflow-y-auto space-y-5">
+            <!-- Platform Links -->
+            <div class="space-y-1">
+                <p class="px-4 text-[9px] font-bold text-ans-light-green uppercase tracking-wider mb-1.5">Navigation</p>
+                <a href="/" class="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    <span class="text-sm">Directory Hub</span>
+                </a>
+                                <a href="http://:/lesson-plans#" class="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span class="text-sm">AI Lesson Planner</span>
+                </a>
+                                <a href="/solicitudes/nueva" class="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="text-sm">Suggest Tool</span>
+                </a>
+            </div>
+
+            <!-- AI Honor Code Card -->
+            <div class="px-4 py-3 bg-white/5 border border-white/10 rounded-xl space-y-2 shadow-sm">
+                <p class="text-[9px] font-bold text-ans-light-green uppercase tracking-wider flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    AI Honor Code
+                </p>
+                <div class="text-[10px] text-gray-300 space-y-1.5 leading-relaxed">
+                    <p>💡 <strong>Integrity:</strong> AI is a partner to co-create, not replace thinking.</p>
+                    <p>📝 <strong>Cite AI:</strong> Document tools/prompts in assignments.</p>
+                    <p>🔒 <strong>Privacy:</strong> No personal or school details in public AI.</p>
+                </div>
+            </div>
+
+            <!-- Dynamic AI Tip Card -->
+            <div class="px-4 py-3 bg-gradient-to-r from-ans-orange/15 to-[#e67600]/10 border border-ans-orange/20 rounded-xl relative overflow-hidden group shadow-sm">
+                <div class="absolute -right-3 -top-3 w-10 h-10 bg-ans-orange/10 rounded-full blur-md"></div>
+                <p class="text-[9px] font-bold text-ans-orange uppercase tracking-wider flex items-center gap-1.5 mb-1.5">
+                    <svg class="w-4 h-4 text-ans-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    AI Micro-Tip
+                </p>
+                <p id="mobile-ai-tip" class="text-[10px] text-gray-200 leading-relaxed italic">
+                    "Prompt tip: Ask AI to critique your essay from the perspective of an expert editor."
+                </p>
+            </div>
+
+            <!-- Admin Controls -->
+                                            </nav>
+
+        <div class="p-4 mt-auto">
+            <div class="bg-black/20 rounded-xl p-4 text-center border border-white/5">
+                <p class="text-[10px] text-white/50 leading-tight">ANS Educational AI Platform</p>
+                <p class="text-[9px] text-white/30 mt-1">© 2026 All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- MAIN WORKSPACE                                              -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="flex-1 flex flex-col h-screen overflow-hidden bg-gray-50/50 relative">
+
+    <!-- Decorative Background -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-ans-light-green/10 rounded-full blur-3xl -z-10 translate-x-1/3 -translate-y-1/3"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 bg-ans-orange/5 rounded-full blur-3xl -z-10 -translate-x-1/3 translate-y-1/3"></div>
+
+    <!-- Top Header (Glassmorphism) -->
+    <header class="glass sticky top-0 z-30 px-6 py-4 flex justify-between items-center border-b border-gray-200/50">
+
+        <!-- Mobile Burger Button -->
+        <button id="toggle-mobile-menu" onclick="toggleMobileDrawer()" class="md:hidden flex w-9 h-9 items-center justify-center rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 hover:text-ans-dark-green transition-all shadow-sm flex-shrink-0 mr-4" title="Open Menu">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+
+        <!-- Sidebar Toggle Button (Desktop Only) -->
+        <button id="toggle-sidebar" onclick="toggleSidebar()" class="hidden md:flex w-9 h-9 items-center justify-center rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 hover:text-ans-dark-green transition-all shadow-sm flex-shrink-0 mr-4" title="Toggle Sidebar">
+            <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
+            </svg>
+        </button>
+
+        <!-- Left: Dynamic Page Header -->
+        <div class="flex-1 min-w-0">
+            <h2 class="text-xl font-heading font-bold text-gray-800 tracking-tight animate-fade-in-up" style="animation-duration: 0.4s;">
+                                    AI Lesson Planner                            </h2>
+            <p class="text-sm text-gray-500 animate-fade-in-up" style="animation-duration: 0.6s;">
+                                    Diseña una planeación de clase interactiva y estructurada con Inteligencia Artificial                            </p>
+        </div>
+
+        <!-- Center: Search -->
+        <div class="flex-1 max-w-md hidden lg:block mx-8">
+            <div class="relative group">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400 group-focus-within:text-ans-dark-green transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+                <input type="search" id="global-search" placeholder="Search tools..." class="block w-full pl-10 pr-16 py-2.5 bg-white border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all shadow-sm">
+                <div id="search-kbd" class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none transition-opacity duration-200">
+                    <kbd class="inline-flex items-center border border-gray-200 px-1.5 py-0.5 rounded text-[10px] font-sans font-medium text-gray-400 bg-gray-50/80 shadow-sm">Ctrl K</kbd>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: User Actions -->
+        <div class="flex-1 flex justify-end items-center space-x-4">
+                                            <button onclick="window.location='/solicitudes/nueva'" class="hidden md:flex items-center gap-2 bg-ans-orange hover:bg-[#e67600] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-ans-orange/20 hover:shadow-lg transition-all hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Suggest App
+                </button>
+                
+                <div class="h-8 w-px bg-gray-200 mx-2"></div>
+
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden sm:block pr-1">
+                        <p class="text-sm font-bold text-gray-800 leading-none">Docente Pruebas</p>
+                        <p class="text-[11px] text-gray-500 font-medium mt-1 uppercase tracking-wide">teacher</p>
+                    </div>
+                                            <div class="w-10 h-10 rounded-full bg-ans-dark-green text-white flex items-center justify-center font-bold text-lg border-2 border-white shadow-sm cursor-pointer">
+                            D
+                        </div>
+                    
+                    <form method="POST" action="http://:/logout#" class="ml-2">
+                        <input type="hidden" name="_token" value="as4YFYf6u41t6UnJsU6NoFPBxVellUzr4V223hcD" autocomplete="off">                        <button type="submit" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Sign out">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        </button>
+                    </form>
+                </div>
+                    </div>
+    </header>
+
+    <!-- Content -->
+    <main class="flex-1 overflow-y-auto p-8 z-10 scroll-smooth">
+        <div class="max-w-7xl mx-auto">
+            <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<div class="max-w-4xl mx-auto space-y-8 animate-fade-in">
+    <!-- Step Tracker Header -->
+    <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <span id="step-badge" class="w-8 h-8 rounded-xl bg-ans-dark-green text-white flex items-center justify-center font-bold text-sm">1</span>
+            <div>
+                <h3 id="step-title" class="font-extrabold text-gray-800 text-base">Paso 1: Configurar detalles</h3>
+                <p id="step-desc" class="text-xs text-gray-500">Ingresa la información básica de tu clase</p>
+            </div>
+        </div>
+        <!-- Progress Bar Indicator -->
+        <div class="w-32 bg-gray-100 h-2 rounded-full overflow-hidden hidden sm:block">
+            <div id="progress-bar" class="bg-ans-dark-green h-full w-1/3 transition-all duration-500"></div>
+        </div>
+    </div>
+
+    <!-- MAIN CARD CONTAINER -->
+    <div class="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm relative overflow-hidden">
+        
+        <!-- STEP 1: FORM -->
+        <div id="panel-step-1" class="space-y-6">
+            <form id="form-generator" onsubmit="event.preventDefault();">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Tema/Título -->
+                    <div class="md:col-span-2">
+                        <label for="title" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Tema o Título de la Clase</label>
+                        <input type="text" id="title" placeholder="Ej. Introducción a la fotosíntesis en ciencias naturales"
+                               class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm">
+                        <p id="title-error" class="hidden mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">⚠️ Este campo es obligatorio.</p>
+                    </div>
+
+                    <!-- Asignatura -->
+                    <div>
+                        <label for="subject" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Asignatura</label>
+                        <select id="subject" onchange="toggleCustomField('subject')" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all text-sm bg-white">
+                            <option value="Ciencias Naturales / Science">Ciencias Naturales / Science</option>
+                            <option value="Matemáticas / Math">Matemáticas / Math</option>
+                            <option value="Español / Lengua">Español / Lengua</option>
+                            <option value="English / Literature">English / Literature</option>
+                            <option value="Estudios Sociales / History">Estudios Sociales / History</option>
+                            <option value="Tecnología / STEM">Tecnología / STEM</option>
+                            <option value="Arte y Música">Arte y Música</option>
+                            <option value="OTRO">Otro (Especificar)</option>
+                        </select>
+                        <input type="text" id="subject_custom" placeholder="Especificar asignatura" class="w-full mt-3 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm hidden">
+                    </div>
+
+                    <!-- Grado/Nivel -->
+                    <div>
+                        <label for="grade_level" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Grado o Nivel Escolar</label>
+                        <select id="grade_level" onchange="toggleCustomField('grade_level')" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all text-sm bg-white">
+                            <option value="Pre-kínder / Kínder">Pre-kínder / Kínder</option>
+                            <option value="1er - 3er Grado (Elementary)">1er - 3er Grado (Elementary)</option>
+                            <option value="4to - 5to Grado (Elementary)">4to - 5to Grado (Elementary)</option>
+                            <option value="6to - 8vo Grado (Middle School)">6to - 8vo Grado (Middle School)</option>
+                            <option value="9no - 12vo Grado (High School)">9no - 12vo Grado (High School)</option>
+                            <option value="OTRO">Otro (Especificar)</option>
+                        </select>
+                        <input type="text" id="grade_level_custom" placeholder="Especificar grado" class="w-full mt-3 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm hidden">
+                    </div>
+
+                    <!-- Duración -->
+                    <div>
+                        <label for="duration" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Duración estimada</label>
+                        <select id="duration" onchange="toggleCustomField('duration')" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all text-sm bg-white">
+                            <option value="45 Minutos">45 Minutos</option>
+                            <option value="60 Minutos">60 Minutos</option>
+                            <option value="90 Minutos">90 Minutos</option>
+                            <option value="120 Minutos">120 Minutos</option>
+                            <option value="OTRO">Otro (Especificar)</option>
+                        </select>
+                        <input type="text" id="duration_custom" placeholder="Especificar duración (ej: 3 horas)" class="w-full mt-3 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm hidden">
+                    </div>
+                </div>
+
+                <!-- Objetivos -->
+                <div class="mt-6">
+                    <label for="objectives" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Objetivos de Aprendizaje (¿Qué lograrán los estudiantes?)</label>
+                    <textarea id="objectives" rows="4" placeholder="Ej. Comprender el proceso de fotosíntesis, identificar los elementos químicos que intervienen (agua, dióxido de carbono y luz) y el producto generado (oxígeno y glucosa)."
+                              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm leading-relaxed"></textarea>
+                    <p id="objectives-error" class="hidden mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">⚠️ Este campo es obligatorio.</p>
+                </div>
+
+                <!-- Button -->
+                <div class="mt-8 flex justify-end">
+                    <button id="btn-generate" type="button" onclick="startGeneration()" class="w-full sm:w-auto px-8 py-3.5 bg-ans-orange hover:bg-[#e67600] text-white font-bold rounded-xl shadow-md shadow-ans-orange/20 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                        <span id="btn-generate-text">Generar con IA</span>
+                        <svg id="btn-generate-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <svg id="btn-generate-spinner" class="w-5 h-5 animate-spin hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- STEP 2: LOADING SCREEN -->
+        <div id="panel-loading" class="hidden py-16 flex flex-col items-center justify-center text-center space-y-6">
+            <div class="relative w-24 h-24">
+                <!-- Dual pulsing rings -->
+                <div class="absolute inset-0 rounded-full border-4 border-ans-dark-green/25 animate-ping"></div>
+                <div class="absolute inset-2 rounded-full border-4 border-ans-orange/20 animate-pulse"></div>
+                <div class="absolute inset-4 rounded-2xl bg-gradient-to-tr from-ans-dark-green to-ans-light-green shadow-xl flex items-center justify-center text-white">
+                    <svg class="w-8 h-8 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+            </div>
+            <div>
+                <h4 id="loading-header" class="text-xl font-bold text-gray-800">Generando tu plan de clases...</h4>
+                <p id="loading-tip" class="text-sm text-ans-dark-green/70 mt-2 font-medium italic transition-all duration-300">
+                    "Estructurando el plan bajo el marco SAMR..."
+                </p>
+            </div>
+        </div>
+
+        <!-- STEP 3: PREVIEW & CONFIRMATION -->
+        <div id="panel-preview" class="hidden space-y-6">
+            <div class="border border-gray-100 bg-gray-50/50 rounded-2xl p-6 md:p-8">
+                <!-- Lesson plan content wrapper -->
+                <article id="markdown-container" class="prose max-w-none text-gray-700 text-sm leading-relaxed prose-headings:text-gray-800 prose-headings:font-heading prose-strong:text-ans-dark-green prose-code:bg-white prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:border prose-code:border-gray-100 prose-a:text-ans-orange prose-a:underline"></article>
+            </div>
+
+            <!-- Tool selector/Detected tags -->
+            <div id="detected-tools-area" class="border-t border-gray-100 pt-6">
+                <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Herramientas EdTech Recomendadas</p>
+                <div id="detected-tools-list" class="flex flex-wrap gap-2">
+                    <!-- Dynamic checkable badges -->
+                </div>
+            </div>
+
+            <!-- Footer controls -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-gray-100 pt-6">
+                <button type="button" onclick="goBack()" class="px-6 py-3 border border-gray-200 text-gray-500 font-bold rounded-xl hover:bg-gray-50 transition-all text-sm">
+                    Modificar Entrada
+                </button>
+                <button type="button" onclick="savePlan()" class="px-8 py-3.5 bg-ans-dark-green hover:bg-ans-seal-green text-white font-bold rounded-xl shadow-md shadow-ans-dark-green/20 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+                    </svg>
+                    <span>Guardar Planificación</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Visual error boundary for easier debugging
+    window.onerror = function(message, source, lineno, colno, error) {
+        const errorBanner = document.createElement('div');
+        errorBanner.style = 'position:fixed;top:0;left:0;right:0;background:#ef4444;color:white;padding:16px;z-index:99999;font-family:monospace;font-size:13px;font-weight:bold;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.15);';
+        errorBanner.innerHTML = '⚠️ Error de JavaScript: ' + message + ' en ' + source.split('/').pop() + ':' + lineno;
+        document.body.appendChild(errorBanner);
+        console.error(error);
+        return false;
+    };
+
+    // State management
+    let generatedMarkdown = '';
+    let detectedToolIds = [];
+    let allAvailableTools = [];
+
+    // Inject tools array from PHP to JS
+    allAvailableTools = [{"id":2,"name":"ChatGPT","category":"AI Assistants"},{"id":3,"name":"NotebookLM","category":"Research"},{"id":4,"name":"Canva AI","category":"Content Creation"},{"id":5,"name":"Perplexity","category":"Research"},{"id":6,"name":"Suno AI","category":"Music & Audio"},{"id":7,"name":"Stitch","category":"Lesson Planning"},{"id":8,"name":"Pomelo","category":"Productivity"},{"id":9,"name":"Google Slides + Gemini","category":"Presentations"},{"id":10,"name":"Antigravity","category":"AI Assistants"},{"id":11,"name":"Gamma","category":"Presentations"},{"id":1,"name":"Gemini","category":"AI Assistants"},{"id":12,"name":"Claude","category":"AI Assistants"}];
+
+    function showInlineError(msg) {
+        let banner = document.getElementById('inline-error-banner');
+        if (!banner) {
+            banner = document.createElement('div');
+            banner.id = 'inline-error-banner';
+            banner.className = 'mt-4 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700 font-semibold flex items-center gap-2';
+            const form = document.getElementById('form-generator');
+            if (form) form.appendChild(banner);
+        }
+        banner.innerHTML = '&#9888;&#65039; ' + msg;
+        banner.classList.remove('hidden');
+        setTimeout(() => banner.classList.add('hidden'), 8000);
+    }
+
+    function toggleCustomField(fieldId) {
+        try {
+            const select = document.getElementById(fieldId);
+            const customInput = document.getElementById(fieldId + '_custom');
+            if (select.value === 'OTRO') {
+                customInput.classList.remove('hidden');
+                customInput.required = true;
+            } else {
+                customInput.classList.add('hidden');
+                customInput.required = false;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    const cyclingMessages = [
+        "Analizando el catálogo de tecnología aprobada en AINS...",
+        "Integrando marcos SAMR y TPACK en las fases de tu clase...",
+        "Diseñando la sección de inicio / warm-up...",
+        "Estructurando las actividades del desarrollo...",
+        "Generando opciones de evaluación formativa...",
+        "Redactando ejemplos prácticos de prompts para docentes..."
+    ];
+    let intervalId = null;
+
+    function showFieldError(fieldId, errorId) {
+        const field = document.getElementById(fieldId);
+        const errorEl = document.getElementById(errorId);
+        if (field) {
+            field.classList.add('border-red-400', 'ring-2', 'ring-red-200');
+            field.classList.remove('border-gray-200');
+        }
+        if (errorEl) errorEl.classList.remove('hidden');
+    }
+
+    function clearFieldError(fieldId, errorId) {
+        const field = document.getElementById(fieldId);
+        const errorEl = document.getElementById(errorId);
+        if (field) {
+            field.classList.remove('border-red-400', 'ring-2', 'ring-red-200');
+            field.classList.add('border-gray-200');
+        }
+        if (errorEl) errorEl.classList.add('hidden');
+    }
+
+    function setBtnLoading(loading) {
+        const btn = document.getElementById('btn-generate');
+        const txt = document.getElementById('btn-generate-text');
+        const icon = document.getElementById('btn-generate-icon');
+        const spinner = document.getElementById('btn-generate-spinner');
+        if (!btn) return;
+        if (loading) {
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+            if (txt) txt.textContent = 'Generando...';
+            if (icon) icon.classList.add('hidden');
+            if (spinner) spinner.classList.remove('hidden');
+        } else {
+            btn.disabled = false;
+            btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            if (txt) txt.textContent = 'Generar con IA';
+            if (icon) icon.classList.remove('hidden');
+            if (spinner) spinner.classList.add('hidden');
+        }
+    }
+
+    function startGeneration() {
+        console.log('[AINS] startGeneration() called');
+        try {
+            // Collect and validate form data
+            const titleEl = document.getElementById('title');
+            const objectivesEl = document.getElementById('objectives');
+            let hasError = false;
+
+            clearFieldError('title', 'title-error');
+            clearFieldError('objectives', 'objectives-error');
+
+            if (!titleEl || !titleEl.value.trim()) {
+                showFieldError('title', 'title-error');
+                if (titleEl) titleEl.focus();
+                hasError = true;
+            }
+            if (!objectivesEl || !objectivesEl.value.trim()) {
+                showFieldError('objectives', 'objectives-error');
+                if (!hasError && objectivesEl) objectivesEl.focus();
+                hasError = true;
+            }
+            if (hasError) {
+                console.log('[AINS] Validation failed — missing required fields');
+                return;
+            }
+
+            const titleVal = titleEl.value.trim();
+            
+            const subjectSelect = document.getElementById('subject');
+            const subjectVal = subjectSelect.value === 'OTRO' ? document.getElementById('subject_custom').value : subjectSelect.value;
+            
+            const gradeSelect = document.getElementById('grade_level');
+            const gradeVal = gradeSelect.value === 'OTRO' ? document.getElementById('grade_level_custom').value : gradeSelect.value;
+            
+            const durationSelect = document.getElementById('duration');
+            const durationVal = durationSelect.value === 'OTRO' ? document.getElementById('duration_custom').value : durationSelect.value;
+            
+            const objectivesVal = objectivesEl.value.trim();
+
+            console.log('[AINS] Sending generate request:', { title: titleVal, subject: subjectVal, grade_level: gradeVal });
+
+            // Show button loading state
+            setBtnLoading(true);
+
+            // Transition UI to Step 2
+            setStep(2);
+
+            // Start cycling tips
+            let msgIndex = 0;
+            const tipEl = document.getElementById('loading-tip');
+            if (tipEl) tipEl.textContent = cyclingMessages[0];
+            intervalId = setInterval(() => {
+                msgIndex = (msgIndex + 1) % cyclingMessages.length;
+                if (tipEl) {
+                    tipEl.style.opacity = 0;
+                    setTimeout(() => {
+                        tipEl.textContent = cyclingMessages[msgIndex];
+                        tipEl.style.opacity = 1;
+                    }, 300);
+                }
+            }, 3500);
+
+            // API AJAX request
+            fetch('http://:/lesson-plans/generate#', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': 'as4YFYf6u41t6UnJsU6NoFPBxVellUzr4V223hcD'
+                },
+                body: JSON.stringify({
+                    title: titleVal,
+                    subject: subjectVal,
+                    grade_level: gradeVal,
+                    duration: durationVal,
+                    objectives: objectivesVal
+                })
+            })
+            .then(res => {
+                console.log('[AINS] Generate response status:', res.status);
+                if (!res.ok) {
+                    return res.json().then(data => { throw new Error(data.error || 'Server error ' + res.status) });
+                }
+                return res.json();
+            })
+            .then(data => {
+                console.log('[AINS] Generate success, markdown length:', data.markdown?.length);
+                clearInterval(intervalId);
+                generatedMarkdown = data.markdown;
+                detectedToolIds = data.tool_ids || [];
+                setBtnLoading(false);
+                renderPreview();
+                setStep(3);
+            })
+            .catch(err => {
+                clearInterval(intervalId);
+                setBtnLoading(false);
+                setStep(1);
+                console.error('[AINS] Generate error:', err);
+                showInlineError('Error al generar: ' + err.message);
+            });
+        } catch (e) {
+            console.error('[AINS] JS exception in startGeneration:', e);
+            setBtnLoading(false);
+            setStep(1);
+            showInlineError('Error de JavaScript: ' + e.message);
+        }
+    }
+
+    function setStep(stepNum) {
+        try {
+            const stepBadge = document.getElementById('step-badge');
+            const stepTitle = document.getElementById('step-title');
+            const stepDesc = document.getElementById('step-desc');
+            const progressBar = document.getElementById('progress-bar');
+
+            const step1 = document.getElementById('panel-step-1');
+            const loading = document.getElementById('panel-loading');
+            const preview = document.getElementById('panel-preview');
+
+            // Hide all
+            step1.classList.add('hidden');
+            loading.classList.add('hidden');
+            preview.classList.add('hidden');
+
+            if (stepNum === 1) {
+                stepBadge.textContent = "1";
+                stepBadge.className = "w-8 h-8 rounded-xl bg-ans-dark-green text-white flex items-center justify-center font-bold text-sm";
+                stepTitle.textContent = "Paso 1: Configurar detalles";
+                stepDesc.textContent = "Ingresa la información básica de tu clase";
+                progressBar.style.width = "33%";
+                step1.classList.remove('hidden');
+            } else if (stepNum === 2) {
+                stepBadge.textContent = "2";
+                stepBadge.className = "w-8 h-8 rounded-xl bg-ans-orange text-white flex items-center justify-center font-bold text-sm";
+                stepTitle.textContent = "Paso 2: Generando planificación";
+                stepDesc.textContent = "Nuestra IA está elaborando tu planeación pedagógica";
+                progressBar.style.width = "66%";
+                loading.classList.remove('hidden');
+            } else if (stepNum === 3) {
+                stepBadge.textContent = "3";
+                stepBadge.className = "w-8 h-8 rounded-xl bg-green-600 text-white flex items-center justify-center font-bold text-sm";
+                stepTitle.textContent = "Paso 3: Previsualizar y guardar";
+                stepDesc.textContent = "Revisa el plan elaborado y confirma las herramientas asociadas";
+                progressBar.style.width = "100%";
+                preview.classList.remove('hidden');
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function renderPreview() {
+        try {
+            // Render Markdown
+            const container = document.getElementById('markdown-container');
+            if (typeof marked !== 'undefined') {
+                container.innerHTML = marked.parse(generatedMarkdown);
+            } else {
+                container.innerHTML = '<pre style="white-space: pre-wrap;">' + generatedMarkdown + '</pre>';
+            }
+
+            // Build tools checkboxes
+            const badgeList = document.getElementById('detected-tools-list');
+            badgeList.innerHTML = '';
+
+            if (allAvailableTools.length === 0) {
+                badgeList.innerHTML = '<span class="text-xs text-gray-400">No hay herramientas disponibles</span>';
+                return;
+            }
+
+            allAvailableTools.forEach(tool => {
+                const isChecked = detectedToolIds.includes(tool.id);
+                const label = document.createElement('label');
+                label.className = `flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs cursor-pointer select-none transition-all ${
+                    isChecked 
+                    ? 'bg-ans-dark-green/10 border-ans-dark-green/30 text-ans-dark-green font-bold shadow-sm' 
+                    : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'
+                }`;
+                label.innerHTML = `
+                    <input type="checkbox" value="${tool.id}" ${isChecked ? 'checked' : ''} onchange="toggleToolBadge(this)" class="accent-ans-dark-green w-3.5 h-3.5 rounded border-gray-300">
+                    <span>${tool.name}</span>
+                `;
+                badgeList.appendChild(label);
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function toggleToolBadge(checkbox) {
+        try {
+            const label = checkbox.closest('label');
+            const val = parseInt(checkbox.value);
+            if (checkbox.checked) {
+                label.className = 'flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs cursor-pointer select-none transition-all bg-ans-dark-green/10 border-ans-dark-green/30 text-ans-dark-green font-bold shadow-sm';
+                if (!detectedToolIds.includes(val)) {
+                    detectedToolIds.push(val);
+                }
+            } else {
+                label.className = 'flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs cursor-pointer select-none transition-all bg-white border-gray-200 text-gray-500 hover:bg-gray-50';
+                detectedToolIds = detectedToolIds.filter(id => id !== val);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function goBack() {
+        if (intervalId) clearInterval(intervalId);
+        setStep(1);
+    }
+
+    function savePlan() {
+        try {
+            // Collect form input data
+            const titleVal = document.getElementById('title').value;
+            
+            const subjectSelect = document.getElementById('subject');
+            const subjectVal = subjectSelect.value === 'OTRO' ? document.getElementById('subject_custom').value : subjectSelect.value;
+            
+            const gradeSelect = document.getElementById('grade_level');
+            const gradeVal = gradeSelect.value === 'OTRO' ? document.getElementById('grade_level_custom').value : gradeSelect.value;
+            
+            const durationSelect = document.getElementById('duration');
+            const durationVal = durationSelect.value === 'OTRO' ? document.getElementById('duration_custom').value : durationSelect.value;
+            
+            const objectivesVal = document.getElementById('objectives').value;
+
+            // Save call via AJAX
+            fetch('http://:/lesson-plans#', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': 'as4YFYf6u41t6UnJsU6NoFPBxVellUzr4V223hcD'
+                },
+                body: JSON.stringify({
+                    title: titleVal,
+                    subject: subjectVal,
+                    grade_level: gradeVal,
+                    duration: durationVal,
+                    objectives: objectivesVal,
+                    content: generatedMarkdown,
+                    selected_tools: detectedToolIds
+                })
+            })
+            .then(res => {
+                if (!res.ok) {
+                    return res.json().then(data => { throw new Error(data.error || 'Server error') });
+                }
+                return res.json();
+            })
+            .then(data => {
+                window.location.href = data.url;
+            })
+            .catch(err => {
+                alert('Error al guardar la planeación: ' + err.message);
+            });
+        } catch (e) {
+            console.error(e);
+            alert('Error en Javascript al guardar: ' + e.message);
+        }
+    }
+</script>
+        </div>
+    </main>
+</div>
+
+<script>
+// ─── Splash Screen ───────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+    // Only show on first visit per session
+    if (!sessionStorage.getItem('splashShown')) {
+        sessionStorage.setItem('splashShown', '1');
+        setTimeout(() => {
+            document.getElementById('splash').classList.add('hidden');
+        }, 3400); // 3.4 seconds gives plenty of time for the fusion animation
+    } else {
+        // Already seen — hide immediately
+        const s = document.getElementById('splash');
+        if (s) {
+            s.style.transition = 'none';
+            s.classList.add('hidden');
+        }
+    }
+});
+
+// ─── Sidebar Toggle ──────────────────────────────────────────
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const body = document.body;
+    const isCollapsed = sidebar.classList.toggle('collapsed');
+    body.classList.toggle('sidebar-collapsed', isCollapsed);
+    localStorage.setItem('sidebar-collapsed', isCollapsed ? '1' : '0');
+}
+
+// Restore sidebar state on load
+(function() {
+    if (localStorage.getItem('sidebar-collapsed') === '1') {
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+            sidebar.classList.add('collapsed');
+            document.body.classList.add('sidebar-collapsed');
+        }
+    }
+})();
+
+// ─── Mobile Drawer Toggle ────────────────────────────────────
+function toggleMobileDrawer() {
+    const drawer = document.getElementById('mobile-drawer');
+    const panel = document.getElementById('mobile-drawer-panel');
+    const backdrop = document.getElementById('mobile-drawer-backdrop');
+    
+    if (drawer && panel && backdrop) {
+        if (drawer.classList.contains('hidden')) {
+            drawer.classList.remove('hidden');
+            setTimeout(() => {
+                panel.classList.remove('-translate-x-full');
+                backdrop.classList.remove('opacity-0');
+                backdrop.classList.add('opacity-100');
+            }, 10);
+        } else {
+            panel.classList.add('-translate-x-full');
+            backdrop.classList.remove('opacity-100');
+            backdrop.classList.add('opacity-0');
+            setTimeout(() => {
+                drawer.classList.add('hidden');
+            }, 300);
+        }
+    }
+}
+
+// ─── Ctrl+K to focus search input ─────────────────────────────
+document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        const searchInput = document.getElementById('global-search');
+        if (searchInput) searchInput.focus();
+    }
+});
+
+// ─── KBD Badge Fade out & Dynamic AI Tips ────────────────────
+const aiTips = [
+    "Prompt Tip: Tell AI 'Act as a professional grader...' to get highly analytical writing feedback.",
+    "Flipped Learning: Ask the AI 'Test me on [topic] step-by-step and grade my answers.'",
+    "Drafting Buddy: Use AI to generate 10 unique outline ideas to break writer's block.",
+    "Fact Check: Hallucinations happen! Always double-check facts against trusted academic journals.",
+    "Data Safety: Never copy-paste private student names or academic files into public AI systems.",
+    "Creative Spark: Ask AI for 'metaphors to explain [complex topic]' to build rich analogies.",
+    "Time Saver: Ask AI to 'Summarize this technical article in 3 simple paragraphs for beginners.'"
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+    // KBD search badge focus transitions
+    const globSearch = document.getElementById('global-search');
+    const kbdBadge = document.getElementById('search-kbd');
+    if (globSearch && kbdBadge) {
+        globSearch.addEventListener('focus', () => kbdBadge.classList.add('opacity-0'));
+        globSearch.addEventListener('blur', () => {
+            if (!globSearch.value) kbdBadge.classList.remove('opacity-0');
+        });
+    }
+
+    // Dynamic educational tip injector
+    const tipElement = document.getElementById('sidebar-ai-tip');
+    const mobileTipElement = document.getElementById('mobile-ai-tip');
+    if (tipElement || mobileTipElement) {
+        const randomTip = aiTips[Math.floor(Math.random() * aiTips.length)];
+        if (tipElement) tipElement.textContent = `"${randomTip}"`;
+        if (mobileTipElement) mobileTipElement.textContent = `"${randomTip}"`;
+    }
+});
+
+// ─── AI Companion Chatbot Engine ────────────────────────────────
+let chatHistory = [];
+let activeConversationId = null;
+const csrfToken = 'as4YFYf6u41t6UnJsU6NoFPBxVellUzr4V223hcD';
+
+function toggleChatbot() {
+    const panel = document.getElementById('ai-chatbot-panel');
+    const fab = document.getElementById('ai-chatbot-fab');
+    if (panel) {
+        if (panel.classList.contains('opacity-0')) {
+            panel.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+            panel.classList.add('opacity-100', 'scale-100');
+            // Scroll to bottom
+            const feed = document.getElementById('chatbot-feed');
+            if (feed) feed.scrollTop = feed.scrollHeight;
+        } else {
+            panel.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+            panel.classList.remove('opacity-100', 'scale-100');
+        }
+    }
+}
+
+function sendPresetPrompt(promptText) {
+    const input = document.getElementById('chatbot-input');
+    if (input) {
+        input.value = promptText;
+        submitChatQuery();
+    }
+}
+
+function submitChatQuery() {
+    const input = document.getElementById('chatbot-input');
+    if (!input) return;
+    const query = input.value.trim();
+    if (!query) return;
+
+    // Clear input
+    input.value = '';
+
+    // Append User Message
+    appendChatMessage('user', query);
+
+    // Show Typing Indicator
+    showTypingIndicator(true);
+
+    // Call API Securely
+    fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({
+            message: query,
+            conversation_id: activeConversationId,
+            history: chatHistory
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        showTypingIndicator(false);
+        const reply = data.reply || "⚠️ *Lo siento, no pude procesar la respuesta.*";
+        appendChatMessage('assistant', reply);
+        
+        if (data.conversation_id) {
+            activeConversationId = data.conversation_id;
+        }
+        
+        // Save to History
+        chatHistory.push({ role: 'user', content: query });
+        chatHistory.push({ role: 'assistant', content: reply });
+    })
+    .catch(error => {
+        showTypingIndicator(false);
+        appendChatMessage('assistant', "🔌 *Error de conexión. Por favor verifica tu red e intenta de nuevo.*");
+        console.error(error);
+    });
+}
+
+function appendChatMessage(role, text) {
+    const feed = document.getElementById('chatbot-feed');
+    if (!feed) return;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} mb-3 items-end gap-2 animate-fade-in-up`;
+
+    // Avatar if assistant
+    let avatarHTML = '';
+    if (role === 'assistant') {
+        avatarHTML = `
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-ans-dark-green to-ans-light-green flex-shrink-0 flex items-center justify-center text-white text-[10px] font-bold shadow-md shadow-ans-dark-green/10">
+                AI
+            </div>
+        `;
+    }
+
+    const bubble = document.createElement('div');
+    bubble.className = `max-w-[78%] px-4 py-3 rounded-2xl text-xs leading-relaxed shadow-sm ${
+        role === 'user' 
+        ? 'bg-gradient-to-r from-ans-dark-green to-ans-seal-green text-white rounded-br-none' 
+        : 'bg-white/90 text-gray-800 border border-gray-100 rounded-bl-none backdrop-blur-sm'
+    }`;
+
+    // Simple markdown formatting
+    bubble.innerHTML = parseBotMarkdown(text);
+    
+    if (role === 'assistant') {
+        wrapper.appendChild(bubble);
+        feed.appendChild(wrapper);
+    } else {
+        wrapper.appendChild(bubble);
+        feed.appendChild(wrapper);
+    }
+
+    // Scroll to bottom
+    feed.scrollTop = feed.scrollHeight;
+}
+
+function showTypingIndicator(show) {
+    let indicator = document.getElementById('chatbot-typing-indicator');
+    const feed = document.getElementById('chatbot-feed');
+    if (!feed) return;
+
+    if (show) {
+        if (!indicator) {
+            indicator = document.createElement('div');
+            indicator.id = 'chatbot-typing-indicator';
+            indicator.className = 'flex justify-start mb-3 items-center gap-2 animate-pulse';
+            indicator.innerHTML = `
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-ans-dark-green to-ans-light-green flex-shrink-0 flex items-center justify-center text-white text-[10px] font-bold shadow-md">
+                    AI
+                </div>
+                <div class="bg-white/80 border border-gray-100 px-4 py-2.5 rounded-2xl rounded-bl-none text-xs text-gray-400 flex items-center gap-1.5 backdrop-blur-sm">
+                    <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+                    <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+                    <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+                </div>
+            `;
+            feed.appendChild(indicator);
+        }
+        feed.scrollTop = feed.scrollHeight;
+    } else {
+        if (indicator) {
+            indicator.remove();
+        }
+    }
+}
+
+function parseBotMarkdown(text) {
+    // Bold
+    let formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    // Code blocks
+    formatted = formatted.replace(/```([\s\S]*?)```/g, '<pre class="bg-gray-900/90 text-white rounded-xl p-3 my-2 font-mono text-[10px] overflow-x-auto whitespace-pre">$1</pre>');
+    // Bullet lists
+    formatted = formatted.replace(/^\s*-\s+(.*?)$/gm, '<li class="ml-4 list-disc">$1</li>');
+    // Paragraphs / Newlines
+    formatted = formatted.replace(/\n/g, '<br>');
+    return formatted;
+}
+
+// Bind Enter Key
+document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('chatbot-input');
+    if (input) {
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                submitChatQuery();
+            }
+        });
+    }
+});
+</script>
+
+<!-- AI Companion Chatbot Interface Markup -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <!-- Chat Drawer Panel -->
+    <div id="ai-chatbot-panel" class="w-96 h-[520px] bg-white/80 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl flex flex-col overflow-hidden mb-4 opacity-0 scale-95 pointer-events-none transition-all duration-300 transform origin-bottom-right">
+        <!-- Header -->
+        <div class="p-4 bg-gradient-to-r from-ans-dark-green to-ans-seal-green text-white flex items-center justify-between shadow-md">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center border border-white/10 shadow-inner">
+                    <svg class="w-5 h-5 text-ans-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold tracking-tight">AINS AI Companion</h4>
+                    <span class="text-[9px] text-ans-light-green font-bold tracking-wider uppercase flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"></span>
+                        EdTech Advisor
+                    </span>
+                </div>
+            </div>
+            <button onclick="toggleChatbot()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 transition-all flex items-center justify-center" title="Close Panel">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <!-- Chat Feed -->
+        <div id="chatbot-feed" class="flex-1 p-4 overflow-y-auto space-y-4 bg-gray-50/30">
+            <!-- Welcome Message -->
+            <div class="flex justify-start mb-3 items-end gap-2">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-ans-dark-green to-ans-light-green flex-shrink-0 flex items-center justify-center text-white text-[10px] font-bold shadow-md shadow-ans-dark-green/10">
+                    AI
+                </div>
+                <div class="max-w-[78%] px-4 py-3 bg-white border border-gray-100 rounded-2xl rounded-bl-none text-xs leading-relaxed shadow-sm text-gray-800">
+                    <p class="font-bold text-ans-dark-green mb-1">¡Hola! 👋</p>
+                    Soy **AINS AI Companion**, tu asesor digital en ANS. Te puedo ayudar a:
+                    <ul class="list-disc list-inside mt-1.5 space-y-1 text-gray-600">
+                        <li>Diseñar planificaciones bajo el modelo **SAMR**.</li>
+                        <li>Escribir **prompts eficientes** para tus clases.</li>
+                        <li>Recomendar las mejores **apps aprobadas** del portal.</li>
+                    </ul>
+                    <p class="mt-2 text-gray-500 italic text-[10px]">¿De qué te gustaría hablar hoy?</p>
+                </div>
+            </div>
+
+            <!-- Suggested Quick Links -->
+            <div class="space-y-2 pl-10">
+                <button onclick="sendPresetPrompt('¿Cómo integro Suno AI usando el modelo SAMR para una clase de música?')" class="block w-full text-left text-[11px] px-3 py-2 bg-white hover:bg-ans-light-green/10 border border-gray-100 rounded-xl text-gray-700 hover:text-ans-dark-green hover:border-ans-light-green transition-all shadow-sm">
+                    🎵 Integrar Suno AI en Música (SAMR)
+                </button>
+                <button onclick="sendPresetPrompt('Escribe un prompt estructurado para que el docente genere una rúbrica en Canva.')" class="block w-full text-left text-[11px] px-3 py-2 bg-white hover:bg-ans-light-green/10 border border-gray-100 rounded-xl text-gray-700 hover:text-ans-dark-green hover:border-ans-light-green transition-all shadow-sm">
+                    📝 Prompt para crear rúbricas en Canva
+                </button>
+                <button onclick="sendPresetPrompt('¿Qué herramientas de AINS me recomiendas para planificación curricular automatizada?')" class="block w-full text-left text-[11px] px-3 py-2 bg-white hover:bg-ans-light-green/10 border border-gray-100 rounded-xl text-gray-700 hover:text-ans-dark-green hover:border-ans-light-green transition-all shadow-sm">
+                    📚 Herramientas para planificar clases
+                </button>
+            </div>
+        </div>
+
+        <!-- Input Box -->
+        <div class="p-3 bg-white border-t border-gray-100 flex items-center gap-2">
+            <input type="text" id="chatbot-input" placeholder="Pregúntale a tu EdTech Companion..." class="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 focus:border-ans-dark-green focus:ring-1 focus:ring-ans-dark-green text-xs bg-gray-50 outline-none transition-all">
+            <button onclick="submitChatQuery()" class="w-9 h-9 rounded-xl bg-ans-dark-green hover:bg-ans-seal-green text-white flex items-center justify-center transition-all shadow-md shadow-ans-dark-green/10" title="Send Message">
+                <svg class="w-4 h-4 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating Chat Button (FAB) -->
+    <button id="ai-chatbot-fab" onclick="toggleChatbot()" class="w-14 h-14 bg-gradient-to-tr from-ans-dark-green to-ans-seal-green hover:from-ans-seal-green hover:to-ans-dark-green text-white rounded-full flex items-center justify-center shadow-xl shadow-ans-dark-green/20 hover:shadow-2xl hover:scale-105 transition-all duration-300 relative group" title="Chat with AI Companion">
+        <!-- Pulse Effect -->
+        <div class="absolute inset-0 rounded-full bg-ans-dark-green/30 animate-ping group-hover:animate-none opacity-70"></div>
+        <!-- Icon -->
+        <svg class="w-6 h-6 relative z-10 transition-transform duration-300 group-hover:rotate-6 text-ans-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+    </button>
+</div>
+
+
+</body>
+</html>

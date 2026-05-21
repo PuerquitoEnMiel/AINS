@@ -73,10 +73,12 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Category *</label>
-                        <select name="category" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-blue/20 focus:border-ans-blue focus:bg-white transition-all appearance-none">
+                        <select name="category_id" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-blue/20 focus:border-ans-blue focus:bg-white transition-all appearance-none">
                             <option value="">Select...</option>
-                            @foreach(['Text & Writing','Image & Design','Video & Animation','Data & Analysis','Presentations','Music','Others'] as $cat)
-                                <option value="{{ $cat }}" {{ old('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->icon }} {{ $category->name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>

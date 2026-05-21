@@ -15,7 +15,7 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || auth()->user()->role !== 'admin') {
+        if (! auth()->check() || auth()->user()->role !== 'admin') {
             return redirect('/')->with('error', 'Acceso denegado. Se requieren permisos de administrador.');
         }
 

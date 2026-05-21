@@ -14,6 +14,16 @@ class Category extends Model
         'color',
         'sort_order',
     ];
+    protected static function booted(): void
+    {
+        static::saved(function ($category) {
+            \Illuminate\Support\Facades\Cache::forget('welcome_categories');
+        });
+
+        static::deleted(function ($category) {
+            \Illuminate\Support\Facades\Cache::forget('welcome_categories');
+        });
+    }
 
     public function tools(): HasMany
     {

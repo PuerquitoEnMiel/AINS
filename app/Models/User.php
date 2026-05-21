@@ -101,4 +101,61 @@ class User extends Authenticatable
     {
         return $this->hasMany(Tool::class, 'created_by');
     }
+
+    /**
+     * Prompts created by this user.
+     */
+    public function promptTips(): HasMany
+    {
+        return $this->hasMany(PromptTip::class);
+    }
+
+    /**
+     * Votes cast by this user.
+     */
+    public function promptVotes(): HasMany
+    {
+        return $this->hasMany(PromptVote::class);
+    }
+
+    /**
+     * Comments left by this user.
+     */
+    public function promptComments(): HasMany
+    {
+        return $this->hasMany(PromptComment::class);
+    }
+
+    /**
+     * Badges earned by this user.
+     */
+    public function badges(): BelongsToMany
+    {
+        return $this->belongsToMany(Badge::class)->withPivot('earned_at', 'score')->withTimestamps();
+    }
+
+    /**
+     * Quiz attempts by this user.
+     */
+    public function quizAttempts(): HasMany
+    {
+        return $this->hasMany(QuizAttempt::class);
+    }
+
+    // ── Badge Helpers ───────────────────────────────────────────
+
+    public function hasBadge(string $slug): bool
+    {
+        return $this->badges()->where('slug', $slug)->exists();
+    }
+
+    public function badgeCount(): int
+    {
+        return $this->badges()->count();
+    }
+
+    public function latestBadges(int $limit = 5)
+    {
+        return $this->badges()->latest('earned_at')->limit($limit)->get();
+    }
 }

@@ -175,12 +175,44 @@
 
         <!-- Navigation -->
         <nav class="flex-1 px-4 mt-6 overflow-y-auto space-y-6">
-            <!-- Platform Links -->
+            <!-- Portal Hub -->
             <div class="space-y-1">
-                <p class="px-4 text-[10px] font-bold text-ans-light-green uppercase tracking-wider mb-2">Navigation</p>
+                <p class="px-4 text-[10px] font-bold text-ans-light-green uppercase tracking-wider mb-2">Portal Hub</p>
                 <a href="/" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->is('/') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     <span class="whitespace-nowrap">Directory Hub</span>
+                </a>
+                @auth
+                <a href="{{ route('lesson-plans.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('lesson-plans.*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span class="whitespace-nowrap">AI Lesson Planner</span>
+                </a>
+                @endauth
+            </div>
+
+            <!-- School & AI Policy -->
+            <div class="space-y-1">
+                <p class="px-4 text-[10px] font-bold text-ans-light-green uppercase tracking-wider mb-2">School & AI Policy</p>
+                <a href="{{ route('policy') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('policy') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    <span class="whitespace-nowrap">AI School Policy</span>
+                </a>
+                <a href="{{ route('task-force') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('task-force') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <span class="whitespace-nowrap">AI Task Force</span>
+                </a>
+            </div>
+
+            <!-- Knowledge & Help -->
+            <div class="space-y-1">
+                <p class="px-4 text-[10px] font-bold text-ans-light-green uppercase tracking-wider mb-2">Knowledge & Help</p>
+                <a href="{{ route('tips') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('tips') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    <span class="whitespace-nowrap">EdTech Prompt Tips</span>
+                </a>
+                <a href="{{ route('badges.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('badges.*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+                    <span class="whitespace-nowrap">EdTech Badges</span>
                 </a>
                 <a href="/solicitudes/nueva" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->is('solicitudes/nueva') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -202,31 +234,6 @@
                 </a>
             </div>
             @endauth
-
-            <!-- AI Honor Code Card -->
-            <div class="px-4 py-3.5 bg-white/5 border border-white/10 rounded-2xl space-y-2.5 shadow-sm">
-                <p class="text-[10px] font-bold text-ans-light-green uppercase tracking-wider flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    AI Honor Code
-                </p>
-                <div class="text-[11px] text-gray-300 space-y-2 leading-relaxed">
-                    <p>💡 <strong>Integrity first:</strong> AI is a partner to co-create, not to replace critical thinking.</p>
-                    <p>📝 <strong>Cite your agent:</strong> Document the tools and prompts used in assignments.</p>
-                    <p>🔒 <strong>Data privacy:</strong> Do not share personal documents or school details.</p>
-                </div>
-            </div>
-
-            <!-- Dynamic AI Tip Card -->
-            <div class="px-4 py-4 bg-gradient-to-r from-ans-orange/15 to-[#e67600]/10 border border-ans-orange/20 rounded-2xl relative overflow-hidden group shadow-sm">
-                <div class="absolute -right-3 -top-3 w-10 h-10 bg-ans-orange/10 rounded-full blur-md"></div>
-                <p class="text-[10px] font-bold text-ans-orange uppercase tracking-wider flex items-center gap-1.5 mb-2">
-                    <svg class="w-4 h-4 text-ans-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
-                    AI Micro-Tip
-                </p>
-                <p id="sidebar-ai-tip" class="text-[11px] text-gray-200 leading-relaxed italic">
-                    "Prompt tip: Ask AI to critique your essay from the perspective of an expert editor."
-                </p>
-            </div>
 
             <!-- Admin Controls -->
             @auth
@@ -252,6 +259,18 @@
                 <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->is('admin/users*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                     <span class="whitespace-nowrap">Users</span>
+                </a>
+                <a href="{{ route('admin.task-force.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->is('admin/task-force*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <span class="whitespace-nowrap">Task Force</span>
+                </a>
+                <a href="{{ route('admin.prompt-tips.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->is('admin/prompt-tips*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    <span class="whitespace-nowrap">Prompt Tips</span>
+                </a>
+                <a href="{{ route('admin.badges.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->is('admin/badges*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+                    <span class="whitespace-nowrap">Badges</span>
                 </a>
             </div>
             @endif
@@ -297,12 +316,44 @@
 
         <!-- Navigation -->
         <nav class="flex-1 px-4 mt-4 overflow-y-auto space-y-5">
-            <!-- Platform Links -->
+            <!-- Portal Hub -->
             <div class="space-y-1">
-                <p class="px-4 text-[9px] font-bold text-ans-light-green uppercase tracking-wider mb-1.5">Navigation</p>
+                <p class="px-4 text-[9px] font-bold text-ans-light-green uppercase tracking-wider mb-1.5">Portal Hub</p>
                 <a href="/" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('/') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     <span class="text-sm">Directory Hub</span>
+                </a>
+                @auth
+                <a href="{{ route('lesson-plans.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->routeIs('lesson-plans.*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span class="text-sm">AI Lesson Planner</span>
+                </a>
+                @endauth
+            </div>
+
+            <!-- School & AI Policy -->
+            <div class="space-y-1">
+                <p class="px-4 text-[9px] font-bold text-ans-light-green uppercase tracking-wider mb-1.5">School & AI Policy</p>
+                <a href="{{ route('policy') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->routeIs('policy') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    <span class="text-sm">AI School Policy</span>
+                </a>
+                <a href="{{ route('task-force') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->routeIs('task-force') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <span class="text-sm">AI Task Force</span>
+                </a>
+            </div>
+
+            <!-- Knowledge & Help -->
+            <div class="space-y-1">
+                <p class="px-4 text-[9px] font-bold text-ans-light-green uppercase tracking-wider mb-1.5">Knowledge & Help</p>
+                <a href="{{ route('tips') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->routeIs('tips') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    <span class="text-sm">EdTech Prompt Tips</span>
+                </a>
+                <a href="{{ route('badges.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->routeIs('badges.*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+                    <span class="text-sm">EdTech Badges</span>
                 </a>
                 <a href="/solicitudes/nueva" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('solicitudes/nueva') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -310,43 +361,57 @@
                 </a>
             </div>
 
-            <!-- AI Honor Code Card -->
-            <div class="px-4 py-3 bg-white/5 border border-white/10 rounded-xl space-y-2 shadow-sm">
-                <p class="text-[9px] font-bold text-ans-light-green uppercase tracking-wider flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    AI Honor Code
-                </p>
-                <div class="text-[10px] text-gray-300 space-y-1.5 leading-relaxed">
-                    <p>💡 <strong>Integrity:</strong> AI is a partner to co-create, not replace thinking.</p>
-                    <p>📝 <strong>Cite AI:</strong> Document tools/prompts in assignments.</p>
-                    <p>🔒 <strong>Privacy:</strong> No personal or school details in public AI.</p>
-                </div>
+            <!-- Authenticated User Links -->
+            @auth
+            <div class="space-y-1">
+                <p class="px-4 text-[9px] font-bold text-ans-light-green uppercase tracking-wider mb-1.5">My Account</p>
+                <a href="{{ route('favorites.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('favorites') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                    <span class="text-sm">My Favorites</span>
+                </a>
+                <a href="{{ route('profile.show') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('profile') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    <span class="text-sm">My Profile</span>
+                </a>
             </div>
-
-            <!-- Dynamic AI Tip Card -->
-            <div class="px-4 py-3 bg-gradient-to-r from-ans-orange/15 to-[#e67600]/10 border border-ans-orange/20 rounded-xl relative overflow-hidden group shadow-sm">
-                <div class="absolute -right-3 -top-3 w-10 h-10 bg-ans-orange/10 rounded-full blur-md"></div>
-                <p class="text-[9px] font-bold text-ans-orange uppercase tracking-wider flex items-center gap-1.5 mb-1.5">
-                    <svg class="w-4 h-4 text-ans-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
-                    AI Micro-Tip
-                </p>
-                <p id="mobile-ai-tip" class="text-[10px] text-gray-200 leading-relaxed italic">
-                    "Prompt tip: Ask AI to critique your essay from the perspective of an expert editor."
-                </p>
-            </div>
+            @endauth
 
             <!-- Admin Controls -->
             @auth
             @if(Auth::user()->role === 'admin')
             <div class="pt-3 border-t border-white/10 space-y-1">
                 <p class="px-4 text-[9px] font-bold text-ans-orange uppercase tracking-wider mb-1.5">Administration</p>
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('admin/dashboard') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    <span class="text-sm">Dashboard</span>
+                </a>
                 <a href="{{ route('admin.requests.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('admin/solicitudes*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                    <span class="text-sm">Requests Management</span>
+                    <span class="text-sm">Requests</span>
                 </a>
                 <a href="{{ route('admin.tools.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('admin/tools*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
-                    <span class="text-sm">Catalog Directory</span>
+                    <span class="text-sm">Tools Catalog</span>
+                </a>
+                <a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('admin/categories*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+                    <span class="text-sm">Categories</span>
+                </a>
+                <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('admin/users*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <span class="text-sm">Users</span>
+                </a>
+                <a href="{{ route('admin.task-force.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('admin/task-force*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <span class="text-sm">Task Force</span>
+                </a>
+                <a href="{{ route('admin.prompt-tips.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('admin/prompt-tips*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    <span class="text-sm">Prompt Tips</span>
+                </a>
+                <a href="{{ route('admin.badges.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('admin/badges*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+                    <span class="text-sm">Badges</span>
                 </a>
             </div>
             @endif
@@ -556,17 +621,22 @@ document.addEventListener('keydown', e => {
     }
 });
 
-// ─── KBD Badge Fade out & Dynamic AI Tips ────────────────────
-const aiTips = [
-    "Prompt Tip: Tell AI 'Act as a professional grader...' to get highly analytical writing feedback.",
-    "Flipped Learning: Ask the AI 'Test me on [topic] step-by-step and grade my answers.'",
-    "Drafting Buddy: Use AI to generate 10 unique outline ideas to break writer's block.",
-    "Fact Check: Hallucinations happen! Always double-check facts against trusted academic journals.",
-    "Data Safety: Never copy-paste private student names or academic files into public AI systems.",
-    "Creative Spark: Ask AI for 'metaphors to explain [complex topic]' to build rich analogies.",
-    "Time Saver: Ask AI to 'Summarize this technical article in 3 simple paragraphs for beginners.'"
-];
+// Redirect search on other pages
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('global-search');
+    if (searchInput) {
+        searchInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                const query = searchInput.value.trim();
+                if (window.location.pathname !== '/') {
+                    window.location.href = '/?search=' + encodeURIComponent(query);
+                }
+            }
+        });
+    }
+});
 
+// ─── KBD Badge Focus Transitions ────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     // KBD search badge focus transitions
     const globSearch = document.getElementById('global-search');
@@ -576,15 +646,6 @@ document.addEventListener('DOMContentLoaded', () => {
         globSearch.addEventListener('blur', () => {
             if (!globSearch.value) kbdBadge.classList.remove('opacity-0');
         });
-    }
-
-    // Dynamic educational tip injector
-    const tipElement = document.getElementById('sidebar-ai-tip');
-    const mobileTipElement = document.getElementById('mobile-ai-tip');
-    if (tipElement || mobileTipElement) {
-        const randomTip = aiTips[Math.floor(Math.random() * aiTips.length)];
-        if (tipElement) tipElement.textContent = `"${randomTip}"`;
-        if (mobileTipElement) mobileTipElement.textContent = `"${randomTip}"`;
     }
 });
 
@@ -765,7 +826,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- AI Companion Chatbot Interface Markup -->
 <!-- ════════════════════════════════════════════════════════════ -->
-<div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+<div class="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
     <!-- Chat Drawer Panel -->
     <div id="ai-chatbot-panel" class="w-96 h-[520px] bg-white/80 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl flex flex-col overflow-hidden mb-4 opacity-0 scale-95 pointer-events-none transition-all duration-300 transform origin-bottom-right">
         <!-- Header -->
@@ -830,7 +891,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
 
     <!-- Floating Chat Button (FAB) -->
-    <button id="ai-chatbot-fab" onclick="toggleChatbot()" class="w-14 h-14 bg-gradient-to-tr from-ans-dark-green to-ans-seal-green hover:from-ans-seal-green hover:to-ans-dark-green text-white rounded-full flex items-center justify-center shadow-xl shadow-ans-dark-green/20 hover:shadow-2xl hover:scale-105 transition-all duration-300 relative group" title="Chat with AI Companion">
+    <button id="ai-chatbot-fab" onclick="toggleChatbot()" class="w-14 h-14 bg-gradient-to-tr from-ans-dark-green to-ans-seal-green hover:from-ans-seal-green hover:to-ans-dark-green text-white rounded-full flex items-center justify-center shadow-xl shadow-ans-dark-green/20 hover:shadow-2xl hover:scale-105 transition-all duration-300 relative group pointer-events-auto" title="Chat with AI Companion">
         <!-- Pulse Effect -->
         <div class="absolute inset-0 rounded-full bg-ans-dark-green/30 animate-ping group-hover:animate-none opacity-70"></div>
         <!-- Icon -->

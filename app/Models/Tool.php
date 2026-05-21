@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Tool extends Model
 {
@@ -30,6 +31,19 @@ class Tool extends Model
         'click_count' => 'integer',
         'avg_rating' => 'decimal:1',
     ];
+
+    protected static function booted(): void
+    {
+        static::saved(function ($tool) {
+            \Illuminate\Support\Facades\Cache::forget('welcome_tools');
+            \Illuminate\Support\Facades\Cache::forget('welcome_categories');
+        });
+
+        static::deleted(function ($tool) {
+            \Illuminate\Support\Facades\Cache::forget('welcome_tools');
+            \Illuminate\Support\Facades\Cache::forget('welcome_categories');
+        });
+    }
 
     // ── Relationships ───────────────────────────────────────────
 
@@ -56,6 +70,11 @@ class Tool extends Model
     public function views(): HasMany
     {
         return $this->hasMany(ToolView::class);
+    }
+
+    public function insight(): HasOne
+    {
+        return $this->hasOne(ToolInsight::class);
     }
 
     // ── Scopes ──────────────────────────────────────────────────

@@ -48,6 +48,7 @@ class ConversationController extends Controller
         }
 
         $messages = $conversation->messages()->orderBy('created_at')->get();
+
         return response()->json([
             'conversation' => $conversation,
             'messages' => $messages,
@@ -79,6 +80,7 @@ class ConversationController extends Controller
         }
 
         $conversation->delete();
+
         return response()->json(['message' => 'Conversación eliminada.']);
     }
 }

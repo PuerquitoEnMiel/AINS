@@ -68,7 +68,7 @@
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
-                <tr class="bg-gray-50/80 border-b border-gray-100">
+                <tr class="bg-gray-50/80 border-b border-gray-100 whitespace-nowrap">
                     <th class="text-left px-6 py-4 font-bold text-gray-500 text-xs uppercase tracking-wider w-12">#</th>
                     <th class="text-left px-6 py-4 font-bold text-gray-500 text-xs uppercase tracking-wider">Tool</th>
                     <th class="text-left px-6 py-4 font-bold text-gray-500 text-xs uppercase tracking-wider">Category</th>
@@ -96,17 +96,17 @@
                             </div>
                         </div>
                     </td>
-                    <td class="px-6 py-5">
+                    <td class="px-6 py-5 whitespace-nowrap">
                         <span class="text-[10px] font-bold bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full uppercase tracking-wider">{{ $tool->category }}</span>
                     </td>
-                    <td class="px-6 py-5">
+                    <td class="px-6 py-5 whitespace-nowrap">
                         @if($tool->is_google_workspace)
                             <span class="text-[10px] font-bold bg-ans-blue/10 text-ans-blue px-2.5 py-1 rounded-full uppercase tracking-wider">Workspace</span>
                         @else
                             <span class="text-[10px] font-bold bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full uppercase tracking-wider">3rd Party</span>
                         @endif
                     </td>
-                    <td class="px-6 py-5">
+                    <td class="px-6 py-5 whitespace-nowrap">
                         <label class="relative inline-flex items-center cursor-pointer group">
                             <input type="checkbox" 
                                    class="sr-only peer status-toggle" 
@@ -114,21 +114,21 @@
                                    {{ $tool->approval_status === 'approved' ? 'checked' : '' }}>
                             <div class="w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-emerald-500 transition-all"></div>
                             <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm peer-checked:translate-x-5 transition-transform"></div>
-                            <span class="text-xs font-bold {{ $tool->approval_status === 'approved' ? 'text-emerald-600' : 'text-gray-500' }} uppercase tracking-wider ml-2 select-none peer-checked:text-emerald-600 status-label">
+                            <span class="text-xs font-bold {{ $tool->approval_status === 'approved' ? 'text-emerald-600' : 'text-gray-500' }} uppercase tracking-wider ml-2 select-none status-label">
                                 {{ $tool->approval_status === 'approved' ? 'Published' : 'Draft' }}
                             </span>
                         </label>
                     </td>
-                    <td class="px-6 py-5 text-right">
+                    <td class="px-6 py-5 text-right whitespace-nowrap">
                         <div class="flex gap-2 justify-end">
                             <a href="{{ route('admin.tools.edit', $tool) }}" class="inline-flex items-center gap-1.5 bg-white hover:bg-ans-dark-green hover:text-white text-gray-600 border border-gray-200 hover:border-ans-dark-green text-xs font-bold px-3 py-2 rounded-xl transition-all">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                 Edit
                             </a>
-                            <form method="POST" action="{{ route('admin.tools.destroy', $tool) }}" onsubmit="return confirm('Delete {{ $tool->name }}? This cannot be undone.')">
+                            <form method="POST" action="{{ route('admin.tools.destroy', $tool) }}" onsubmit="return confirm('Delete {{ addslashes($tool->name) }}? This cannot be undone.')">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="inline-flex items-center gap-1.5 bg-white hover:bg-red-50 text-gray-400 hover:text-red-600 border border-gray-200 hover:border-red-200 text-xs font-bold px-3 py-2 rounded-xl transition-all">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                <button type="submit" class="inline-flex items-center gap-1.5 bg-white hover:bg-red-50 text-gray-400 hover:text-red-600 border border-gray-200 hover:border-red-200 text-xs font-bold px-3 py-2 rounded-xl transition-all cursor-pointer">
+                                    <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                 </button>
                             </form>
                         </div>
@@ -163,9 +163,14 @@ document.querySelectorAll('.status-toggle').forEach(checkbox => {
     checkbox.addEventListener('change', function() {
         const toolId = this.dataset.toolId;
         const label = this.closest('label').querySelector('.status-label');
+        if (!label) return;
+        
+        const originalText = label.textContent.trim();
+        const wasApproved = originalText === 'Published';
         
         label.textContent = 'Updating...';
-        label.className = 'text-xs font-bold text-gray-400 uppercase tracking-wider ml-2';
+        label.classList.remove('text-emerald-600', 'text-gray-500');
+        label.classList.add('text-gray-400');
         
         fetch(`/admin/tools/${toolId}/toggle-status`, {
             method: 'PATCH',
@@ -174,21 +179,27 @@ document.querySelectorAll('.status-toggle').forEach(checkbox => {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             }
         })
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) throw new Error('Network response was not OK');
+            return res.json();
+        })
         .then(data => {
             if (data.success) {
                 const isApproved = data.status === 'approved';
                 label.textContent = isApproved ? 'Published' : 'Draft';
-                label.className = `text-xs font-bold ${isApproved ? 'text-emerald-600' : 'text-gray-500'} uppercase tracking-wider ml-2`;
+                label.classList.remove('text-gray-400', 'text-emerald-600', 'text-gray-500');
+                label.classList.add(isApproved ? 'text-emerald-600' : 'text-gray-500');
             } else {
-                alert('Failed to update status.');
-                this.checked = !this.checked;
+                throw new Error('Failed to update status.');
             }
         })
         .catch(err => {
             console.error(err);
-            alert('An error occurred.');
+            alert('Failed to update status.');
             this.checked = !this.checked;
+            label.textContent = wasApproved ? 'Published' : 'Draft';
+            label.classList.remove('text-gray-400', 'text-emerald-600', 'text-gray-500');
+            label.classList.add(wasApproved ? 'text-emerald-600' : 'text-gray-500');
         });
     });
 });

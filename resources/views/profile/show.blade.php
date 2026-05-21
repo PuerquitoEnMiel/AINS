@@ -73,6 +73,30 @@
 
     <!-- Right Column: Favorites + Reviews -->
     <div class="lg:col-span-2 space-y-6">
+        <!-- EdTech Badges -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h4 class="font-heading font-bold text-gray-800">🏅 My EdTech Badges</h4>
+                <a href="{{ route('badges.index') }}" class="text-xs text-ans-dark-green font-semibold hover:underline">View All Badges →</a>
+            </div>
+            @if($badges->isEmpty())
+                <div class="text-center py-6">
+                    <p class="text-sm text-gray-400">No badges earned yet. Take quizzes in the gallery to earn them!</p>
+                    <a href="{{ route('badges.index') }}" class="inline-block mt-3 px-4 py-2 bg-ans-dark-green text-white text-xs font-semibold rounded-xl hover:bg-ans-seal-green transition-all shadow-sm">Explore Badges</a>
+                </div>
+            @else
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    @foreach($badges as $badge)
+                    <a href="{{ route('badges.show', $badge->slug) }}" class="flex flex-col items-center text-center p-3 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-md hover:scale-105 transition-all group">
+                        <span class="text-4xl mb-2 group-hover:scale-110 transition-transform">{{ $badge->icon }}</span>
+                        <span class="font-semibold text-gray-800 text-xs truncate w-full" title="{{ $badge->name }}">{{ $badge->name }}</span>
+                        <span class="text-[9px] text-gray-400 mt-1 uppercase font-bold tracking-wider" style="color: {{ $badge->color }}">{{ $badge->difficulty }}</span>
+                    </a>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+
         <!-- Favorite Tools -->
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
             <div class="flex items-center justify-between mb-4">

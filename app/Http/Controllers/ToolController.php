@@ -16,7 +16,7 @@ class ToolController extends Controller
         $tool->trackClick(Auth::id(), request()->ip());
 
         // Load relationships
-        $tool->load(['categoryRelation', 'creator', 'reviews.user']);
+        $tool->load(['categoryRelation', 'creator', 'reviews.user', 'insight']);
         $tool->loadCount(['favoritedBy', 'views']);
 
         // Check if current user favorited this tool

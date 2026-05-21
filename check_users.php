@@ -1,10 +1,14 @@
 <?php
+
+use App\Models\User;
+use Illuminate\Contracts\Console\Kernel;
+
 require __DIR__.'/vendor/autoload.php';
 $app = require_once __DIR__.'/bootstrap/app.php';
-$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+$kernel = $app->make(Kernel::class);
 $kernel->bootstrap();
 
-$users = \App\Models\User::all();
-foreach($users as $user) {
-    echo $user->email . " - " . $user->role . "\n";
+$users = User::all();
+foreach ($users as $user) {
+    echo $user->email.' - '.$user->role."\n";
 }

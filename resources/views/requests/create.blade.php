@@ -147,13 +147,11 @@
                             <select name="category" required
                                 class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green focus:bg-white transition-all appearance-none cursor-pointer">
                                 <option value="">Select a category...</option>
-                                <option value="Text & Writing">Text & Writing</option>
-                                <option value="Image & Design">Image & Design</option>
-                                <option value="Video & Animation">Video & Animation</option>
-                                <option value="Data & Analysis">Data & Analysis</option>
-                                <option value="Presentations">Presentations</option>
-                                <option value="Music">Music</option>
-                                <option value="Others">Others</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->name }}" {{ old('category') === $category->name ? 'selected' : '' }}>
+                                        {{ $category->icon }} {{ $category->name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="flex items-end pb-1">

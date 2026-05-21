@@ -15,8 +15,9 @@ class ProfileController extends Controller
         $user = Auth::user()->loadCount(['favorites', 'reviews', 'conversations']);
         $favorites = $user->favorites()->approved()->with('categoryRelation')->latest('tool_user.created_at')->take(6)->get();
         $reviews = $user->reviews()->with('tool')->latest()->take(5)->get();
+        $badges = $user->badges()->latest('badge_user.earned_at')->get();
 
-        return view('profile.show', compact('user', 'favorites', 'reviews'));
+        return view('profile.show', compact('user', 'favorites', 'reviews', 'badges'));
     }
 
     /**
@@ -26,7 +27,7 @@ class ProfileController extends Controller
     {
         $data = $request->validate([
             'department' => 'nullable|string|max:100',
-            'bio'        => 'nullable|string|max:500',
+            'bio' => 'nullable|string|max:500',
         ]);
 
         Auth::user()->update($data);

@@ -79,7 +79,7 @@
                 <!-- Right: Quick Stats Cards -->
                 <div class="flex gap-4 animate-fade-in-up" style="animation-duration: 0.7s;">
                     <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-5 text-center min-w-[110px]">
-                        <div class="text-3xl font-heading font-extrabold text-white">{{ count($tools ?? []) + 4 }}</div>
+                        <div class="text-3xl font-heading font-extrabold text-white">{{ (is_iterable($tools) ? count($tools) : 0) + 4 }}</div>
                         <p class="text-xs text-white/60 mt-1 font-medium">Total Tools</p>
                     </div>
                     <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-5 text-center min-w-[110px]">
@@ -107,10 +107,10 @@
 <!-- OFFICIAL TOOLS — Dynamic featured section                  -->
 <!-- ═══════════════════════════════════════════════════════════ -->
 @php
-    $stitchDb = isset($tools) ? $tools->firstWhere('name', 'Stitch') : null;
-    $pomeloDb = isset($tools) ? $tools->firstWhere('name', 'Pomelo') : null;
-    $antigravityDb = isset($tools) ? $tools->firstWhere('name', 'Antigravity') : null;
-    $flowDb = isset($tools) ? $tools->firstWhere('name', 'Flow') : null;
+    $stitchDb = (isset($tools) && is_iterable($tools)) ? $tools->firstWhere('name', 'Stitch') : null;
+    $pomeloDb = (isset($tools) && is_iterable($tools)) ? $tools->firstWhere('name', 'Pomelo') : null;
+    $antigravityDb = (isset($tools) && is_iterable($tools)) ? $tools->firstWhere('name', 'Antigravity') : null;
+    $flowDb = (isset($tools) && is_iterable($tools)) ? $tools->firstWhere('name', 'Flow') : null;
 @endphp
 
 <div id="official-section" class="mb-14">
@@ -267,13 +267,13 @@
             
             <div class="h-4 w-[1px] bg-gray-200 mx-1"></div>
             
-            <button class="text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all" id="filter-text">Text &amp; Writing</button>
-            <button class="text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all" id="filter-design">Image &amp; Design</button>
-            <button class="text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all" id="filter-video">Video &amp; Animation</button>
-            <button class="text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all" id="filter-data">Data &amp; Analysis</button>
-            <button class="text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all" id="filter-presentations">Presentations</button>
-            <button class="text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all" id="filter-music">Music</button>
-            <button class="text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all" id="filter-others">Others</button>
+            @foreach($categories as $category)
+                <button class="text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all filter-category-btn" 
+                        data-category="{{ $category->name }}" 
+                        id="filter-cat-{{ $category->id }}">
+                    {{ $category->icon }} {{ $category->name }}
+                </button>
+            @endforeach
             
             <div class="h-4 w-[1px] bg-gray-200 mx-1"></div>
             
@@ -285,7 +285,7 @@
     </div>
     
     <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        @foreach($tools ?? [] as $index => $tool)
+        @foreach((is_iterable($tools) ? $tools : []) as $index => $tool)
         @if(in_array($tool->name, ['Stitch', 'Pomelo', 'Antigravity', 'Flow']))
             @continue
         @endif
@@ -316,7 +316,7 @@
         </div>
         @endforeach
 
-        @if(empty($tools) || count($tools) == 0)
+        @if(!is_iterable($tools) || count($tools) == 0)
         <!-- Demo Cards when DB is empty -->
         @php
             $demoTools = [
@@ -463,32 +463,51 @@ let currentCategory = 'all';
 let currentSearchQuery = '';
 let activeTool = null;
 
-// Parse Query URL Category
+// Parse Query URL Category & Search
 (function() {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get('category');
+    const search = params.get('search');
+    
+    if (search) {
+        currentSearchQuery = search.toLowerCase().trim();
+        const searchInput = document.getElementById('global-search');
+        if (searchInput) {
+            searchInput.value = search;
+            const kbdBadge = document.getElementById('search-kbd');
+            if (kbdBadge) kbdBadge.classList.add('opacity-0');
+        }
+    }
+
     if (cat) {
         currentCategory = cat;
         setTimeout(() => {
-            const pills = {
-                'google workspace': 'filter-workspace',
-                'workspace': 'filter-workspace',
-                '3rd party': 'filter-3rdparty',
-                'text & writing': 'filter-text',
-                'image & design': 'filter-design',
-                'video & animation': 'filter-video',
-                'data & analysis': 'filter-data',
-                'presentations': 'filter-presentations',
-                'music': 'filter-music',
-                'others': 'filter-others'
-            };
-            const activeId = pills[cat.toLowerCase()] || null;
-            if (activeId) {
-                setActiveFilter(activeId);
+            let matchedBtn = null;
+            document.querySelectorAll('.filter-category-btn').forEach(btn => {
+                if (btn.dataset.category.toLowerCase() === cat.toLowerCase()) {
+                    matchedBtn = btn;
+                }
+            });
+            
+            if (matchedBtn) {
+                setActiveFilter(matchedBtn.id);
             } else {
-                applyFilters();
+                const staticPills = {
+                    'workspace': 'filter-workspace',
+                    'google workspace': 'filter-workspace',
+                    '3rdparty': 'filter-3rdparty',
+                    '3rd party': 'filter-3rdparty'
+                };
+                const activeId = staticPills[cat.toLowerCase()];
+                if (activeId) {
+                    setActiveFilter(activeId);
+                } else {
+                    applyFilters();
+                }
             }
         }, 100);
+    } else if (search) {
+        applyFilters();
     }
 })();
 
@@ -505,18 +524,18 @@ if (searchInput) {
 document.getElementById('filter-all').addEventListener('click', () => { currentCategory = 'all'; setActiveFilter('filter-all'); });
 document.getElementById('filter-workspace').addEventListener('click', () => { currentCategory = 'workspace'; setActiveFilter('filter-workspace'); });
 document.getElementById('filter-3rdparty').addEventListener('click', () => { currentCategory = '3rdparty'; setActiveFilter('filter-3rdparty'); });
-document.getElementById('filter-text').addEventListener('click', () => { currentCategory = 'Text & Writing'; setActiveFilter('filter-text'); });
-document.getElementById('filter-design').addEventListener('click', () => { currentCategory = 'Image & Design'; setActiveFilter('filter-design'); });
-document.getElementById('filter-video').addEventListener('click', () => { currentCategory = 'Video & Animation'; setActiveFilter('filter-video'); });
-document.getElementById('filter-data').addEventListener('click', () => { currentCategory = 'Data & Analysis'; setActiveFilter('filter-data'); });
-document.getElementById('filter-presentations').addEventListener('click', () => { currentCategory = 'Presentations'; setActiveFilter('filter-presentations'); });
-document.getElementById('filter-music').addEventListener('click', () => { currentCategory = 'Music'; setActiveFilter('filter-music'); });
-document.getElementById('filter-others').addEventListener('click', () => { currentCategory = 'Others'; setActiveFilter('filter-others'); });
 document.getElementById('filter-favs').addEventListener('click', () => { currentCategory = 'favs'; setActiveFilter('filter-favs'); });
 
+document.querySelectorAll('.filter-category-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        currentCategory = btn.dataset.category;
+        setActiveFilter(btn.id);
+    });
+});
+
 function setActiveFilter(id) {
-    const allFilters = ['filter-all', 'filter-workspace', 'filter-3rdparty', 'filter-text', 'filter-design', 'filter-video', 'filter-data', 'filter-presentations', 'filter-music', 'filter-others', 'filter-favs'];
-    allFilters.forEach(btnId => {
+    const staticFilters = ['filter-all', 'filter-workspace', 'filter-3rdparty', 'filter-favs'];
+    staticFilters.forEach(btnId => {
         const btn = document.getElementById(btnId);
         if (!btn) return;
         if (btnId === id) {
@@ -525,6 +544,15 @@ function setActiveFilter(id) {
             btn.className = 'text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all flex items-center gap-1.5';
         }
     });
+    
+    document.querySelectorAll('.filter-category-btn').forEach(btn => {
+        if (btn.id === id) {
+            btn.className = 'text-xs font-semibold px-4 py-2 bg-ans-dark-green text-white rounded-full shadow-sm transition-all hover:shadow-md filter-category-btn';
+        } else {
+            btn.className = 'text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all filter-category-btn';
+        }
+    });
+    
     applyFilters();
 }
 

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tool;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
@@ -14,6 +13,7 @@ class FavoriteController extends Controller
     public function index()
     {
         $favorites = Auth::user()->favorites()->approved()->with('categoryRelation')->get();
+
         return view('favorites.index', compact('favorites'));
     }
 
@@ -27,10 +27,12 @@ class FavoriteController extends Controller
 
         if ($exists) {
             $user->favorites()->detach($tool->id);
+
             return response()->json(['favorited' => false, 'message' => 'Eliminado de favoritos.']);
         }
 
         $user->favorites()->attach($tool->id);
+
         return response()->json(['favorited' => true, 'message' => 'Agregado a favoritos.']);
     }
 }

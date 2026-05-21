@@ -12,6 +12,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::withCount('approvedTools')->orderBy('sort_order')->get();
+
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -23,9 +24,9 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'       => 'required|string|max:100',
-            'icon'       => 'nullable|string|max:10',
-            'color'      => 'required|string|max:7',
+            'name' => 'required|string|max:100',
+            'icon' => 'nullable|string|max:10',
+            'color' => 'required|string|max:7',
             'sort_order' => 'nullable|integer',
         ]);
 
@@ -46,9 +47,9 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $data = $request->validate([
-            'name'       => 'required|string|max:100',
-            'icon'       => 'nullable|string|max:10',
-            'color'      => 'required|string|max:7',
+            'name' => 'required|string|max:100',
+            'icon' => 'nullable|string|max:10',
+            'color' => 'required|string|max:7',
             'sort_order' => 'nullable|integer',
         ]);
 
@@ -56,7 +57,7 @@ class CategoryController extends Controller
         $category->update($data);
 
         return redirect()->route('admin.categories.index')
-            ->with('success', "Categoría actualizada.");
+            ->with('success', 'Categoría actualizada.');
     }
 
     public function destroy(Category $category)

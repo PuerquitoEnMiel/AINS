@@ -10,9 +10,9 @@ return new class extends Migration
     {
         Schema::table('tools', function (Blueprint $table) {
             $table->foreignId('category_id')->nullable()->after('id')
-                  ->constrained('categories')->nullOnDelete();
+                ->constrained('categories')->nullOnDelete();
             $table->foreignId('created_by')->nullable()->after('category_id')
-                  ->constrained('users')->nullOnDelete();
+                ->constrained('users')->nullOnDelete();
             $table->boolean('featured')->default(false)->after('approval_status');
             $table->unsignedInteger('click_count')->default(0)->after('featured');
             $table->decimal('avg_rating', 2, 1)->default(0)->after('click_count');

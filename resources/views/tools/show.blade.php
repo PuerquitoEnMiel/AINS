@@ -51,6 +51,104 @@
             </div>
         </div>
 
+        <!-- AI Insights Section -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-6">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">🤖</span>
+                        <h3 class="text-lg font-heading font-bold text-gray-800">Resumen y Análisis de IA (AI Insights)</h3>
+                    </div>
+                    @if(Auth::check() && Auth::user()->isAdmin())
+                        <form method="POST" action="{{ route('admin.tools.generateInsight', $tool) }}">
+                            @csrf
+                            @if($tool->reviews->count() >= 3)
+                                <button type="submit" class="px-4 py-2 bg-gradient-to-r from-ans-dark-green to-ans-light-green text-white rounded-xl text-xs font-semibold hover:shadow-md transition-all">
+                                    {{ $tool->insight ? 'Regenerar Insights' : 'Generar Insights' }}
+                                </button>
+                            @else
+                                <button type="button" disabled class="px-4 py-2 bg-gray-100 text-gray-400 rounded-xl text-xs font-semibold cursor-not-allowed">
+                                    Requiere 3 Reseñas
+                                </button>
+                            @endif
+                        </form>
+                    @endif
+                </div>
+
+                @if($tool->insight)
+                    <div class="space-y-4">
+                        <div class="p-4 bg-gray-50/50 rounded-xl border border-gray-100/50">
+                            <p class="text-sm text-gray-700 leading-relaxed font-medium">
+                                "{{ $tool->insight->summary }}"
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Pros -->
+                            <div class="space-y-2">
+                                <h4 class="text-xs font-bold text-emerald-600 uppercase tracking-wider">✅ Ventajas Principales</h4>
+                                <ul class="space-y-1.5">
+                                    @foreach($tool->insight->pros as $pro)
+                                        <li class="text-xs text-gray-600 flex items-start gap-1.5">
+                                            <span class="text-emerald-500">✓</span>
+                                            <span>{{ $pro }}</span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+
+                            <!-- Cons -->
+                            <div class="space-y-2">
+                                <h4 class="text-xs font-bold text-amber-600 uppercase tracking-wider">⚠️ Limitaciones o Contras</h4>
+                                <ul class="space-y-1.5">
+                                    @foreach($tool->insight->cons as $con)
+                                        <li class="text-xs text-gray-600 flex items-start gap-1.5">
+                                            <span class="text-amber-500">•</span>
+                                            <span>{{ $con }}</span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-gray-50 flex items-center justify-between flex-wrap gap-3">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Ideal para:</span>
+                                @foreach($tool->insight->best_for_grades as $grade)
+                                    <span class="px-2 py-0.5 bg-blue-50 text-blue-600 rounded-md text-[10px] font-medium">{{ $grade }}</span>
+                                @endforeach
+                            </div>
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Casos de Uso:</span>
+                                @foreach($tool->insight->best_use_cases as $case)
+                                    <span class="px-2 py-0.5 bg-purple-50 text-purple-600 rounded-md text-[10px] font-medium">{{ $case }}</span>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div class="text-[10px] text-gray-400 text-right mt-2">
+                            Generado automáticamente con Gemini • Basado en {{ $tool->insight->review_count_at_generation }} reseñas • Actualizado {{ $tool->insight->generated_at->diffForHumans() }}
+                        </div>
+                    </div>
+                @else
+                    <div class="text-center py-6 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                        <span class="text-3xl block mb-2">📊</span>
+                        @if($tool->reviews->count() >= 3)
+                            <p class="text-sm font-semibold text-gray-600">Insights listos para ser generados</p>
+                            @if(Auth::check() && Auth::user()->isAdmin())
+                                <p class="text-xs text-gray-400 mt-1">Haz clic en "Generar Insights" arriba para crearlos con IA.</p>
+                            @else
+                                <p class="text-xs text-gray-400 mt-1">Un administrador generará el análisis de IA pronto.</p>
+                            @endif
+                        @else
+                            <p class="text-sm font-semibold text-gray-600">Se necesitan más reseñas</p>
+                            <p class="text-xs text-gray-400 mt-1">Se requieren al menos 3 calificaciones de docentes para sintetizar la información con IA. (Faltan {{ 3 - $tool->reviews->count() }}).</p>
+                        @endif
+                    </div>
+                @endif
+            </div>
+        </div>
+
         <!-- Reviews Section -->
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
             <h3 class="text-lg font-heading font-bold text-gray-800 mb-4">⭐ Reviews ({{ $tool->reviews->count() }})</h3>
