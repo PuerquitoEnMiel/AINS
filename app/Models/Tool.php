@@ -18,6 +18,7 @@ class Tool extends Model
         'category_id',
         'logo_url',
         'is_google_workspace',
+        'is_official',
         'approval_status',
         'featured',
         'click_count',
@@ -27,6 +28,7 @@ class Tool extends Model
 
     protected $casts = [
         'is_google_workspace' => 'boolean',
+        'is_official' => 'boolean',
         'featured' => 'boolean',
         'click_count' => 'integer',
         'avg_rating' => 'decimal:1',
@@ -120,5 +122,6 @@ class Tool extends Model
             'user_id' => $userId,
             'ip_address' => $ip,
         ]);
+        \Illuminate\Support\Facades\Cache::forget('welcome_tools');
     }
 }

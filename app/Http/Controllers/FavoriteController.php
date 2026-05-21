@@ -8,11 +8,19 @@ use Illuminate\Support\Facades\Auth;
 class FavoriteController extends Controller
 {
     /**
-     * List user's favorite tools.
+     * List user's favorite tools (excluding ai-detection for students).
      */
     public function index()
     {
-        $favorites = Auth::user()->favorites()->approved()->with('categoryRelation')->get();
+        $user = Auth::user();
+        $favorites = $user->favorites()->approved()->with('categoryRelation')->get();
+
+        // Students cannot see AI Detection tools even in favorites
+        if ($user->isStudent()) {
+            $favorites = $favorites->filter(function ($tool) {
+                return $tool->categoryRelation?->slug !== 'ai-detection';
+            })->values();
+        }
 
         return view('favorites.index', compact('favorites'));
     }
@@ -23,16 +31,20 @@ class FavoriteController extends Controller
     public function toggle(Tool $tool)
     {
         $user = Auth::user();
+
+        // Block students from favoriting AI Detection tools
+        if ($user->isStudent() && $tool->categoryRelation?->slug === 'ai-detection') {
+            return response()->json(['error' => 'No tienes permiso para guardar esta herramienta.'], 403);
+        }
+
         $exists = $user->favorites()->where('tool_id', $tool->id)->exists();
 
         if ($exists) {
             $user->favorites()->detach($tool->id);
-
             return response()->json(['favorited' => false, 'message' => 'Eliminado de favoritos.']);
         }
 
         $user->favorites()->attach($tool->id);
-
         return response()->json(['favorited' => true, 'message' => 'Agregado a favoritos.']);
     }
 }

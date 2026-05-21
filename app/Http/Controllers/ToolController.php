@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Tool;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,6 +13,13 @@ class ToolController extends Controller
      */
     public function show(Tool $tool)
     {
+        // Guard: AI Detection tools are teacher/admin only
+        if ($tool->categoryRelation && $tool->categoryRelation->slug === 'ai-detection') {
+            if (! Auth::check() || (Auth::user()->isStudent())) {
+                abort(403, 'Acceso restringido. Esta herramienta es exclusiva para docentes y administradores.');
+            }
+        }
+
         // Track click/view
         $tool->trackClick(Auth::id(), request()->ip());
 
@@ -37,5 +45,20 @@ class ToolController extends Controller
             ->get();
 
         return view('tools.show', compact('tool', 'isFavorited', 'userReview', 'relatedTools'));
+    }
+
+    /**
+     * Dedicated AI Detection hub — teacher/admin only.
+     * (Route also protected by is_teacher_or_admin middleware.)
+     */
+    public function aiDetection()
+    {
+        $category = Category::where('slug', 'ai-detection')->first();
+
+        $tools = $category
+            ? Tool::approved()->where('category_id', $category->id)->get()
+            : collect();
+
+        return view('tools.ai_detection', compact('tools', 'category'));
     }
 }

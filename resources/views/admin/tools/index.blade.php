@@ -100,11 +100,16 @@
                         <span class="text-[10px] font-bold bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full uppercase tracking-wider">{{ $tool->category }}</span>
                     </td>
                     <td class="px-6 py-5 whitespace-nowrap">
-                        @if($tool->is_google_workspace)
-                            <span class="text-[10px] font-bold bg-ans-blue/10 text-ans-blue px-2.5 py-1 rounded-full uppercase tracking-wider">Workspace</span>
-                        @else
-                            <span class="text-[10px] font-bold bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full uppercase tracking-wider">3rd Party</span>
-                        @endif
+                        <div class="flex flex-col gap-1 items-start">
+                            @if($tool->is_google_workspace)
+                                <span class="text-[10px] font-bold bg-ans-blue/10 text-ans-blue px-2.5 py-1 rounded-full uppercase tracking-wider">Workspace</span>
+                            @else
+                                <span class="text-[10px] font-bold bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full uppercase tracking-wider">3rd Party</span>
+                            @endif
+                            @if($tool->is_official)
+                                <span class="text-[10px] font-bold bg-ans-orange/10 text-ans-orange px-2.5 py-1 rounded-full uppercase tracking-wider">★ Official</span>
+                            @endif
+                        </div>
                     </td>
                     <td class="px-6 py-5 whitespace-nowrap">
                         <label class="relative inline-flex items-center cursor-pointer group">

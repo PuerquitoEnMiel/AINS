@@ -33,6 +33,7 @@ class ToolController extends Controller
             'url' => 'required|url',
             'category_id' => 'required|exists:categories,id',
             'is_google_workspace' => 'nullable|boolean',
+            'is_official' => 'nullable|boolean',
             'approval_status' => 'required|in:approved,pending',
             'logo' => 'nullable|image|max:2048',
         ]);
@@ -49,6 +50,7 @@ class ToolController extends Controller
         }
 
         $data['is_google_workspace'] = $request->boolean('is_google_workspace');
+        $data['is_official'] = $request->boolean('is_official');
         $category = Category::find($request->category_id);
         $data['category'] = $category->name;
         $data['category_id'] = $category->id;
@@ -74,6 +76,7 @@ class ToolController extends Controller
             'url' => 'required|url',
             'category_id' => 'required|exists:categories,id',
             'is_google_workspace' => 'nullable|boolean',
+            'is_official' => 'nullable|boolean',
             'approval_status' => 'required|in:approved,pending',
             'logo' => 'nullable|image|max:2048',
         ]);
@@ -102,6 +105,7 @@ class ToolController extends Controller
         }
 
         $data['is_google_workspace'] = $request->boolean('is_google_workspace');
+        $data['is_official'] = $request->boolean('is_official');
         $category = Category::find($request->category_id);
         $data['category'] = $category->name;
         $data['category_id'] = $category->id;

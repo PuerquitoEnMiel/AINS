@@ -64,8 +64,20 @@ class ChatController extends Controller
             ->orderBy('created_at')
             ->get();
 
-        // Build approved tools context from real database
-        $approvedTools = Tool::approved()->get(['name', 'description', 'url', 'category']);
+        // Build approved tools context — exclude AI Detection for students/guests
+        $user = Auth::user();
+        $canSeeDetection = $user && ($user->isTeacher() || $user->isAdmin());
+
+        $approvedTools = Tool::approved()
+            ->with('categoryRelation')
+            ->get()
+            ->filter(function ($t) use ($canSeeDetection) {
+                if ($t->categoryRelation?->slug === 'ai-detection') {
+                    return $canSeeDetection;
+                }
+                return true;
+            });
+
         $toolsList = $approvedTools->map(fn ($t) => "- {$t->name}: {$t->description} ({$t->url})")->implode("\n");
 
         // Deep pedagogical and institutional system prompt

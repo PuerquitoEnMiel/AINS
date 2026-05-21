@@ -41,9 +41,14 @@ class GoogleController extends Controller
             $driver->setHttpClient(new Client(['verify' => false]));
             $googleUser = $driver->user();
 
-            // Only allow institutional @ans.edu.ni accounts
-            if (! str_ends_with($googleUser->getEmail(), '@ans.edu.ni')) {
-                return redirect('/')->with('error', 'Solo se permiten cuentas institucionales (@ans.edu.ni).');
+            // Verify allowed domains from env (default to ans.edu.ni)
+            $allowedDomains = env('ALLOWED_GOOGLE_DOMAINS', 'ans.edu.ni');
+            $allowedDomainsArray = array_map('trim', explode(',', $allowedDomains));
+            $email = $googleUser->getEmail();
+            $domain = substr(strrchr($email, "@"), 1);
+
+            if ($allowedDomains !== '*' && !in_array($domain, $allowedDomainsArray)) {
+                return redirect('/')->with('error', 'Solo se permiten cuentas de dominios autorizados: ' . implode(', ', $allowedDomainsArray));
             }
 
             $user = User::updateOrCreate(

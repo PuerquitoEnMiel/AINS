@@ -54,6 +54,13 @@ Route::get('/', function () {
             ->get();
     }
 
+    // Hide AI Detection category/tools from students and public guests
+    $canSeeDetection = Auth::check() && (Auth::user()->isTeacher() || Auth::user()->isAdmin());
+    if (! $canSeeDetection) {
+        $categories = $categories->filter(fn($c) => $c->slug !== 'ai-detection')->values();
+        $tools = $tools->filter(fn($t) => $t->categoryRelation?->slug !== 'ai-detection')->values();
+    }
+
     return view('welcome', compact('tools', 'categories'));
 });
 
@@ -132,9 +139,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/api/chat', [ChatController::class, 'chat'])->name('api.chat');
 
     // ── AI Lesson Planner ──────────────────────────────────────
-    Route::post('/lesson-plans/generate', [LessonPlanController::class, 'generate'])->name('lesson-plans.generate');
-    Route::get('/lesson-plans/{lessonPlan}/export', [LessonPlanController::class, 'export'])->name('lesson-plans.export');
-    Route::resource('lesson-plans', LessonPlanController::class);
+    // (Moved to teacher/admin middleware group below)
 
     // ── Prompt Library Colaborativo ──────────────────────────────
     Route::post('/tips/{prompt}/vote', [App\Http\Controllers\PromptLibraryController::class, 'vote'])->name('tips.vote');
@@ -147,6 +152,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/badges/{slug}', [App\Http\Controllers\BadgeController::class, 'show'])->name('badges.show');
     Route::get('/quizzes/{quiz}', [App\Http\Controllers\QuizController::class, 'show'])->name('quizzes.show');
     Route::post('/quizzes/{quiz}/submit', [App\Http\Controllers\QuizController::class, 'submit'])->name('quizzes.submit');
+
+    // ── Badge Evidence (teacher submits proof for manual badges) ─
+    Route::get('/badges/{badge}/evidence', [App\Http\Controllers\BadgeEvidenceController::class, 'create'])->name('badge-evidence.create');
+    Route::post('/badges/{badge}/evidence', [App\Http\Controllers\BadgeEvidenceController::class, 'store'])->name('badge-evidence.store');
+});
+
+// ── Teacher/Admin Routes ───────────────────────────────────────
+Route::middleware(['auth', 'is_teacher_or_admin'])->group(function () {
+    // AI Lesson Planner
+    Route::post('/lesson-plans/generate', [LessonPlanController::class, 'generate'])->name('lesson-plans.generate');
+    Route::get('/lesson-plans/{lessonPlan}/export', [LessonPlanController::class, 'export'])->name('lesson-plans.export');
+    Route::resource('lesson-plans', LessonPlanController::class);
+
+    // AI Detection Hub
+    Route::get('/ai-detection', [ToolController::class, 'aiDetection'])->name('ai-detection.index');
 });
 
 // ═════════════════════════════════════════════════════════════════════════
@@ -195,6 +215,11 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     // ── Badges CRUD & AI Quiz Generation ────────────────────────
     Route::post('/badges/{badge}/generate-quiz', [App\Http\Controllers\Admin\BadgeController::class, 'generateQuizWithAI'])->name('badges.generateQuiz');
     Route::resource('badges', App\Http\Controllers\Admin\BadgeController::class);
+
+    // ── Badge Evidence Review ────────────────────────────────────
+    Route::get('/badge-evidence', [App\Http\Controllers\Admin\BadgeController::class, 'evidenceQueue'])->name('badge-evidence.index');
+    Route::post('/badge-evidence/{evidence}/approve', [App\Http\Controllers\Admin\BadgeController::class, 'approveEvidence'])->name('badge-evidence.approve');
+    Route::post('/badge-evidence/{evidence}/reject', [App\Http\Controllers\Admin\BadgeController::class, 'rejectEvidence'])->name('badge-evidence.reject');
 });
 
 // ═════════════════════════════════════════════════════════════════════════

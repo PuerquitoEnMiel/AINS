@@ -142,6 +142,14 @@ class User extends Authenticatable
         return $this->hasMany(QuizAttempt::class);
     }
 
+    /**
+     * Badge evidence submissions by this user.
+     */
+    public function badgeEvidences(): HasMany
+    {
+        return $this->hasMany(BadgeEvidence::class);
+    }
+
     // ── Badge Helpers ───────────────────────────────────────────
 
     public function hasBadge(string $slug): bool

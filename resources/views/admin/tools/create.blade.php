@@ -89,14 +89,22 @@
                             <option value="pending" {{ old('approval_status') === 'pending' ? 'selected' : '' }}>Draft</option>
                         </select>
                     </div>
-                    <div class="flex items-end pb-1">
+                    <div class="flex flex-col gap-3 justify-end pb-1">
                         <label class="flex items-center gap-3 cursor-pointer group">
                             <div class="relative">
                                 <input type="checkbox" id="input-workspace" name="is_google_workspace" value="1" class="sr-only peer" {{ old('is_google_workspace') ? 'checked' : '' }}>
                                 <div class="w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-ans-dark-green transition-all"></div>
                                 <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm peer-checked:translate-x-5 transition-transform"></div>
                             </div>
-                            <span class="text-sm font-medium text-gray-700">Workspace</span>
+                            <span class="text-sm font-medium text-gray-700">Workspace Platform</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <div class="relative">
+                                <input type="checkbox" id="input-official" name="is_official" value="1" class="sr-only peer" {{ old('is_official') ? 'checked' : '' }}>
+                                <div class="w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-ans-orange transition-all"></div>
+                                <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm peer-checked:translate-x-5 transition-transform"></div>
+                            </div>
+                            <span class="text-sm font-medium text-gray-700">Official Tool</span>
                         </label>
                     </div>
                 </div>

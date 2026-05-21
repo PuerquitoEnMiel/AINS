@@ -2,6 +2,23 @@
 
 @section('content')
 
+@php
+    $allTools = is_iterable($tools) ? $tools : collect();
+    $officialCount = $allTools->where('is_official', true)->count();
+    $totalCount = $allTools->count();
+    $categoriesCount = isset($categories) && is_iterable($categories) ? $categories->count() : 5;
+    
+    // Banner configuration (recently approved/added in last 15 days)
+    $newestTool = $allTools->sortByDesc('created_at')->first();
+    $showNewestBanner = false;
+    if ($newestTool && $newestTool->created_at) {
+        $showNewestBanner = \Carbon\Carbon::parse($newestTool->created_at)->gt(now()->subDays(15));
+    }
+    
+    // Trending tools (top 4 by clicks)
+    $trendingTools = $allTools->sortByDesc('click_count')->take(4);
+@endphp
+
 <style>
     /* ─── Premium Catalog Card Border Mask Glow ─── */
     .premium-card {
@@ -79,15 +96,15 @@
                 <!-- Right: Quick Stats Cards -->
                 <div class="flex gap-4 animate-fade-in-up" style="animation-duration: 0.7s;">
                     <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-5 text-center min-w-[110px]">
-                        <div class="text-3xl font-heading font-extrabold text-white">{{ (is_iterable($tools) ? count($tools) : 0) + 4 }}</div>
+                        <div class="text-3xl font-heading font-extrabold text-white">{{ $totalCount }}</div>
                         <p class="text-xs text-white/60 mt-1 font-medium">Total Tools</p>
                     </div>
                     <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-5 text-center min-w-[110px]">
-                        <div class="text-3xl font-heading font-extrabold text-ans-orange">4</div>
+                        <div class="text-3xl font-heading font-extrabold text-ans-orange">{{ $officialCount }}</div>
                         <p class="text-xs text-white/60 mt-1 font-medium">Official</p>
                     </div>
                     <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-5 text-center min-w-[110px]">
-                        <div class="text-3xl font-heading font-extrabold text-ans-light-green">5</div>
+                        <div class="text-3xl font-heading font-extrabold text-ans-light-green">{{ $categoriesCount }}</div>
                         <p class="text-xs text-white/60 mt-1 font-medium">Categories</p>
                     </div>
                 </div>
@@ -103,16 +120,50 @@
 </div>
 
 
+@if($showNewestBanner && $newestTool)
+<div id="new-app-banner" class="mb-8 hidden animate-fade-in-up" data-tool-id="{{ $newestTool->id }}">
+    <div class="relative bg-gradient-to-r from-ans-dark-green/95 via-ans-seal-green/90 to-ans-dark-green/95 backdrop-blur-xl border border-white/15 rounded-2xl p-4 md:p-5 shadow-lg overflow-hidden flex flex-col md:flex-row items-center justify-between gap-4">
+        <!-- Close Button -->
+        <button onclick="dismissNewAppBanner({{ $newestTool->id }})" class="absolute top-3 right-3 text-white/60 hover:text-white transition-colors" title="Close Novedades Banner">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <!-- Content -->
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-ans-orange rounded-xl flex items-center justify-center shadow-md shadow-ans-orange/20 text-white font-bold text-lg flex-shrink-0 animate-pulse-soft">
+                @if($newestTool->logo_url)
+                    <img src="{{ asset($newestTool->logo_url) }}" alt="{{ $newestTool->name }}" class="w-full h-full object-cover rounded-xl">
+                @else
+                    {{ substr($newestTool->name, 0, 1) }}
+                @endif
+            </div>
+            <div>
+                <span class="inline-flex items-center gap-1 bg-ans-orange/20 text-ans-orange text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider mb-1">
+                    ✨ Novedad
+                </span>
+                <h4 class="text-sm font-bold text-white">¡Nueva herramienta disponible: {{ $newestTool->name }}!</h4>
+                <p class="text-xs text-white/70 mt-0.5 line-clamp-1 md:line-clamp-none">{{ $newestTool->description }}</p>
+            </div>
+        </div>
+        <!-- Action Button -->
+        <div class="flex-shrink-0 pr-8">
+            <button onclick="openToolModal(JSON.parse(this.dataset.tool))" 
+                    data-tool="{{ json_encode(['id'=>$newestTool->id,'name'=>$newestTool->name,'desc'=>$newestTool->description,'url'=>$newestTool->url,'cat'=>$newestTool->category,'type'=>$newestTool->is_google_workspace?'Google Workspace':'3rd Party','logo'=>$newestTool->logo_url?asset($newestTool->logo_url):null]) }}"
+                    class="bg-ans-orange hover:bg-ans-orange/90 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-ans-orange/20 hover:scale-105">
+                Explorar Ahora
+            </button>
+        </div>
+    </div>
+</div>
+@endif
+
 <!-- ═══════════════════════════════════════════════════════════ -->
 <!-- OFFICIAL TOOLS — Dynamic featured section                  -->
 <!-- ═══════════════════════════════════════════════════════════ -->
 @php
-    $stitchDb = (isset($tools) && is_iterable($tools)) ? $tools->firstWhere('name', 'Stitch') : null;
-    $pomeloDb = (isset($tools) && is_iterable($tools)) ? $tools->firstWhere('name', 'Pomelo') : null;
-    $antigravityDb = (isset($tools) && is_iterable($tools)) ? $tools->firstWhere('name', 'Antigravity') : null;
-    $flowDb = (isset($tools) && is_iterable($tools)) ? $tools->firstWhere('name', 'Flow') : null;
+    $officialTools = $allTools->where('is_official', true);
 @endphp
 
+@if($officialTools->count() > 0)
 <div id="official-section" class="mb-14">
     <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-3">
@@ -126,125 +177,113 @@
     </div>
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        
-        <!-- Stitch -->
-        <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-ans-orange/5 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer animate-fade-in-up"
-             style="animation-delay: 0.05s;"
-             data-tool="{{ json_encode([
-                 'id' => $stitchDb ? $stitchDb->id : null,
-                 'name' => 'Stitch',
-                 'desc' => $stitchDb ? $stitchDb->description : 'Centralized platform for integrations and workflow automation. Curated and approved for the ANS community.',
-                 'url' => $stitchDb ? $stitchDb->url : 'https://ans.edu.ni',
-                 'cat' => $stitchDb ? $stitchDb->category : 'Workspace',
-                 'type' => 'Official',
-                 'logo' => $stitchDb && $stitchDb->logo_url ? asset($stitchDb->logo_url) : null
-             ]) }}"
-             onclick="openToolModal(JSON.parse(this.dataset.tool))">
-            <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-ans-orange/5 to-transparent rounded-bl-full"></div>
-            <div class="w-14 h-14 bg-gradient-to-br from-ans-orange to-[#e67600] rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-ans-orange/20 group-hover:scale-110 transition-transform duration-300">
-                @if($stitchDb && $stitchDb->logo_url)
-                    <img src="{{ asset($stitchDb->logo_url) }}" alt="Stitch" class="w-full h-full object-cover rounded-2xl">
-                @else
-                    <span class="text-white font-bold text-xl">S</span>
-                @endif
+        @foreach($officialTools as $index => $oTool)
+            @php
+                $palettes = [
+                    0 => ['from' => 'from-ans-orange to-[#e67600]', 'bg' => 'bg-gradient-to-bl from-ans-orange/5 to-transparent', 'shadow' => 'shadow-ans-orange/20'],
+                    1 => ['from' => 'from-ans-light-green to-ans-2nd-green', 'bg' => 'bg-gradient-to-bl from-ans-light-green/5 to-transparent', 'shadow' => 'shadow-ans-light-green/20'],
+                    2 => ['from' => 'from-ans-purple to-[#5a2570]', 'bg' => 'bg-gradient-to-bl from-ans-purple/5 to-transparent', 'shadow' => 'shadow-ans-purple/20'],
+                    3 => ['from' => 'from-ans-blue to-ans-light-blue', 'bg' => 'bg-gradient-to-bl from-ans-blue/5 to-transparent', 'shadow' => 'shadow-ans-blue/20'],
+                ];
+                $palette = $palettes[$index % 4];
+            @endphp
+            <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-ans-orange/5 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer animate-fade-in-up"
+                 style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
+                 data-tool="{{ json_encode([
+                     'id' => $oTool->id,
+                     'name' => $oTool->name,
+                     'desc' => $oTool->description,
+                     'url' => $oTool->url,
+                     'cat' => $oTool->category,
+                     'type' => $oTool->is_google_workspace ? 'Google Workspace' : '3rd Party',
+                     'logo' => $oTool->logo_url ? asset($oTool->logo_url) : null
+                 ]) }}"
+                 onclick="openToolModal(JSON.parse(this.dataset.tool))">
+                <div class="absolute top-0 right-0 w-24 h-24 {{ $palette['bg'] }} rounded-bl-full"></div>
+                <div class="w-14 h-14 bg-gradient-to-br {{ $palette['from'] }} rounded-2xl flex items-center justify-center mb-5 shadow-lg {{ $palette['shadow'] }} group-hover:scale-110 transition-transform duration-300">
+                    @if($oTool->logo_url)
+                        <img src="{{ asset($oTool->logo_url) }}" alt="{{ $oTool->name }}" class="w-full h-full object-cover rounded-2xl">
+                    @else
+                        <span class="text-white font-bold text-xl">{{ substr($oTool->name, 0, 1) }}</span>
+                    @endif
+                </div>
+                <h4 class="font-heading font-bold text-gray-900 text-lg">{{ $oTool->name }}</h4>
+                <p class="text-sm text-gray-500 mt-2 leading-relaxed line-clamp-2">{{ $oTool->description }}</p>
+                <div class="mt-5 flex items-center justify-between">
+                    <span class="text-[10px] font-bold bg-ans-dark-green/10 text-ans-dark-green px-2.5 py-1 rounded-full uppercase tracking-wider">Official</span>
+                    <svg class="w-5 h-5 text-gray-300 group-hover:text-ans-orange group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
             </div>
-            <h4 class="font-heading font-bold text-gray-900 text-lg">Stitch</h4>
-            <p class="text-sm text-gray-500 mt-2 leading-relaxed line-clamp-2">{{ $stitchDb ? $stitchDb->description : 'Centralized platform for integrations and workflow automation.' }}</p>
-            <div class="mt-5 flex items-center justify-between">
-                <span class="text-[10px] font-bold bg-ans-dark-green/10 text-ans-dark-green px-2.5 py-1 rounded-full uppercase tracking-wider">Official</span>
-                <svg class="w-5 h-5 text-gray-300 group-hover:text-ans-orange group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-            </div>
-        </div>
-
-        <!-- Pomelo -->
-        <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-ans-orange/5 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer animate-fade-in-up"
-             style="animation-delay: 0.1s;"
-             data-tool="{{ json_encode([
-                 'id' => $pomeloDb ? $pomeloDb->id : null,
-                 'name' => 'Pomelo',
-                 'desc' => $pomeloDb ? $pomeloDb->description : 'Intelligent learning management and academic assessment system tailored for ANS students and faculty.',
-                 'url' => $pomeloDb ? $pomeloDb->url : 'https://ans.edu.ni',
-                 'cat' => $pomeloDb ? $pomeloDb->category : 'Workspace',
-                 'type' => 'Official',
-                 'logo' => $pomeloDb && $pomeloDb->logo_url ? asset($pomeloDb->logo_url) : null
-             ]) }}"
-             onclick="openToolModal(JSON.parse(this.dataset.tool))">
-            <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-ans-light-green/5 to-transparent rounded-bl-full"></div>
-            <div class="w-14 h-14 bg-gradient-to-br from-ans-light-green to-ans-2nd-green rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-ans-light-green/20 group-hover:scale-110 transition-transform duration-300">
-                @if($pomeloDb && $pomeloDb->logo_url)
-                    <img src="{{ asset($pomeloDb->logo_url) }}" alt="Pomelo" class="w-full h-full object-cover rounded-2xl">
-                @else
-                    <span class="text-white font-bold text-xl">P</span>
-                @endif
-            </div>
-            <h4 class="font-heading font-bold text-gray-900 text-lg">Pomelo</h4>
-            <p class="text-sm text-gray-500 mt-2 leading-relaxed line-clamp-2">{{ $pomeloDb ? $pomeloDb->description : 'Intelligent learning management and academic assessment system.' }}</p>
-            <div class="mt-5 flex items-center justify-between">
-                <span class="text-[10px] font-bold bg-ans-dark-green/10 text-ans-dark-green px-2.5 py-1 rounded-full uppercase tracking-wider">Official</span>
-                <svg class="w-5 h-5 text-gray-300 group-hover:text-ans-orange group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-            </div>
-        </div>
-
-        <!-- Antigravity -->
-        <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-ans-orange/5 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer animate-fade-in-up"
-             style="animation-delay: 0.15s;"
-             data-tool="{{ json_encode([
-                 'id' => $antigravityDb ? $antigravityDb->id : null,
-                 'name' => 'Antigravity',
-                 'desc' => $antigravityDb ? $antigravityDb->description : 'AI-powered programming and infrastructure assistant designed for advanced developer workflows at ANS.',
-                 'url' => $antigravityDb ? $antigravityDb->url : 'https://ans.edu.ni',
-                 'cat' => $antigravityDb ? $antigravityDb->category : 'Data & Analysis',
-                 'type' => 'Official',
-                 'logo' => $antigravityDb && $antigravityDb->logo_url ? asset($antigravityDb->logo_url) : null
-             ]) }}"
-             onclick="openToolModal(JSON.parse(this.dataset.tool))">
-            <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-ans-purple/5 to-transparent rounded-bl-full"></div>
-            <div class="w-14 h-14 bg-gradient-to-br from-ans-purple to-[#5a2570] rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-ans-purple/20 group-hover:scale-110 transition-transform duration-300">
-                @if($antigravityDb && $antigravityDb->logo_url)
-                    <img src="{{ asset($antigravityDb->logo_url) }}" alt="Antigravity" class="w-full h-full object-cover rounded-2xl">
-                @else
-                    <span class="text-white font-bold text-xl">A</span>
-                @endif
-            </div>
-            <h4 class="font-heading font-bold text-gray-900 text-lg">Antigravity</h4>
-            <p class="text-sm text-gray-500 mt-2 leading-relaxed line-clamp-2">{{ $antigravityDb ? $antigravityDb->description : 'AI-powered programming assistant.' }}</p>
-            <div class="mt-5 flex items-center justify-between">
-                <span class="text-[10px] font-bold bg-ans-dark-green/10 text-ans-dark-green px-2.5 py-1 rounded-full uppercase tracking-wider">Official</span>
-                <svg class="w-5 h-5 text-gray-300 group-hover:text-ans-orange group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-            </div>
-        </div>
-
-        <!-- Flow -->
-        <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-ans-orange/5 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer animate-fade-in-up"
-             style="animation-delay: 0.2s;"
-             data-tool="{{ json_encode([
-                 'id' => $flowDb ? $flowDb->id : null,
-                 'name' => 'Flow',
-                 'desc' => $flowDb ? $flowDb->description : 'Collaborative tool for planning, organizing, and tracking educational workflows and school tasks at ANS.',
-                 'url' => $flowDb ? $flowDb->url : 'https://ans.edu.ni',
-                 'cat' => $flowDb ? $flowDb->category : 'Data & Analysis',
-                 'type' => 'Official',
-                 'logo' => $flowDb && $flowDb->logo_url ? asset($flowDb->logo_url) : null
-             ]) }}"
-             onclick="openToolModal(JSON.parse(this.dataset.tool))">
-            <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-ans-blue/5 to-transparent rounded-bl-full"></div>
-            <div class="w-14 h-14 bg-gradient-to-br from-ans-blue to-ans-light-blue rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-ans-blue/20 group-hover:scale-110 transition-transform duration-300">
-                @if($flowDb && $flowDb->logo_url)
-                    <img src="{{ asset($flowDb->logo_url) }}" alt="Flow" class="w-full h-full object-cover rounded-2xl">
-                @else
-                    <span class="text-white font-bold text-xl">F</span>
-                @endif
-            </div>
-            <h4 class="font-heading font-bold text-gray-900 text-lg">Flow</h4>
-            <p class="text-sm text-gray-500 mt-2 leading-relaxed line-clamp-2">{{ $flowDb ? $flowDb->description : 'Collaborative tool for planning and tracking workflows.' }}</p>
-            <div class="mt-5 flex items-center justify-between">
-                <span class="text-[10px] font-bold bg-ans-dark-green/10 text-ans-dark-green px-2.5 py-1 rounded-full uppercase tracking-wider">Official</span>
-                <svg class="w-5 h-5 text-gray-300 group-hover:text-ans-orange group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-            </div>
-        </div>
-
+        @endforeach
     </div>
 </div>
+@endif
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- TRENDING TOOLS — Animated visitor counters                 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+@if($trendingTools->count() > 0)
+<div id="trending-section" class="mb-14">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+            <div class="w-1.5 h-8 bg-gradient-to-b from-red-500 to-ans-orange rounded-full"></div>
+            <div>
+                <h3 class="text-xl font-heading font-bold text-gray-900">🔥 Herramientas en Tendencia</h3>
+                <p class="text-xs text-gray-500 mt-0.5">Las plataformas más utilizadas por la comunidad de ANS</p>
+            </div>
+        </div>
+        <span class="inline-flex items-center gap-1 text-xs font-semibold bg-red-500/10 text-red-600 px-3 py-1.5 rounded-full">
+            <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping"></span>
+            En alza
+        </span>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        @foreach($trendingTools as $index => $tTool)
+            <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-xl hover:shadow-red-500/5 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer animate-fade-in-up"
+                 style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
+                 data-tool="{{ json_encode([
+                     'id' => $tTool->id,
+                     'name' => $tTool->name,
+                     'desc' => $tTool->description,
+                     'url' => $tTool->url,
+                     'cat' => $tTool->category,
+                     'type' => $tTool->is_google_workspace ? 'Google Workspace' : '3rd Party',
+                     'logo' => $tTool->logo_url ? asset($tTool->logo_url) : null
+                 ]) }}"
+                 onclick="openToolModal(JSON.parse(this.dataset.tool))">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-red-500/5 to-transparent rounded-bl-full"></div>
+                <div class="flex items-start justify-between mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-50 rounded-xl flex items-center justify-center text-gray-400 font-bold text-xl group-hover:from-red-500/10 group-hover:to-ans-orange/5 group-hover:text-red-500 transition-all duration-300">
+                        @if($tTool->logo_url)
+                            <img src="{{ asset($tTool->logo_url) }}" alt="{{ $tTool->name }}" class="w-full h-full object-cover rounded-xl">
+                        @else
+                            {{ substr($tTool->name, 0, 1) }}
+                        @endif
+                    </div>
+                    <!-- Click Count Badge -->
+                    <span class="inline-flex items-center gap-1 text-[10px] font-bold bg-red-50 text-red-600 px-2.5 py-1 rounded-lg border border-red-100 group-hover:scale-105 transition-transform duration-300">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        {{ $tTool->click_count }} clics
+                    </span>
+                </div>
+                <h4 class="font-heading font-bold text-gray-900 text-base leading-tight group-hover:text-red-600 transition-colors">{{ $tTool->name }}</h4>
+                <p class="text-xs text-gray-500 mt-2 leading-relaxed line-clamp-2">{{ $tTool->description }}</p>
+                <div class="mt-4 flex items-center gap-2">
+                    @if($tTool->is_official)
+                        <span class="text-[9px] font-bold bg-ans-orange/10 text-ans-orange px-2 py-0.5 rounded-full uppercase tracking-wider">★ Oficial</span>
+                    @endif
+                    @if($tTool->is_google_workspace)
+                        <span class="text-[9px] font-bold bg-ans-blue/10 text-ans-blue px-2 py-0.5 rounded-full uppercase tracking-wider">Workspace</span>
+                    @else
+                        <span class="text-[9px] font-bold bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full uppercase tracking-wider">3rd Party</span>
+                    @endif
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
+@endif
 
 
 <!-- ═══════════════════════════════════════════════════════════ -->
@@ -286,7 +325,7 @@
     
     <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         @foreach((is_iterable($tools) ? $tools : []) as $index => $tool)
-        @if(in_array($tool->name, ['Stitch', 'Pomelo', 'Antigravity', 'Flow']))
+        @if($tool->is_official)
             @continue
         @endif
         <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer animate-fade-in-up"
@@ -560,6 +599,7 @@ function applyFilters() {
     const favs = getFavs();
     let officialVisibleCount = 0;
     let catalogVisibleCount = 0;
+    let trendingVisibleCount = 0;
     
     // Filter Official Tools
     document.querySelectorAll('#official-section .group[data-tool]').forEach(card => {
@@ -591,6 +631,43 @@ function applyFilters() {
                 card.style.display = '';
                 card.classList.add('animate-fade-in-up');
                 officialVisibleCount++;
+            } else {
+                card.style.display = 'none';
+                card.classList.remove('animate-fade-in-up');
+            }
+        } catch (err) {}
+    });
+    
+    // Filter Trending Tools
+    document.querySelectorAll('#trending-section .group[data-tool]').forEach(card => {
+        try {
+            const tool = JSON.parse(card.dataset.tool);
+            const name = tool.name.toLowerCase();
+            const desc = tool.desc.toLowerCase();
+            const cat = (tool.cat || 'General').toLowerCase();
+            const type = (tool.type || '').toLowerCase();
+            
+            const matchesSearch = name.includes(currentSearchQuery) || 
+                                  desc.includes(currentSearchQuery) || 
+                                  cat.includes(currentSearchQuery);
+            
+            let matchesCategory = false;
+            if (currentCategory === 'all') {
+                matchesCategory = true;
+            } else if (currentCategory === 'workspace') {
+                matchesCategory = (type === 'google workspace' || type === 'workspace');
+            } else if (currentCategory === '3rdparty') {
+                matchesCategory = (type === '3rd party');
+            } else if (currentCategory === 'favs') {
+                matchesCategory = favs.includes(tool.name);
+            } else {
+                matchesCategory = (cat === currentCategory.toLowerCase());
+            }
+            
+            if (matchesSearch && matchesCategory) {
+                card.style.display = '';
+                card.classList.add('animate-fade-in-up');
+                trendingVisibleCount++;
             } else {
                 card.style.display = 'none';
                 card.classList.remove('animate-fade-in-up');
@@ -645,14 +722,42 @@ function applyFilters() {
         }
     }
 
+    const trendingSection = document.getElementById('trending-section');
+    if (trendingSection) {
+        if (trendingVisibleCount === 0) {
+            trendingSection.style.display = 'none';
+        } else {
+            trendingSection.style.display = '';
+        }
+    }
+
     // Dynamic global empty state toggle
     const emptyState = document.getElementById('catalog-empty-state');
     if (emptyState) {
-        if (officialVisibleCount === 0 && catalogVisibleCount === 0) {
+        if (officialVisibleCount === 0 && catalogVisibleCount === 0 && trendingVisibleCount === 0) {
             emptyState.classList.remove('hidden');
         } else {
             emptyState.classList.add('hidden');
         }
+    }
+}
+
+// Banner Novedades functions
+document.addEventListener('DOMContentLoaded', () => {
+    const banner = document.getElementById('new-app-banner');
+    if (banner) {
+        const toolId = banner.dataset.toolId;
+        if (!localStorage.getItem('dismissed_new_tool_banner_' + toolId)) {
+            banner.classList.remove('hidden');
+        }
+    }
+});
+
+function dismissNewAppBanner(toolId) {
+    localStorage.setItem('dismissed_new_tool_banner_' + toolId, 'true');
+    const banner = document.getElementById('new-app-banner');
+    if (banner) {
+        banner.classList.add('hidden');
     }
 }
 
