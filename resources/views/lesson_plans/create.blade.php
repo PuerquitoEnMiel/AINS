@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header-title', 'AI Lesson Planner')
-@section('header-subtitle', 'Diseña una planeación de clase interactiva y estructurada con Inteligencia Artificial')
+@section('header-subtitle', 'Design an interactive and structured class planning with Artificial Intelligence')
 
 @section('content')
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -12,8 +12,8 @@
         <div class="flex items-center gap-3">
             <span id="step-badge" class="w-8 h-8 rounded-xl bg-ans-dark-green text-white flex items-center justify-center font-bold text-sm">1</span>
             <div>
-                <h3 id="step-title" class="font-extrabold text-gray-800 text-base">Paso 1: Configurar detalles</h3>
-                <p id="step-desc" class="text-xs text-gray-500">Ingresa la información básica de tu clase</p>
+                <h3 id="step-title" class="font-extrabold text-gray-800 text-base">Step 1: Configure details</h3>
+                <p id="step-desc" class="text-xs text-gray-500">Enter the basic information of your class</p>
             </div>
         </div>
         <!-- Progress Bar Indicator -->
@@ -31,68 +31,68 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Tema/Título -->
                     <div class="md:col-span-2">
-                        <label for="title" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Tema o Título de la Clase</label>
-                        <input type="text" id="title" placeholder="Ej. Introducción a la fotosíntesis en ciencias naturales"
+                        <label for="title" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Topic or Class Title</label>
+                        <input type="text" id="title" placeholder="e.g. Introduction to photosynthesis in natural sciences"
                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm">
-                        <p id="title-error" class="hidden mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">⚠️ Este campo es obligatorio.</p>
+                        <p id="title-error" class="hidden mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">⚠️ This field is required.</p>
                     </div>
 
                     <!-- Asignatura -->
                     <div>
-                        <label for="subject" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Asignatura</label>
+                        <label for="subject" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Subject</label>
                         <select id="subject" onchange="toggleCustomField('subject')" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all text-sm bg-white">
-                            <option value="Ciencias Naturales / Science">Ciencias Naturales / Science</option>
-                            <option value="Matemáticas / Math">Matemáticas / Math</option>
-                            <option value="Español / Lengua">Español / Lengua</option>
+                            <option value="Natural Sciences">Natural Sciences</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Spanish">Spanish</option>
                             <option value="English / Literature">English / Literature</option>
-                            <option value="Estudios Sociales / History">Estudios Sociales / History</option>
-                            <option value="Tecnología / STEM">Tecnología / STEM</option>
-                            <option value="Arte y Música">Arte y Música</option>
-                            <option value="OTRO">Otro (Especificar)</option>
+                            <option value="Social Studies">Social Studies</option>
+                            <option value="Technology / STEM">Technology / STEM</option>
+                            <option value="Art & Music">Art & Music</option>
+                            <option value="OTHER">Other (Specify)</option>
                         </select>
-                        <input type="text" id="subject_custom" placeholder="Especificar asignatura" class="w-full mt-3 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm hidden">
+                        <input type="text" id="subject_custom" placeholder="Specify subject" class="w-full mt-3 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm hidden">
                     </div>
 
                     <!-- Grado/Nivel -->
                     <div>
-                        <label for="grade_level" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Grado o Nivel Escolar</label>
+                        <label for="grade_level" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Grade or School Level</label>
                         <select id="grade_level" onchange="toggleCustomField('grade_level')" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all text-sm bg-white">
-                            <option value="Pre-kínder / Kínder">Pre-kínder / Kínder</option>
-                            <option value="1er - 3er Grado (Elementary)">1er - 3er Grado (Elementary)</option>
-                            <option value="4to - 5to Grado (Elementary)">4to - 5to Grado (Elementary)</option>
-                            <option value="6to - 8vo Grado (Middle School)">6to - 8vo Grado (Middle School)</option>
-                            <option value="9no - 12vo Grado (High School)">9no - 12vo Grado (High School)</option>
-                            <option value="OTRO">Otro (Especificar)</option>
+                            <option value="Pre-K / Kindergarten">Pre-K / Kindergarten</option>
+                            <option value="1st - 3rd Grade (Elementary)">1st - 3rd Grade (Elementary)</option>
+                            <option value="4th - 5th Grade (Elementary)">4th - 5th Grade (Elementary)</option>
+                            <option value="6th - 8th Grade (Middle School)">6th - 8th Grade (Middle School)</option>
+                            <option value="9th - 12th Grade (High School)">9th - 12th Grade (High School)</option>
+                            <option value="OTHER">Other (Specify)</option>
                         </select>
-                        <input type="text" id="grade_level_custom" placeholder="Especificar grado" class="w-full mt-3 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm hidden">
+                        <input type="text" id="grade_level_custom" placeholder="Specify grade" class="w-full mt-3 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm hidden">
                     </div>
 
                     <!-- Duración -->
                     <div>
-                        <label for="duration" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Duración estimada</label>
+                        <label for="duration" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Estimated Duration</label>
                         <select id="duration" onchange="toggleCustomField('duration')" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all text-sm bg-white">
-                            <option value="45 Minutos">45 Minutos</option>
-                            <option value="60 Minutos">60 Minutos</option>
-                            <option value="90 Minutos">90 Minutos</option>
-                            <option value="120 Minutos">120 Minutos</option>
-                            <option value="OTRO">Otro (Especificar)</option>
+                            <option value="45 Minutes">45 Minutes</option>
+                            <option value="60 Minutes">60 Minutes</option>
+                            <option value="90 Minutes">90 Minutes</option>
+                            <option value="120 Minutes">120 Minutes</option>
+                            <option value="OTHER">Other (Specify)</option>
                         </select>
-                        <input type="text" id="duration_custom" placeholder="Especificar duración (ej: 3 horas)" class="w-full mt-3 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm hidden">
+                        <input type="text" id="duration_custom" placeholder="Specify duration (e.g. 3 hours)" class="w-full mt-3 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm hidden">
                     </div>
                 </div>
 
                 <!-- Objetivos -->
                 <div class="mt-6">
-                    <label for="objectives" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Objetivos de Aprendizaje (¿Qué lograrán los estudiantes?)</label>
-                    <textarea id="objectives" rows="4" placeholder="Ej. Comprender el proceso de fotosíntesis, identificar los elementos químicos que intervienen (agua, dióxido de carbono y luz) y el producto generado (oxígeno y glucosa)."
+                    <label for="objectives" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Learning Objectives (What will students achieve?)</label>
+                    <textarea id="objectives" rows="4" placeholder="e.g. Understand the process of photosynthesis, identify the chemical elements involved (water, carbon dioxide, and light), and the product generated (oxygen and glucose)."
                               class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm leading-relaxed"></textarea>
-                    <p id="objectives-error" class="hidden mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">⚠️ Este campo es obligatorio.</p>
+                    <p id="objectives-error" class="hidden mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">⚠️ This field is required.</p>
                 </div>
 
                 <!-- Button -->
                 <div class="mt-8 flex justify-end">
                     <button id="btn-generate" type="button" onclick="startGeneration()" class="w-full sm:w-auto px-8 py-3.5 bg-ans-orange hover:bg-[#e67600] text-white font-bold rounded-xl shadow-md shadow-ans-orange/20 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                        <span id="btn-generate-text">Generar con IA</span>
+                        <span id="btn-generate-text">Generate with AI</span>
                         <svg id="btn-generate-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
@@ -119,9 +119,9 @@
                 </div>
             </div>
             <div>
-                <h4 id="loading-header" class="text-xl font-bold text-gray-800">Generando tu plan de clases...</h4>
+                <h4 id="loading-header" class="text-xl font-bold text-gray-800">Generating your lesson plan...</h4>
                 <p id="loading-tip" class="text-sm text-ans-dark-green/70 mt-2 font-medium italic transition-all duration-300">
-                    "Estructurando el plan bajo el marco SAMR..."
+                    "Structuring the plan under the SAMR framework..."
                 </p>
             </div>
         </div>
@@ -133,9 +133,42 @@
                 <article id="markdown-container" class="prose max-w-none text-gray-700 text-sm leading-relaxed prose-headings:text-gray-800 prose-headings:font-heading prose-strong:text-ans-dark-green prose-code:bg-white prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:border prose-code:border-gray-100 prose-a:text-ans-orange prose-a:underline"></article>
             </div>
 
+            <!-- AI Refinement Panel (Punto 2 - Part A) -->
+            <div class="bg-gradient-to-r from-ans-dark-green/5 to-ans-orange/5 border border-ans-dark-green/10 rounded-2xl p-6 space-y-4">
+                <div class="flex items-center gap-2">
+                    <span class="p-1.5 rounded-lg bg-ans-dark-green text-white">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                        </svg>
+                    </span>
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-800">Refine Lesson Plan with AI</h4>
+                        <p class="text-xs text-gray-500">Want to adjust the planning? Ask the AI to make specific changes.</p>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="flex-1">
+                        <textarea id="refine-instructions" rows="2" placeholder="e.g. Add a 10-minute icebreaker at the start, or adapt the activities for a student with ADHD."
+                                  class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm leading-relaxed"></textarea>
+                        <p id="refine-error" class="hidden mt-1 text-xs font-semibold text-red-500">⚠️ Please enter refinement instructions.</p>
+                    </div>
+                    <button id="btn-refine" type="button" onclick="refinePlan()" class="self-end sm:self-center px-6 py-3 bg-ans-dark-green hover:bg-ans-seal-green text-white font-bold rounded-xl shadow-md shadow-ans-dark-green/10 transition-all flex items-center justify-center gap-2 text-sm whitespace-nowrap">
+                        <span id="btn-refine-text">Refine Plan</span>
+                        <svg id="btn-refine-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <svg id="btn-refine-spinner" class="w-4 h-4 animate-spin hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
             <!-- Tool selector/Detected tags -->
             <div id="detected-tools-area" class="border-t border-gray-100 pt-6">
-                <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Herramientas EdTech Recomendadas</p>
+                <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Recommended EdTech Tools</p>
                 <div id="detected-tools-list" class="flex flex-wrap gap-2">
                     <!-- Dynamic checkable badges -->
                 </div>
@@ -144,13 +177,13 @@
             <!-- Footer controls -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-gray-100 pt-6">
                 <button type="button" onclick="goBack()" class="px-6 py-3 border border-gray-200 text-gray-500 font-bold rounded-xl hover:bg-gray-50 transition-all text-sm">
-                    Modificar Entrada
+                    Modify Input
                 </button>
                 <button type="button" onclick="savePlan()" class="px-8 py-3.5 bg-ans-dark-green hover:bg-ans-seal-green text-white font-bold rounded-xl shadow-md shadow-ans-dark-green/20 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 text-sm">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
                     </svg>
-                    <span>Guardar Planificación</span>
+                    <span>Save Lesson Plan</span>
                 </button>
             </div>
         </div>
@@ -163,7 +196,7 @@
     window.onerror = function(message, source, lineno, colno, error) {
         const errorBanner = document.createElement('div');
         errorBanner.style = 'position:fixed;top:0;left:0;right:0;background:#ef4444;color:white;padding:16px;z-index:99999;font-family:monospace;font-size:13px;font-weight:bold;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.15);';
-        errorBanner.innerHTML = '⚠️ Error de JavaScript: ' + message + ' en ' + source.split('/').pop() + ':' + lineno;
+        errorBanner.innerHTML = '⚠️ JavaScript Error: ' + message + ' in ' + source.split('/').pop() + ':' + lineno;
         document.body.appendChild(errorBanner);
         console.error(error);
         return false;
@@ -195,7 +228,7 @@
         try {
             const select = document.getElementById(fieldId);
             const customInput = document.getElementById(fieldId + '_custom');
-            if (select.value === 'OTRO') {
+            if (select.value === 'OTHER') {
                 customInput.classList.remove('hidden');
                 customInput.required = true;
             } else {
@@ -208,12 +241,12 @@
     }
 
     const cyclingMessages = [
-        "Analizando el catálogo de tecnología aprobada en AINS...",
-        "Integrando marcos SAMR y TPACK en las fases de tu clase...",
-        "Diseñando la sección de inicio / warm-up...",
-        "Estructurando las actividades del desarrollo...",
-        "Generando opciones de evaluación formativa...",
-        "Redactando ejemplos prácticos de prompts para docentes..."
+        "Analyzing the approved technology catalog in AINS...",
+        "Integrating SAMR and TPACK frameworks into lesson phases...",
+        "Designing the introduction / warm-up section...",
+        "Structuring development activities...",
+        "Generating formative assessment options...",
+        "Drafting practical prompt examples for teachers..."
     ];
     let intervalId = null;
 
@@ -246,13 +279,13 @@
         if (loading) {
             btn.disabled = true;
             btn.classList.add('opacity-75', 'cursor-not-allowed');
-            if (txt) txt.textContent = 'Generando...';
+            if (txt) txt.textContent = 'Generating...';
             if (icon) icon.classList.add('hidden');
             if (spinner) spinner.classList.remove('hidden');
         } else {
             btn.disabled = false;
             btn.classList.remove('opacity-75', 'cursor-not-allowed');
-            if (txt) txt.textContent = 'Generar con IA';
+            if (txt) txt.textContent = 'Generate with AI';
             if (icon) icon.classList.remove('hidden');
             if (spinner) spinner.classList.add('hidden');
         }
@@ -261,7 +294,7 @@
     function startGeneration() {
         // ===== DEBUG =====
         var dbg = document.getElementById('debug-status');
-        if (dbg) dbg.textContent = '🟡 startGeneration() LLAMADO — validando...';
+        if (dbg) dbg.textContent = '🟡 startGeneration() CALLED — validating...';
         // ==================
         console.log('[AINS] startGeneration() called');
         try {
@@ -291,13 +324,13 @@
             const titleVal = titleEl.value.trim();
             
             const subjectSelect = document.getElementById('subject');
-            const subjectVal = subjectSelect.value === 'OTRO' ? document.getElementById('subject_custom').value : subjectSelect.value;
+            const subjectVal = subjectSelect.value === 'OTHER' ? document.getElementById('subject_custom').value : subjectSelect.value;
             
             const gradeSelect = document.getElementById('grade_level');
-            const gradeVal = gradeSelect.value === 'OTRO' ? document.getElementById('grade_level_custom').value : gradeSelect.value;
+            const gradeVal = gradeSelect.value === 'OTHER' ? document.getElementById('grade_level_custom').value : gradeSelect.value;
             
             const durationSelect = document.getElementById('duration');
-            const durationVal = durationSelect.value === 'OTRO' ? document.getElementById('duration_custom').value : durationSelect.value;
+            const durationVal = durationSelect.value === 'OTHER' ? document.getElementById('duration_custom').value : durationSelect.value;
             
             const objectivesVal = objectivesEl.value.trim();
 
@@ -360,13 +393,13 @@
                 setBtnLoading(false);
                 setStep(1);
                 console.error('[AINS] Generate error:', err);
-                showInlineError('Error al generar: ' + err.message);
+                showInlineError('Generation error: ' + err.message);
             });
         } catch (e) {
             console.error('[AINS] JS exception in startGeneration:', e);
             setBtnLoading(false);
             setStep(1);
-            showInlineError('Error de JavaScript: ' + e.message);
+            showInlineError('JavaScript error: ' + e.message);
         }
     }
 
@@ -389,22 +422,22 @@
             if (stepNum === 1) {
                 stepBadge.textContent = "1";
                 stepBadge.className = "w-8 h-8 rounded-xl bg-ans-dark-green text-white flex items-center justify-center font-bold text-sm";
-                stepTitle.textContent = "Paso 1: Configurar detalles";
-                stepDesc.textContent = "Ingresa la información básica de tu clase";
+                stepTitle.textContent = "Step 1: Configure details";
+                stepDesc.textContent = "Enter the basic information of your class";
                 progressBar.style.width = "33%";
                 step1.classList.remove('hidden');
             } else if (stepNum === 2) {
                 stepBadge.textContent = "2";
                 stepBadge.className = "w-8 h-8 rounded-xl bg-ans-orange text-white flex items-center justify-center font-bold text-sm";
-                stepTitle.textContent = "Paso 2: Generando planificación";
-                stepDesc.textContent = "Nuestra IA está elaborando tu planeación pedagógica";
+                stepTitle.textContent = "Step 2: Generating lesson plan";
+                stepDesc.textContent = "Our AI is crafting your pedagogical plan";
                 progressBar.style.width = "66%";
                 loading.classList.remove('hidden');
             } else if (stepNum === 3) {
                 stepBadge.textContent = "3";
                 stepBadge.className = "w-8 h-8 rounded-xl bg-green-600 text-white flex items-center justify-center font-bold text-sm";
-                stepTitle.textContent = "Paso 3: Previsualizar y guardar";
-                stepDesc.textContent = "Revisa el plan elaborado y confirma las herramientas asociadas";
+                stepTitle.textContent = "Step 3: Preview and save";
+                stepDesc.textContent = "Review the crafted plan and confirm the associated tools";
                 progressBar.style.width = "100%";
                 preview.classList.remove('hidden');
             }
@@ -428,7 +461,7 @@
             badgeList.innerHTML = '';
 
             if (allAvailableTools.length === 0) {
-                badgeList.innerHTML = '<span class="text-xs text-gray-400">No hay herramientas disponibles</span>';
+                badgeList.innerHTML = '<span class="text-xs text-gray-400">No tools available</span>';
                 return;
             }
 
@@ -464,6 +497,79 @@
                 label.className = 'flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs cursor-pointer select-none transition-all bg-white border-gray-200 text-gray-500 hover:bg-gray-50';
                 detectedToolIds = detectedToolIds.filter(id => id !== val);
             }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function refinePlan() {
+        try {
+            const instructionsEl = document.getElementById('refine-instructions');
+            const refineError = document.getElementById('refine-error');
+            const btnRefine = document.getElementById('btn-refine');
+            const btnText = document.getElementById('btn-refine-text');
+            const btnIcon = document.getElementById('btn-refine-icon');
+            const btnSpinner = document.getElementById('btn-refine-spinner');
+            
+            if (!instructionsEl || !instructionsEl.value.trim()) {
+                if (refineError) refineError.classList.remove('hidden');
+                if (instructionsEl) instructionsEl.focus();
+                return;
+            }
+            if (refineError) refineError.classList.add('hidden');
+            
+            const instructionsVal = instructionsEl.value.trim();
+            
+            // Disable controls & show loader
+            btnRefine.disabled = true;
+            instructionsEl.disabled = true;
+            btnRefine.classList.add('opacity-75', 'cursor-not-allowed');
+            if (btnText) btnText.textContent = 'Refining...';
+            if (btnIcon) btnIcon.classList.add('hidden');
+            if (btnSpinner) btnSpinner.classList.remove('hidden');
+            
+            fetch('{{ route("lesson-plans.refine") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    content: generatedMarkdown,
+                    instructions: instructionsVal
+                })
+            })
+            .then(res => {
+                if (!res.ok) {
+                    return res.json().then(data => { throw new Error(data.error || 'Server error ' + res.status) });
+                }
+                return res.json();
+            })
+            .then(data => {
+                generatedMarkdown = data.markdown;
+                renderPreview();
+                instructionsEl.value = '';
+                
+                // Re-enable controls
+                btnRefine.disabled = false;
+                instructionsEl.disabled = false;
+                btnRefine.classList.remove('opacity-75', 'cursor-not-allowed');
+                if (btnText) btnText.textContent = 'Refine Plan';
+                if (btnIcon) btnIcon.classList.remove('hidden');
+                if (btnSpinner) btnSpinner.classList.add('hidden');
+            })
+            .catch(err => {
+                console.error('[AINS] Refine error:', err);
+                alert('Error refining lesson plan: ' + err.message);
+                
+                // Re-enable controls
+                btnRefine.disabled = false;
+                instructionsEl.disabled = false;
+                btnRefine.classList.remove('opacity-75', 'cursor-not-allowed');
+                if (btnText) btnText.textContent = 'Refine Plan';
+                if (btnIcon) btnIcon.classList.remove('hidden');
+                if (btnSpinner) btnSpinner.classList.add('hidden');
+            });
         } catch (e) {
             console.error(e);
         }
@@ -517,11 +623,11 @@
                 window.location.href = data.url;
             })
             .catch(err => {
-                alert('Error al guardar la planeación: ' + err.message);
+                alert('Error saving lesson plan: ' + err.message);
             });
         } catch (e) {
             console.error(e);
-            alert('Error en Javascript al guardar: ' + e.message);
+            alert('JavaScript error while saving: ' + e.message);
         }
     }
 </script>

@@ -27,6 +27,8 @@ use Illuminate\Support\Facades\Route;
 //  PUBLIC ROUTES
 // ═════════════════════════════════════════════════════════════════════════
 
+Route::get('/lang/{locale}', [App\Http\Controllers\LanguageController::class, 'switch'])->name('lang.switch');
+
 Route::get('/', function () {
     $tools = Cache::rememberForever('welcome_tools', function () {
         return Tool::approved()
@@ -61,7 +63,10 @@ Route::get('/', function () {
         $tools = $tools->filter(fn($t) => $t->categoryRelation?->slug !== 'ai-detection')->values();
     }
 
-    return view('welcome', compact('tools', 'categories'));
+    $latestTool = $tools->sortByDesc('created_at')->first();
+    $trendingTools = $tools->sortByDesc('click_count')->take(4);
+
+    return view('welcome', compact('tools', 'categories', 'latestTool', 'trendingTools'));
 });
 
 // Tool detail page (public, tracks views)
@@ -114,8 +119,8 @@ Route::post('/logout', [GoogleController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
 
     // ── Tool Requests (suggest a tool) ──────────────────────────
-    Route::get('/solicitudes/nueva', [ToolRequestController::class, 'create']);
-    Route::post('/solicitudes', [ToolRequestController::class, 'store']);
+    Route::get('/requests/new', [ToolRequestController::class, 'create'])->name('requests.create');
+    Route::post('/requests', [ToolRequestController::class, 'store'])->name('requests.store');
 
     // ── Favorites ───────────────────────────────────────────────
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
@@ -162,6 +167,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'is_teacher_or_admin'])->group(function () {
     // AI Lesson Planner
     Route::post('/lesson-plans/generate', [LessonPlanController::class, 'generate'])->name('lesson-plans.generate');
+    Route::post('/lesson-plans/refine', [LessonPlanController::class, 'refine'])->name('lesson-plans.refine');
     Route::get('/lesson-plans/{lessonPlan}/export', [LessonPlanController::class, 'export'])->name('lesson-plans.export');
     Route::resource('lesson-plans', LessonPlanController::class);
 
@@ -179,9 +185,9 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // ── Tool Requests ───────────────────────────────────────────
-    Route::get('/solicitudes', [App\Http\Controllers\Admin\ToolRequestController::class, 'index'])->name('requests.index');
-    Route::post('/solicitudes/{toolRequest}/approve', [App\Http\Controllers\Admin\ToolRequestController::class, 'approve'])->name('requests.approve');
-    Route::post('/solicitudes/{toolRequest}/reject', [App\Http\Controllers\Admin\ToolRequestController::class, 'reject'])->name('requests.reject');
+    Route::get('/requests', [App\Http\Controllers\Admin\ToolRequestController::class, 'index'])->name('requests.index');
+    Route::post('/requests/{toolRequest}/approve', [App\Http\Controllers\Admin\ToolRequestController::class, 'approve'])->name('requests.approve');
+    Route::post('/requests/{toolRequest}/reject', [App\Http\Controllers\Admin\ToolRequestController::class, 'reject'])->name('requests.reject');
 
     // ── Tools CRUD ──────────────────────────────────────────────
     Route::get('/tools', [App\Http\Controllers\Admin\ToolController::class, 'index'])->name('tools.index');

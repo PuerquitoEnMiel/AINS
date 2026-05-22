@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'catalog' => 'Catálogo',
+    'policy' => 'Política',
+    'task_force' => 'Equipo de Trabajo',
+    'tips' => 'Consejos',
+    'dashboard' => 'Panel',
+    'login' => 'Iniciar Sesión',
+    'logout' => 'Cerrar Sesión',
+    'profile' => 'Perfil',
+    'favorites' => 'Favoritos',
+    'suggest_tool' => 'Sugerir Herramienta',
+    'badges' => 'Insignias',
+    'admin' => 'Admin',
+    'search' => 'Buscar herramientas...',
+    'welcome_title' => 'Tu Centro Unificado EdTech',
+    'welcome_subtitle' => 'Descubre, aprende y domina las mejores herramientas educativas disponibles.',
+    'official' => 'Herramientas Oficiales',
+    'trending' => 'Tendencias',
+    'latest' => 'Lo Último',
+    'language' => 'Idioma',
+    'english' => 'English',
+    'spanish' => 'Español',
+];

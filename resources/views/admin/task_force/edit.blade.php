@@ -13,12 +13,12 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Nombre Completo</label>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Full Name</label>
                     <input type="text" name="name" value="{{ old('name', $member->name) }}" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">
                     @error('name') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Rol / Puesto</label>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Role / Position</label>
                     <input type="text" name="role" value="{{ old('role', $member->role) }}" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">
                     @error('role') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
@@ -31,40 +31,40 @@
                     @error('email') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Iniciales (para avatar)</label>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Initials (for avatar)</label>
                     <input type="text" name="initials" value="{{ old('initials', $member->initials) }}" required maxlength="3" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">
                     @error('initials') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-gray-600 mb-1">Descripción / Biografía</label>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Description / Biography</label>
                 <textarea name="description" required rows="3" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">{{ old('description', $member->description) }}</textarea>
                 @error('description') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
             </div>
 
             <div class="grid grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Color de Avatar</label>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Avatar Color</label>
                     <input type="color" name="avatar_color" value="{{ old('avatar_color', $member->avatar_color) }}" class="w-full h-11 px-2 py-1 border border-gray-200 rounded-xl cursor-pointer">
                     @error('avatar_color') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
                 <div class="col-span-2">
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">URL de Imagen (Opcional)</label>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Image URL (Optional)</label>
                     <input type="url" name="image_url" value="{{ old('image_url', $member->image_url) }}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all" placeholder="https://example.com/avatar.jpg">
                     @error('image_url') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-gray-600 mb-1">Orden de visualización</label>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Sort Order</label>
                 <input type="number" name="sort_order" value="{{ old('sort_order', $member->sort_order) }}" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">
                 @error('sort_order') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
             </div>
 
             <div class="flex items-center gap-3 pt-2">
-                <button type="submit" class="px-6 py-2.5 bg-ans-dark-green text-white rounded-xl font-semibold hover:bg-ans-seal-green transition-all shadow-md text-sm">Actualizar Miembro</button>
-                <a href="{{ route('admin.task-force.index') }}" class="px-6 py-2.5 bg-gray-100 text-gray-600 rounded-xl font-semibold hover:bg-gray-200 transition-all text-sm">Cancelar</a>
+                <button type="submit" class="px-6 py-2.5 bg-ans-dark-green text-white rounded-xl font-semibold hover:bg-ans-seal-green transition-all shadow-md text-sm">Update Member</button>
+                <a href="{{ route('admin.task-force.index') }}" class="px-6 py-2.5 bg-gray-100 text-gray-600 rounded-xl font-semibold hover:bg-gray-200 transition-all text-sm">Cancel</a>
             </div>
         </form>
     </div>

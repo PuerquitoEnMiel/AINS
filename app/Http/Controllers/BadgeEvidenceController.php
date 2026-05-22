@@ -17,7 +17,7 @@ class BadgeEvidenceController extends Controller
     {
         if (! $badge->requires_evidence) {
             return redirect()->route('badges.show', $badge->slug)
-                ->with('error', 'Esta insignia no requiere evidencia manual.');
+                ->with('error', 'This badge does not require manual evidence.');
         }
 
         $existing = BadgeEvidence::where('user_id', Auth::id())
@@ -33,7 +33,7 @@ class BadgeEvidenceController extends Controller
     public function store(Request $request, Badge $badge)
     {
         if (! $badge->requires_evidence) {
-            abort(403, 'Esta insignia no acepta evidencia manual.');
+            abort(403, 'This badge does not accept manual evidence.');
         }
 
         $request->validate([
@@ -41,12 +41,12 @@ class BadgeEvidenceController extends Controller
             'notes'           => 'nullable|string|max:1000',
             'evidence_file'   => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120', // 5MB max
         ], [], [
-            'evidence_file' => 'archivo de evidencia',
+            'evidence_file' => 'evidence file',
         ]);
 
         // Require at least one form of evidence
         if (! $request->certificate_url && ! $request->hasFile('evidence_file')) {
-            return back()->withErrors(['evidence' => 'Debes proporcionar al menos un enlace de certificación o un archivo adjunto.'])->withInput();
+            return back()->withErrors(['evidence' => 'You must provide at least a certification link or an attached file.'])->withInput();
         }
 
         $filePath = null;
@@ -77,6 +77,6 @@ class BadgeEvidenceController extends Controller
         );
 
         return redirect()->route('badges.show', $badge->slug)
-            ->with('success', '¡Evidencia enviada! El administrador la revisará pronto y activará tu insignia.');
+            ->with('success', 'Evidence submitted! The administrator will review it soon and activate your badge.');
     }
 }

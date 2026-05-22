@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'catalog' => 'Catalog',
+    'policy' => 'Policy',
+    'task_force' => 'Task Force',
+    'tips' => 'Tips',
+    'dashboard' => 'Dashboard',
+    'login' => 'Login',
+    'logout' => 'Logout',
+    'profile' => 'Profile',
+    'favorites' => 'Favorites',
+    'suggest_tool' => 'Suggest Tool',
+    'badges' => 'Badges',
+    'admin' => 'Admin',
+    'search' => 'Search tools...',
+    'welcome_title' => 'Your Unified EdTech Hub',
+    'welcome_subtitle' => 'Discover, learn, and master the best educational tools available.',
+    'official' => 'Official Tools',
+    'trending' => 'Trending',
+    'latest' => 'Latest',
+    'language' => 'Language',
+    'english' => 'English',
+    'spanish' => 'Español',
+];

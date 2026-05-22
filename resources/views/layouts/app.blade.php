@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Curated AI Tools - ANS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -221,7 +222,7 @@
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
                     <span class="whitespace-nowrap">EdTech Badges</span>
                 </a>
-                <a href="/solicitudes/nueva" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->is('solicitudes/nueva') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
+                <a href="{{ route('requests.create') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('requests.create') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span class="whitespace-nowrap">Suggest Tool</span>
                 </a>
@@ -252,7 +253,7 @@
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                     <span class="whitespace-nowrap">Dashboard</span>
                 </a>
-                <a href="{{ route('admin.requests.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->is('admin/solicitudes*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                <a href="{{ route('admin.requests.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->is('admin/requests*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                     <span class="whitespace-nowrap">Requests</span>
                 </a>
@@ -374,7 +375,7 @@
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
                     <span class="text-sm">EdTech Badges</span>
                 </a>
-                <a href="/solicitudes/nueva" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('solicitudes/nueva') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
+                <a href="{{ route('requests.create') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->routeIs('requests.create') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span class="text-sm">Suggest Tool</span>
                 </a>
@@ -405,7 +406,7 @@
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                     <span class="text-sm">Dashboard</span>
                 </a>
-                <a href="{{ route('admin.requests.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('admin/solicitudes*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                <a href="{{ route('admin.requests.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('admin/requests*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                     <span class="text-sm">Requests</span>
                 </a>
@@ -470,6 +471,13 @@
             </svg>
         </button>
 
+        <!-- Mobile Search Button -->
+        <button id="open-mobile-search" onclick="toggleMobileSearch(true)" class="lg:hidden flex w-9 h-9 items-center justify-center rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 hover:text-ans-dark-green transition-all shadow-sm flex-shrink-0 mr-4" title="Search">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+        </button>
+
         <!-- Sidebar Toggle Button (Desktop Only) -->
         <button id="toggle-sidebar" onclick="toggleSidebar()" class="hidden md:flex w-9 h-9 items-center justify-center rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 hover:text-ans-dark-green transition-all shadow-sm flex-shrink-0 mr-4" title="Toggle Sidebar">
             <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -520,9 +528,25 @@
 
         <!-- Right: User Actions -->
         <div class="flex-1 flex justify-end items-center space-x-4">
+            <!-- Language Switcher (Disabled for English-only baseline) -->
+            <!--
+            <div class="relative group hidden sm:block">
+                <button class="flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-ans-dark-green transition-colors py-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
+                    {{ strtoupper(app()->getLocale()) }}
+                </button>
+                <div class="absolute right-0 top-full w-32 bg-white rounded-xl shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                    <div class="py-1">
+                        <a href="{{ route('lang.switch', 'en') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-ans-dark-green {{ app()->getLocale() === 'en' ? 'font-bold text-ans-dark-green' : '' }}">English</a>
+                        <a href="{{ route('lang.switch', 'es') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-ans-dark-green {{ app()->getLocale() === 'es' ? 'font-bold text-ans-dark-green' : '' }}">Español</a>
+                    </div>
+                </div>
+            </div>
+            -->
+
             @auth
-                @if(!request()->is('solicitudes/*') && !request()->is('admin/*'))
-                <button onclick="window.location='/solicitudes/nueva'" class="hidden md:flex items-center gap-2 bg-ans-orange hover:bg-[#e67600] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-ans-orange/20 hover:shadow-lg transition-all hover:-translate-y-0.5">
+                @if(!request()->is('requests/*') && !request()->is('admin/*'))
+                <button onclick="window.location='{{ route('requests.create') }}'" class="hidden md:flex items-center gap-2 bg-ans-orange hover:bg-[#e67600] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-ans-orange/20 hover:shadow-lg transition-all hover:-translate-y-0.5">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     Suggest App
                 </button>
@@ -564,6 +588,23 @@
         </div>
     </header>
 
+    <!-- Mobile Search Overlay (Slide-down) -->
+    <div id="mobile-search-overlay" class="fixed top-0 left-0 right-0 bg-white shadow-xl border-b border-gray-200 z-50 transform -translate-y-full transition-transform duration-300 ease-in-out p-4 flex items-center gap-3 lg:hidden">
+        <div class="relative flex-1">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+            <input type="search" id="mobile-search-input" placeholder="Search tools..." class="block w-full pl-10 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all">
+        </div>
+        <button onclick="toggleMobileSearch(false)" class="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-all flex-shrink-0" title="Close Search">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+
     <!-- Content -->
     <main class="flex-1 overflow-y-auto p-8 z-10 scroll-smooth">
         <div class="max-w-7xl mx-auto">
@@ -573,6 +614,52 @@
 </div>
 
 <script>
+// ─── Mobile Search Overlay Toggle ────────────────────────────
+function toggleMobileSearch(show) {
+    const overlay = document.getElementById('mobile-search-overlay');
+    const input = document.getElementById('mobile-search-input');
+    if (overlay) {
+        if (show) {
+            overlay.classList.remove('-translate-y-full');
+            if (input) {
+                setTimeout(() => input.focus(), 100);
+            }
+        } else {
+            overlay.classList.add('-translate-y-full');
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const mobileSearchInput = document.getElementById('mobile-search-input');
+    const desktopSearchInput = document.getElementById('global-search');
+    
+    if (mobileSearchInput && desktopSearchInput) {
+        mobileSearchInput.addEventListener('input', e => {
+            const val = e.target.value;
+            desktopSearchInput.value = val;
+            desktopSearchInput.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+        
+        desktopSearchInput.addEventListener('input', e => {
+            mobileSearchInput.value = e.target.value;
+        });
+    }
+
+    if (mobileSearchInput) {
+        mobileSearchInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                const query = mobileSearchInput.value.trim();
+                if (window.location.pathname !== '/') {
+                    window.location.href = '/?search=' + encodeURIComponent(query);
+                } else {
+                    toggleMobileSearch(false);
+                }
+            }
+        });
+    }
+});
+
 // ─── Splash Screen ───────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
     // Only show on first visit per session
@@ -734,7 +821,7 @@ function submitChatQuery() {
     .then(response => response.json())
     .then(data => {
         showTypingIndicator(false);
-        const reply = data.reply || "⚠️ *Lo siento, no pude procesar la respuesta.*";
+        const reply = data.reply || "*Sorry, I could not process the response.*";
         appendChatMessage('assistant', reply);
         
         if (data.conversation_id) {
@@ -747,7 +834,7 @@ function submitChatQuery() {
     })
     .catch(error => {
         showTypingIndicator(false);
-        appendChatMessage('assistant', "🔌 *Error de conexión. Por favor verifica tu red e intenta de nuevo.*");
+        appendChatMessage('assistant', "*Connection error. Please check your network and try again.*");
         console.error(error);
     });
 }
@@ -849,9 +936,8 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 @auth
-<div class="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
     <!-- Chat Drawer Panel -->
-    <div id="ai-chatbot-panel" class="w-96 h-[520px] bg-white/80 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl flex flex-col overflow-hidden mb-4 opacity-0 scale-95 pointer-events-none transition-all duration-300 transform origin-bottom-right">
+    <div id="ai-chatbot-panel" class="fixed bottom-24 right-6 z-50 w-96 h-[520px] bg-white/80 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl flex flex-col overflow-hidden mb-4 opacity-0 scale-95 pointer-events-none transition-all duration-300 transform origin-bottom-right">
         <!-- Header -->
         <div class="p-4 bg-gradient-to-r from-ans-dark-green to-ans-seal-green text-white flex items-center justify-between shadow-md">
             <div class="flex items-center gap-3">
@@ -879,14 +965,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     AI
                 </div>
                 <div class="max-w-[78%] px-4 py-3 bg-white border border-gray-100 rounded-2xl rounded-bl-none text-xs leading-relaxed shadow-sm text-gray-800">
-                    <p class="font-bold text-ans-dark-green mb-1">¡Hola! 👋</p>
-                    Soy **AINS AI Companion**, tu asesor digital en ANS. Te puedo ayudar a:
+                    <p class="font-bold text-ans-dark-green mb-1">Hello!</p>
+                    I am **AINS AI Companion**, your digital advisor at ANS. I can help you to:
                     <ul class="list-disc list-inside mt-1.5 space-y-1 text-gray-600">
-                        <li>Diseñar planificaciones bajo el modelo **SAMR**.</li>
-                        <li>Escribir **prompts eficientes** para tus clases.</li>
-                        <li>Recomendar las mejores **apps aprobadas** del portal.</li>
+                        <li>Design lesson plans under the **SAMR** model.</li>
+                        <li>Write **efficient prompts** for your classes.</li>
+                        <li>Recommend the best **approved apps** in the portal.</li>
                     </ul>
-                    <p class="mt-2 text-gray-500 italic text-[10px]">¿De qué te gustaría hablar hoy?</p>
+                    <p class="mt-2 text-gray-500 italic text-[10px]">What would you like to talk about today?</p>
                 </div>
             </div>
 
@@ -898,37 +984,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 @if($suggestedTools->count() > 0)
                     @foreach($suggestedTools as $sTool)
                         @php
-                            $icon = '🛠️';
-                            $promptText = "Escribe un prompt estructurado para que el docente genere una actividad con " . $sTool->name . ".";
+                            $promptText = "Write a structured prompt for the teacher to generate an activity with " . $sTool->name . ".";
                             if (str_contains(strtolower($sTool->category), 'plan') || str_contains(strtolower($sTool->name), 'stitch')) {
-                                $icon = '📝';
-                                $promptText = "¿Cómo puedo integrar " . $sTool->name . " en una planeación bajo el modelo SAMR?";
+                                $promptText = "How can I integrate " . $sTool->name . " in a lesson plan under the SAMR model?";
                             } elseif (str_contains(strtolower($sTool->category), 'assist') || str_contains(strtolower($sTool->name), 'antigravity')) {
-                                $icon = '🤖';
-                                $promptText = "¿Cómo me ayuda " . $sTool->name . " como asistente virtual en mis clases?";
+                                $promptText = "How does " . $sTool->name . " help me as a virtual assistant in my classes?";
                             } elseif (str_contains(strtolower($sTool->category), 'product') || str_contains(strtolower($sTool->name), 'flow') || str_contains(strtolower($sTool->name), 'pomelo')) {
-                                $icon = '⚡';
-                                $promptText = "¿Cómo optimizo mi flujo de trabajo administrativo usando " . $sTool->name . "?";
+                                $promptText = "How do I optimize my administrative workflow using " . $sTool->name . "?";
                             }
                         @endphp
                         <button onclick="sendPresetPrompt('{{ addslashes($promptText) }}')" class="block w-full text-left text-[11px] px-3 py-2 bg-white hover:bg-ans-light-green/10 border border-gray-100 rounded-xl text-gray-700 hover:text-ans-dark-green hover:border-ans-light-green transition-all shadow-sm truncate">
-                            {{ $icon }} {{ $sTool->name }}: {{ str_replace(['?', '¿'], '', $promptText) }}
+                            {{ $sTool->name }}: {{ str_replace(['?', '¿'], '', $promptText) }}
                         </button>
                     @endforeach
                 @else
-                    <button onclick="sendPresetPrompt('¿Cómo integro Suno AI usando el modelo SAMR para una clase de música?')" class="block w-full text-left text-[11px] px-3 py-2 bg-white hover:bg-ans-light-green/10 border border-gray-100 rounded-xl text-gray-700 hover:text-ans-dark-green hover:border-ans-light-green transition-all shadow-sm">
-                        🎵 Integrar Suno AI en Música (SAMR)
-                    </button>
-                    <button onclick="sendPresetPrompt('Escribe un prompt estructurado para que el docente genere una rúbrica en Canva.')" class="block w-full text-left text-[11px] px-3 py-2 bg-white hover:bg-ans-light-green/10 border border-gray-100 rounded-xl text-gray-700 hover:text-ans-dark-green hover:border-ans-light-green transition-all shadow-sm">
-                        📝 Prompt para crear rúbricas en Canva
-                    </button>
+                    <p class="text-[10px] text-gray-400 italic px-2">Write your question below. The administrator has not configured suggested tools yet.</p>
                 @endif
             </div>
         </div>
 
         <!-- Input Box -->
         <div class="p-3 bg-white border-t border-gray-100 flex items-center gap-2">
-            <input type="text" id="chatbot-input" placeholder="Pregúntale a tu EdTech Companion..." class="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 focus:border-ans-dark-green focus:ring-1 focus:ring-ans-dark-green text-xs bg-gray-50 outline-none transition-all">
+            <input type="text" id="chatbot-input" placeholder="Ask your EdTech Companion..." class="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 focus:border-ans-dark-green focus:ring-1 focus:ring-ans-dark-green text-xs bg-gray-50 outline-none transition-all">
             <button onclick="submitChatQuery()" class="w-9 h-9 rounded-xl bg-ans-dark-green hover:bg-ans-seal-green text-white flex items-center justify-center transition-all shadow-md shadow-ans-dark-green/10" title="Send Message">
                 <svg class="w-4 h-4 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
             </button>
@@ -936,13 +1013,12 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
 
     <!-- Floating Chat Button (FAB) -->
-    <button id="ai-chatbot-fab" onclick="toggleChatbot()" class="w-14 h-14 bg-gradient-to-tr from-ans-dark-green to-ans-seal-green hover:from-ans-seal-green hover:to-ans-dark-green text-white rounded-full flex items-center justify-center shadow-xl shadow-ans-dark-green/20 hover:shadow-2xl hover:scale-105 transition-all duration-300 relative group pointer-events-auto" title="Chat with AI Companion">
+    <button id="ai-chatbot-fab" onclick="toggleChatbot()" class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-tr from-ans-dark-green to-ans-seal-green hover:from-ans-seal-green hover:to-ans-dark-green text-white rounded-full flex items-center justify-center shadow-xl shadow-ans-dark-green/20 hover:shadow-2xl hover:scale-105 transition-all duration-300 group pointer-events-auto" title="Chat with AI Companion">
         <!-- Pulse Effect -->
         <div class="absolute inset-0 rounded-full bg-ans-dark-green/30 animate-ping group-hover:animate-none opacity-70"></div>
         <!-- Icon -->
         <svg class="w-6 h-6 relative z-10 transition-transform duration-300 group-hover:rotate-6 text-ans-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
     </button>
-</div>
 @endauth
 
 @yield('modals')

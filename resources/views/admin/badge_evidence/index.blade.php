@@ -75,7 +75,7 @@
                             @if($evidence->isPending())
                                 <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
                             @endif
-                            {{ $evidence->statusLabel() }}
+                            {{ $evidence->status === 'pending' ? 'Pending' : ($evidence->status === 'approved' ? 'Approved' : 'Rejected') }}
                         </span>
                         @if($evidence->isApproved() && $evidence->expires_at)
                         <p class="text-xs text-gray-400 mt-1">Expires {{ $evidence->expires_at->format('d M Y') }}</p>

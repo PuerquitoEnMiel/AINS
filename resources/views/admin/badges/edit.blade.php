@@ -23,10 +23,10 @@
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1">Category</label>
                     <select name="category" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">
-                        <option value="tool_mastery" {{ old('category', $badge->category) == 'tool_mastery' ? 'selected' : '' }}>Tool Mastery (Herramientas)</option>
-                        <option value="ai_safety" {{ old('category', $badge->category) == 'ai_safety' ? 'selected' : '' }}>AI Safety (Seguridad)</option>
-                        <option value="pedagogy" {{ old('category', $badge->category) == 'pedagogy' ? 'selected' : '' }}>Pedagogy (Metodologías)</option>
-                        <option value="platform" {{ old('category', $badge->category) == 'platform' ? 'selected' : '' }}>Platform (Uso de AINS)</option>
+                        <option value="tool_mastery" {{ old('category', $badge->category) == 'tool_mastery' ? 'selected' : '' }}>Tool Mastery</option>
+                        <option value="ai_safety" {{ old('category', $badge->category) == 'ai_safety' ? 'selected' : '' }}>AI Safety</option>
+                        <option value="pedagogy" {{ old('category', $badge->category) == 'pedagogy' ? 'selected' : '' }}>Pedagogy</option>
+                        <option value="platform" {{ old('category', $badge->category) == 'platform' ? 'selected' : '' }}>Platform</option>
                     </select>
                     @error('category') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
@@ -35,9 +35,9 @@
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1">Difficulty / Metal</label>
                     <select name="difficulty" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">
-                        <option value="bronze" {{ old('difficulty', $badge->difficulty) == 'bronze' ? 'selected' : '' }}>Bronze (Bronce)</option>
-                        <option value="silver" {{ old('difficulty', $badge->difficulty) == 'silver' ? 'selected' : '' }}>Silver (Plata)</option>
-                        <option value="gold" {{ old('difficulty', $badge->difficulty) == 'gold' ? 'selected' : '' }}>Gold (Oro)</option>
+                        <option value="bronze" {{ old('difficulty', $badge->difficulty) == 'bronze' ? 'selected' : '' }}>Bronze</option>
+                        <option value="silver" {{ old('difficulty', $badge->difficulty) == 'silver' ? 'selected' : '' }}>Silver</option>
+                        <option value="gold" {{ old('difficulty', $badge->difficulty) == 'gold' ? 'selected' : '' }}>Gold</option>
                     </select>
                     @error('difficulty') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
@@ -46,16 +46,16 @@
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1">Criteria Type</label>
                     <select name="criteria_type" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">
-                        <option value="quiz" {{ old('criteria_type', $badge->criteria_type) == 'quiz' ? 'selected' : '' }}>Quiz (Completa un cuestionario)</option>
-                        <option value="usage" {{ old('criteria_type', $badge->criteria_type) == 'usage' ? 'selected' : '' }}>Usage (Generar planes o usar sistema)</option>
-                        <option value="manual" {{ old('criteria_type', $badge->criteria_type) == 'manual' ? 'selected' : '' }}>Manual (Aprobación manual de Admin)</option>
+                        <option value="quiz" {{ old('criteria_type', $badge->criteria_type) == 'quiz' ? 'selected' : '' }}>Quiz (Complete a quiz)</option>
+                        <option value="usage" {{ old('criteria_type', $badge->criteria_type) == 'usage' ? 'selected' : '' }}>Usage (Generate plans or use system)</option>
+                        <option value="manual" {{ old('criteria_type', $badge->criteria_type) == 'manual' ? 'selected' : '' }}>Manual (Manual Admin Approval)</option>
                     </select>
                     @error('criteria_type') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <!-- Sort Order -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Sort Order (Posición)</label>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Sort Order</label>
                     <input type="number" name="sort_order" value="{{ old('sort_order', $badge->sort_order) }}" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">
                     @error('sort_order') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>

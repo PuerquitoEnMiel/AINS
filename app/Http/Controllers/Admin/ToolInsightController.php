@@ -17,12 +17,12 @@ class ToolInsightController extends Controller
         $reviewCount = $reviews->count();
 
         if ($reviewCount < 3) {
-            return redirect()->back()->with('error', 'Se requieren al menos 3 reseñas para generar insights por IA.');
+            return redirect()->back()->with('error', 'At least 3 reviews are required to generate AI insights.');
         }
 
         $apiKey = env('GEMINI_API_KEY');
         if (!$apiKey) {
-            return redirect()->back()->with('error', 'API Key de Gemini no configurada.');
+            return redirect()->back()->with('error', 'Gemini API Key is not configured.');
         }
 
         $reviewsText = $reviews->map(function ($r) {
@@ -34,13 +34,13 @@ class ToolInsightController extends Controller
                   $reviewsText . "\n\n" .
                   "Generate a summary and pedagogical insights. Your response MUST be a valid JSON object matching this schema exactly (do not output any other text or explanation, respond ONLY with raw JSON):\n" .
                   "{\n" .
-                  "  \"summary\": \"A concise 2-3 sentence overview in Spanish synthesizing the overall sentiment and pedagogical value.\",\n" .
-                  "  \"pros\": [\"pro 1 in Spanish\", \"pro 2 in Spanish\", \"pro 3 in Spanish\"],\n" .
-                  "  \"cons\": [\"con 1 in Spanish\", \"con 2 in Spanish\", \"con 3 in Spanish\"],\n" .
-                  "  \"best_for_grades\": [\"Grade levels in Spanish, e.g. Pre-K, K-2, Primaria, Secundaria, Bachillerato\"],\n" .
-                  "  \"best_use_cases\": [\"Key educational use cases in Spanish, e.g. Evaluación Formativa, Aprendizaje Cooperativo\"]\n" .
+                  "  \"summary\": \"A concise 2-3 sentence overview in English synthesizing the overall sentiment and pedagogical value.\",\n" .
+                  "  \"pros\": [\"pro 1 in English\", \"pro 2 in English\", \"pro 3 in English\"],\n" .
+                  "  \"cons\": [\"con 1 in English\", \"con 2 in English\", \"con 3 in English\"],\n" .
+                  "  \"best_for_grades\": [\"Grade levels in English, e.g. Pre-K, K-2, Elementary, Middle School, High School\"],\n" .
+                  "  \"best_use_cases\": [\"Key educational use cases in English, e.g. Formative Assessment, Cooperative Learning\"]\n" .
                   "}\n\n" .
-                  "Note: translate the fields to Spanish as requested. Do not include markdown code block syntax (like ```json) in your output, just the raw JSON.";
+                  "Note: translate the fields to English as requested. Do not include markdown code block syntax (like ```json) in your output, just the raw JSON.";
 
         try {
             $response = Http::timeout(30)->withoutVerifying()->post(
@@ -88,20 +88,20 @@ class ToolInsightController extends Controller
                             ]
                         );
 
-                        return redirect()->back()->with('success', 'Insights de IA generados correctamente para ' . $tool->name);
+                        return redirect()->back()->with('success', 'AI insights successfully generated for ' . $tool->name);
                     } else {
                         Log::error('Invalid JSON structure from Gemini: ' . $text);
-                        return redirect()->back()->with('error', 'Error al procesar el formato de respuesta del asistente de IA.');
+                        return redirect()->back()->with('error', 'Error processing the AI assistant response format.');
                     }
                 }
             }
 
             Log::error('Gemini Insight Error: Status ' . $response->status() . ' - ' . $response->body());
-            return redirect()->back()->with('error', 'Error al conectar con el servidor de IA.');
+            return redirect()->back()->with('error', 'Error connecting to the AI server.');
 
         } catch (\Exception $e) {
             Log::error('Gemini Insight Exception: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Error al generar insights de IA: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error generating AI insights: ' . $e->getMessage());
         }
     }
 }

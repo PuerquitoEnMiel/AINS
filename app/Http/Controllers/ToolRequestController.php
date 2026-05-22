@@ -30,6 +30,6 @@ class ToolRequestController extends Controller
 
         ToolRequest::create($data);
 
-        return redirect('/')->with('success', '¡Solicitud enviada! El equipo administrador la revisará pronto.');
+        return redirect('/')->with('success', 'Request submitted! The administration team will review it soon.');
     }
 }

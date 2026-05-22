@@ -21,7 +21,7 @@ class ChatController extends Controller
         // Require authentication for chatbot
         if (! Auth::check()) {
             return response()->json([
-                'reply' => '🔒 Debes iniciar sesión con tu cuenta @ans.edu.ni para usar el asistente de IA.',
+                'reply' => '🔒 You must log in with your @ans.edu.ni account to use the AI assistant.',
             ], 401);
         }
 
@@ -33,7 +33,7 @@ class ChatController extends Controller
         // Graceful fallback if API key is not configured
         if (! $apiKey) {
             return response()->json([
-                'reply' => "👋 **Hola! Soy AINS AI Companion**, tu asesor personal de tecnología educativa en ANS.\n\nPara activar mi inteligencia de lenguaje en tiempo real, pídele al administrador que configure la variable `GEMINI_API_KEY` en el archivo `.env`.\n\nMientras tanto, ¡puedo recomendarte excelentes herramientas aprobadas de nuestro catálogo! \n- Usa **Stitch** para una planificación curricular impecable.\n- Usa **Pomelo** para automatizar tus tareas de gestión escolar.\n- Prueba **NotebookLM** para analizar y resumir artículos académicos de forma interactiva.",
+                'reply' => "👋 **Hello! I am AINS AI Companion**, your personal EdTech advisor at ANS.\n\nTo activate my real-time language intelligence, please ask the administrator to configure the `GEMINI_API_KEY` variable in the `.env` file.\n\nIn the meantime, I can recommend excellent approved tools from our catalog! \n- Use **Stitch** for flawless curriculum planning.\n- Use **Pomelo** to automate your school management tasks.\n- Try **NotebookLM** to interactively analyze and summarize academic articles.",
             ]);
         }
 
@@ -88,7 +88,7 @@ class ChatController extends Controller
                              "Guidelines:\n".
                              "1. Provide rich, highly practical pedagogical recommendations (align with SAMR or TPACK models when appropriate).\n".
                              "2. Write clear, detailed prompt engineering templates for teachers and students (e.g. prompt blueprints they can copy).\n".
-                             "3. Always reply in the user's language (Spanish or English). Keep your tone friendly, professional, institutional, and highly motivating.\n".
+                             "3. Always reply in English. Keep your tone friendly, professional, institutional, and highly motivating.\n".
                              '4. Use clear markdown formatting, bold points, bullet lists, and code blocks for prompt templates. Never mention system limits; act as a helpful ANS staff assistant.';
 
         // Format and consolidate history for Gemini API (ensures strictly alternating turns)
@@ -148,7 +148,7 @@ class ChatController extends Controller
             Log::error('Gemini API Error: Status '.$response->status().' - '.$response->body());
 
             return response()->json([
-                'reply' => '⚠️ *ANS Companion: Tuve un problema al procesar la respuesta con el servidor de inteligencia artificial. Por favor intenta de nuevo en unos momentos.*',
+                'reply' => '⚠️ *ANS Companion: I had a problem processing the response with the AI server. Please try again in a few moments.*',
                 'conversation_id' => $conversation->id,
             ]);
 
@@ -156,7 +156,7 @@ class ChatController extends Controller
             Log::error('Gemini Request Exception: '.$e->getMessage());
 
             return response()->json([
-                'reply' => '🔌 *ANS Companion: Hubo un problema de conexión con el servidor. Verifica tu conexión a internet o intenta más tarde.*',
+                'reply' => '🔌 *ANS Companion: There was a connection issue with the server. Please check your internet connection or try again later.*',
                 'conversation_id' => $conversation->id,
             ]);
         }

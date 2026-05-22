@@ -225,7 +225,7 @@
     function nextQuestion() {
         // Validate that an answer is selected
         if (!userAnswers[currentQuestionIndex]) {
-            alert('Por favor selecciona una opción antes de continuar.');
+            alert('Please select an option before continuing.');
             return;
         }
 
@@ -268,14 +268,14 @@
             if (data.success) {
                 renderResults(data);
             } else {
-                alert('Ocurrió un error al calificar el cuestionario.');
+                alert('An error occurred while grading the quiz.');
                 nextBtn.disabled = false;
                 nextBtn.innerText = "Submit Assessment";
             }
         })
         .catch(err => {
             console.error(err);
-            alert('Error de red. Inténtalo de nuevo.');
+            alert('Network error. Please try again.');
             nextBtn.disabled = false;
             nextBtn.innerText = "Submit Assessment";
         });
@@ -325,7 +325,7 @@
             const expDiv = document.createElement('div');
             expDiv.className = `p-4 rounded-xl border ${q.is_correct ? 'border-emerald-100 bg-emerald-50/20' : 'border-rose-100 bg-rose-50/20'}`;
             
-            const userOptionText = q.options[q.user_answer] || 'Ninguna';
+            const userOptionText = q.options[q.user_answer] || 'None';
             const correctOptionText = q.options[q.correct];
             
             expDiv.innerHTML = `

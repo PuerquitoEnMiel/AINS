@@ -48,7 +48,7 @@ class GoogleController extends Controller
             $domain = substr(strrchr($email, "@"), 1);
 
             if ($allowedDomains !== '*' && !in_array($domain, $allowedDomainsArray)) {
-                return redirect('/')->with('error', 'Solo se permiten cuentas de dominios autorizados: ' . implode(', ', $allowedDomainsArray));
+                return redirect('/')->with('error', 'Only accounts from authorized domains are allowed: ' . implode(', ', $allowedDomainsArray));
             }
 
             $user = User::updateOrCreate(
@@ -79,15 +79,15 @@ class GoogleController extends Controller
 
             // Redirect based on role
             if ($user->role === 'admin') {
-                return redirect('/admin/solicitudes');
+                return redirect()->route('admin.requests.index');
             }
 
-            return redirect('/')->with('success', 'Sesión iniciada con éxito.');
+            return redirect('/')->with('success', 'Logged in successfully.');
 
         } catch (\Exception $e) {
             Log::error('Google Auth Error: '.$e->getMessage()."\n".$e->getTraceAsString());
 
-            return redirect('/')->with('error', 'Error al iniciar sesión con Google: '.$e->getMessage());
+            return redirect('/')->with('error', 'Error logging in with Google: '.$e->getMessage());
         }
     }
 

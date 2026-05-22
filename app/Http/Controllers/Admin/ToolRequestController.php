@@ -37,7 +37,7 @@ class ToolRequestController extends Controller
             'tool_id' => $tool->id,
         ]);
 
-        return back()->with('success', "Herramienta \"{$tool->name}\" aprobada y publicada.");
+        return back()->with('success', "Tool \"{$tool->name}\" approved and published.");
     }
 
     public function reject(Request $request, ToolRequest $toolRequest)
@@ -47,6 +47,6 @@ class ToolRequestController extends Controller
             'admin_notes' => $request->input('admin_notes'),
         ]);
 
-        return back()->with('info', 'Solicitud rechazada.');
+        return back()->with('info', 'Request rejected.');
     }
 }

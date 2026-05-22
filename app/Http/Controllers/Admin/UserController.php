@@ -51,7 +51,7 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => "Rol de {$user->name} actualizado a {$data['role']}.",
+            'message' => "Role of {$user->name} updated to {$data['role']}.",
         ]);
     }
 }

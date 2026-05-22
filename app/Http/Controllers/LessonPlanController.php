@@ -35,29 +35,29 @@ class LessonPlanController extends Controller
         $apiKey = env('GEMINI_API_KEY');
         if (! $apiKey) {
             return response()->json([
-                'error' => 'API Key de Gemini no configurada en el archivo .env.',
+                'error' => 'Gemini API Key is not configured in the .env file.',
             ], 500);
         }
 
         // Get approved tools context
         $tools = Tool::approved()->get(['id', 'name', 'description', 'category']);
         $toolsContext = $tools->map(function ($t) {
-            return "- {$t->name} (Categoría: {$t->category}): {$t->description}";
+            return "- {$t->name} (Category: {$t->category}): {$t->description}";
         })->implode("\n");
 
-        $prompt = "Diseña una planeación de clase detallada y profesional para el colegio American Nicaraguan School (ANS).\n\n".
-                  "Detalles de la clase:\n".
-                  "- Título/Tema: {$request->title}\n".
-                  "- Asignatura: {$request->subject}\n".
-                  "- Nivel/Grado: {$request->grade_level}\n".
-                  "- Objetivos de Aprendizaje: {$request->objectives}\n".
-                  "- Duración: {$request->duration}\n\n".
-                  "Directrices pedagógicas:\n".
-                  "1. Estructura el plan en fases claras: Inicio/Warm-up, Desarrollo/Activities, Cierre/Wrap-up y Evaluación/Assessment.\n".
-                  "2. Integra explícitamente una o más de las siguientes herramientas del catálogo de tecnología educativa aprobado en AINS en el desarrollo de la clase. Menciona el nombre exacto de la herramienta en negrita (ej. **Canva**, **Kahoot**):\n".
+        $prompt = "Design a detailed and professional lesson plan for the American Nicaraguan School (ANS).\n\n".
+                  "Class details:\n".
+                  "- Title/Topic: {$request->title}\n".
+                  "- Subject: {$request->subject}\n".
+                  "- Grade Level: {$request->grade_level}\n".
+                  "- Learning Objectives: {$request->objectives}\n".
+                  "- Duration: {$request->duration}\n\n".
+                  "Pedagogical guidelines:\n".
+                  "1. Structure the plan into clear phases: Warm-up, Activities, Wrap-up, and Assessment.\n".
+                  "2. Explicitly integrate one or more of the following educational technology tools from the approved AINS catalog into the class development. Mention the exact name of the tool in bold (e.g. **Canva**, **Kahoot**):\n".
                   $toolsContext."\n\n".
-                  "3. Agrega sugerencias de prompt o plantillas de uso de IA aplicables para esta lección específica.\n".
-                  '4. Responde en español (o inglés si el tema lo amerita, por defecto español). Usa formato Markdown limpio y profesional con subtítulos, listas con viñetas y bloques de código para plantillas.';
+                  "3. Add suggestions for AI prompts or templates applicable for this specific lesson.\n".
+                  "4. Respond in English. Use clean, professional Markdown formatting with subheadings, bulleted lists, and code blocks for templates.";
 
         try {
             $response = Http::timeout(30)->withoutVerifying()->post(
@@ -95,14 +95,14 @@ class LessonPlanController extends Controller
             Log::error('Gemini Planner Error: Status '.$response->status().' - '.$response->body());
 
             return response()->json([
-                'error' => 'Error al generar la planeación de clases desde el servidor de IA.',
+                'error' => 'Error generating the lesson plan from the AI server.',
             ], 500);
 
         } catch (\Exception $e) {
             Log::error('Gemini Planner Exception: '.$e->getMessage());
 
             return response()->json([
-                'error' => 'Error de conexión con el asistente de IA: '.$e->getMessage(),
+                'error' => 'Connection error with the AI assistant: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -140,7 +140,7 @@ class LessonPlanController extends Controller
     public function show(LessonPlan $lessonPlan)
     {
         if ($lessonPlan->user_id !== auth()->id()) {
-            abort(403, 'No autorizado.');
+            abort(403, 'Unauthorized.');
         }
 
         $tools = [];
@@ -156,7 +156,7 @@ class LessonPlanController extends Controller
     public function export(LessonPlan $lessonPlan)
     {
         if ($lessonPlan->user_id !== auth()->id()) {
-            abort(403, 'No autorizado.');
+            abort(403, 'Unauthorized.');
         }
 
         $token = session('google_access_token');
@@ -194,10 +194,10 @@ class LessonPlanController extends Controller
             if (! $createResponse->successful()) {
                 Log::error('Google Docs Create Error: ' . $createResponse->body());
                 if (request()->ajax()) {
-                    return response()->json(['error' => 'Error al crear el documento en Google Docs.'], 500);
+                    return response()->json(['error' => 'Error creating the document in Google Docs.'], 500);
                 }
                 return redirect()->route('lesson-plans.show', $lessonPlan)
-                    ->with('error', 'Error al crear el documento en Google Docs.');
+                    ->with('error', 'Error creating the document in Google Docs.');
             }
 
             $docData = $createResponse->json();
@@ -232,10 +232,10 @@ class LessonPlanController extends Controller
         } catch (\Exception $e) {
             Log::error('Google Docs Export Exception: ' . $e->getMessage());
             if (request()->ajax()) {
-                return response()->json(['error' => 'Excepción de conexión con Google API: ' . $e->getMessage()], 500);
+                return response()->json(['error' => 'Connection exception with Google API: ' . $e->getMessage()], 500);
             }
             return redirect()->route('lesson-plans.show', $lessonPlan)
-                ->with('error', 'Error de conexión con Google: ' . $e->getMessage());
+                ->with('error', 'Connection error with Google: ' . $e->getMessage());
         }
     }
 
@@ -369,12 +369,127 @@ class LessonPlanController extends Controller
     public function destroy(LessonPlan $lessonPlan)
     {
         if ($lessonPlan->user_id !== auth()->id()) {
-            abort(403, 'No autorizado.');
+            abort(403, 'Unauthorized.');
         }
 
         $lessonPlan->delete();
 
         return redirect()->route('lesson-plans.index')
-            ->with('success', 'Planificación eliminada exitosamente.');
+            ->with('success', 'Lesson plan deleted successfully.');
+    }
+
+    public function refine(Request $request)
+    {
+        $request->validate([
+            'content' => 'required|string',
+            'instructions' => 'required|string',
+        ]);
+
+        $apiKey = env('GEMINI_API_KEY');
+        if (! $apiKey) {
+            return response()->json([
+                'error' => 'Gemini API Key is not configured in the .env file.',
+            ], 500);
+        }
+
+        $prompt = "I have this lesson plan:\n\n".
+                  "```markdown\n".
+                  $request->content."\n".
+                  "```\n\n".
+                  "I want you to refine and modify it following exactly these instructions:\n".
+                  "\"{$request->instructions}\"\n\n".
+                  "Guidelines:\n".
+                  "1. Maintain the structure and format of the lesson plan (phases, Markdown, bold text, etc.).\n".
+                  "2. Keep the references to the educational technology tools from the AINS catalog (e.g. **Canva**, **Kahoot**, etc.) unless explicitly asked to add or remove one.\n".
+                  "3. Respond only with the new refined content in Markdown (do not add greetings, extra explanations, or delimiters like ```markdown ... ``` or similar, just the modified lesson plan in English).";
+
+        try {
+            $response = Http::timeout(30)->withoutVerifying()->post(
+                'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='.$apiKey,
+                [
+                    'contents' => [
+                        [
+                            'role' => 'user',
+                            'parts' => [['text' => $prompt]],
+                        ],
+                    ],
+                ]
+            );
+
+            if ($response->successful()) {
+                $data = $response->json();
+                $markdown = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
+
+                if ($markdown) {
+                    if (str_starts_with($markdown, "```markdown")) {
+                        $markdown = substr($markdown, 11);
+                        if (str_ends_with($markdown, "```")) {
+                            $markdown = substr($markdown, 0, -3);
+                        }
+                    } elseif (str_starts_with($markdown, "```")) {
+                        $markdown = substr($markdown, 3);
+                        if (str_ends_with($markdown, "```")) {
+                            $markdown = substr($markdown, 0, -3);
+                        }
+                    }
+                    $markdown = trim($markdown);
+
+                    return response()->json([
+                        'markdown' => $markdown,
+                    ]);
+                }
+            }
+
+            Log::error('Gemini Planner Refinement Error: Status '.$response->status().' - '.$response->body());
+
+            return response()->json([
+                'error' => 'Error refining the lesson plan from the AI server.',
+            ], 500);
+
+        } catch (\Exception $e) {
+            Log::error('Gemini Planner Refinement Exception: '.$e->getMessage());
+
+            return response()->json([
+                'error' => 'Connection error with the AI assistant: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function update(Request $request, LessonPlan $lessonPlan)
+    {
+        if ($lessonPlan->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized.');
+        }
+
+        $request->validate([
+            'title' => 'sometimes|required|string|max:255',
+            'subject' => 'sometimes|required|string|max:255',
+            'grade_level' => 'sometimes|required|string|max:255',
+            'objectives' => 'sometimes|required|string',
+            'duration' => 'sometimes|required|string|max:255',
+            'content' => 'required|string',
+            'selected_tools' => 'nullable|array',
+        ]);
+
+        $lessonPlan->update([
+            'title' => $request->title ?? $lessonPlan->title,
+            'subject' => $request->subject ?? $lessonPlan->subject,
+            'grade_level' => $request->grade_level ?? $lessonPlan->grade_level,
+            'objectives' => $request->objectives ?? $lessonPlan->objectives,
+            'duration' => $request->duration ?? $lessonPlan->duration,
+            'content' => $request->content,
+            'selected_tools' => $request->selected_tools ?? $lessonPlan->selected_tools ?? [],
+        ]);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lesson plan updated successfully.',
+                'url' => route('lesson-plans.show', $lessonPlan),
+            ]);
+        }
+
+        return redirect()->route('lesson-plans.show', $lessonPlan)
+            ->with('success', 'Lesson plan updated successfully.');
     }
 }

@@ -32,6 +32,6 @@ class ProfileController extends Controller
 
         Auth::user()->update($data);
 
-        return back()->with('success', 'Perfil actualizado.');
+        return back()->with('success', 'Profile updated.');
     }
 }

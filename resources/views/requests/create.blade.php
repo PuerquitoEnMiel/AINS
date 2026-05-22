@@ -57,7 +57,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         <!-- FORM COLUMN -->
-        <form method="POST" action="/solicitudes" class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <form method="POST" action="{{ route('requests.store') }}" class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             @csrf
 
             <!-- Form Header -->

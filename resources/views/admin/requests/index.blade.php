@@ -176,14 +176,14 @@
                         <td class="px-6 py-5 text-right">
                             @if($req->status === 'pending')
                             <div class="flex gap-2 justify-end">
-                                <form method="POST" action="/admin/solicitudes/{{ $req->id }}/approve">
+                                <form method="POST" action="{{ route('admin.requests.approve', $req) }}">
                                     @csrf
                                     <button type="submit" class="inline-flex items-center gap-1.5 bg-ans-dark-green hover:bg-ans-seal-green text-white text-xs font-bold px-4 py-2 rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                         Approve
                                     </button>
                                 </form>
-                                <form method="POST" action="/admin/solicitudes/{{ $req->id }}/reject">
+                                <form method="POST" action="{{ route('admin.requests.reject', $req) }}">
                                     @csrf
                                     <button type="submit" class="inline-flex items-center gap-1.5 bg-white hover:bg-red-50 text-gray-500 hover:text-red-600 border border-gray-200 hover:border-red-200 text-xs font-bold px-4 py-2 rounded-xl transition-all">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>

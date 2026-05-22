@@ -43,7 +43,7 @@ class PromptTipController extends Controller
         PromptTip::create($validated);
 
         return redirect()->route('admin.prompt-tips.index')
-            ->with('success', 'Prompt EdTech creado exitosamente.');
+            ->with('success', 'EdTech Prompt created successfully.');
     }
 
     /**
@@ -73,7 +73,7 @@ class PromptTipController extends Controller
         $promptTip->update($validated);
 
         return redirect()->route('admin.prompt-tips.index')
-            ->with('success', 'Prompt EdTech actualizado exitosamente.');
+            ->with('success', 'EdTech Prompt updated successfully.');
     }
 
     /**
@@ -84,6 +84,6 @@ class PromptTipController extends Controller
         $promptTip->delete();
 
         return redirect()->route('admin.prompt-tips.index')
-            ->with('success', 'Prompt EdTech eliminado exitosamente.');
+            ->with('success', 'EdTech Prompt deleted successfully.');
     }
 }

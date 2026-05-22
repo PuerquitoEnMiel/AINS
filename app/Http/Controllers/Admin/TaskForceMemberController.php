@@ -44,7 +44,7 @@ class TaskForceMemberController extends Controller
         TaskForceMember::create($validated);
 
         return redirect()->route('admin.task-force.index')
-            ->with('success', 'Miembro agregado exitosamente.');
+            ->with('success', 'Member added successfully.');
     }
 
     /**
@@ -77,7 +77,7 @@ class TaskForceMemberController extends Controller
         $taskForce->update($validated);
 
         return redirect()->route('admin.task-force.index')
-            ->with('success', 'Miembro actualizado exitosamente.');
+            ->with('success', 'Member updated successfully.');
     }
 
     /**
@@ -88,6 +88,6 @@ class TaskForceMemberController extends Controller
         $taskForce->delete();
 
         return redirect()->route('admin.task-force.index')
-            ->with('success', 'Miembro eliminado exitosamente.');
+            ->with('success', 'Member deleted successfully.');
     }
 }

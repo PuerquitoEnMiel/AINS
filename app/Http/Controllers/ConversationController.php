@@ -31,7 +31,7 @@ class ConversationController extends Controller
         ]);
 
         $conversation = Auth::user()->conversations()->create([
-            'title' => $data['title'] ?? 'Nueva conversación',
+            'title' => $data['title'] ?? 'New conversation',
         ]);
 
         return response()->json($conversation, 201);
@@ -81,6 +81,6 @@ class ConversationController extends Controller
 
         $conversation->delete();
 
-        return response()->json(['message' => 'Conversación eliminada.']);
+        return response()->json(['message' => 'Conversation deleted.']);
     }
 }

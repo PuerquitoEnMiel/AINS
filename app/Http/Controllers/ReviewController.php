@@ -18,7 +18,7 @@ class ReviewController extends Controller
         $user = Auth::user();
         if ($tool->categoryRelation?->slug === 'ai-detection') {
             if ($user->isStudent()) {
-                return back()->with('error', 'No tienes permiso para reseñar esta herramienta.');
+                return back()->with('error', 'You do not have permission to review this tool.');
             }
         }
 
@@ -35,6 +35,6 @@ class ReviewController extends Controller
         // Recalculate cached average
         $tool->recalculateRating();
 
-        return back()->with('success', '¡Reseña guardada!');
+        return back()->with('success', 'Review saved!');
     }
 }

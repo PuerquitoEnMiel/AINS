@@ -17,6 +17,26 @@
     
     // Trending tools (top 4 by clicks)
     $trendingTools = $allTools->sortByDesc('click_count')->take(4);
+
+    // Vibrant Tailwind Gradients for placeholders
+    $vibrantGradients = [
+        'from-purple-500 to-indigo-600',
+        'from-pink-500 to-rose-600',
+        'from-emerald-500 to-teal-600',
+        'from-blue-500 to-indigo-600',
+        'from-amber-500 to-orange-600',
+        'from-cyan-500 to-blue-600',
+        'from-violet-500 to-fuchsia-600',
+        'from-red-500 to-ans-orange'
+    ];
+
+    $getGradientForName = function($name) use ($vibrantGradients) {
+        $hash = 0;
+        foreach (str_split($name) as $char) {
+            $hash += ord($char);
+        }
+        return $vibrantGradients[$hash % count($vibrantGradients)];
+    };
 @endphp
 
 <style>
@@ -120,8 +140,8 @@
 </div>
 
 
-@if($showNewestBanner && $newestTool)
-<div id="new-app-banner" class="mb-8 hidden animate-fade-in-up" data-tool-id="{{ $newestTool->id }}">
+@if($newestTool && $showNewestBanner)
+<div id="new-app-banner" class="mb-8 animate-fade-in-up" data-tool-id="{{ $newestTool->id }}">
     <div class="relative bg-gradient-to-r from-ans-dark-green/95 via-ans-seal-green/90 to-ans-dark-green/95 backdrop-blur-xl border border-white/15 rounded-2xl p-4 md:p-5 shadow-lg overflow-hidden flex flex-col md:flex-row items-center justify-between gap-4">
         <!-- Close Button -->
         <button onclick="dismissNewAppBanner({{ $newestTool->id }})" class="absolute top-3 right-3 text-white/60 hover:text-white transition-colors" title="Close Novedades Banner">
@@ -138,9 +158,9 @@
             </div>
             <div>
                 <span class="inline-flex items-center gap-1 bg-ans-orange/20 text-ans-orange text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider mb-1">
-                    ✨ Novedad
+                    New
                 </span>
-                <h4 class="text-sm font-bold text-white">¡Nueva herramienta disponible: {{ $newestTool->name }}!</h4>
+                <h4 class="text-sm font-bold text-white">New tool available: {{ $newestTool->name }}!</h4>
                 <p class="text-xs text-white/70 mt-0.5 line-clamp-1 md:line-clamp-none">{{ $newestTool->description }}</p>
             </div>
         </div>
@@ -149,7 +169,7 @@
             <button onclick="openToolModal(JSON.parse(this.dataset.tool))" 
                     data-tool="{{ json_encode(['id'=>$newestTool->id,'name'=>$newestTool->name,'desc'=>$newestTool->description,'url'=>$newestTool->url,'cat'=>$newestTool->category,'type'=>$newestTool->is_google_workspace?'Google Workspace':'3rd Party','logo'=>$newestTool->logo_url?asset($newestTool->logo_url):null]) }}"
                     class="bg-ans-orange hover:bg-ans-orange/90 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-ans-orange/20 hover:scale-105">
-                Explorar Ahora
+                Explore Now
             </button>
         </div>
     </div>
@@ -200,7 +220,16 @@
                  ]) }}"
                  onclick="openToolModal(JSON.parse(this.dataset.tool))">
                 <div class="absolute top-0 right-0 w-24 h-24 {{ $palette['bg'] }} rounded-bl-full"></div>
-                <div class="w-14 h-14 bg-gradient-to-br {{ $palette['from'] }} rounded-2xl flex items-center justify-center mb-5 shadow-lg {{ $palette['shadow'] }} group-hover:scale-110 transition-transform duration-300">
+                
+                <!-- Heart Button -->
+                <button onclick="toggleCardFavorite(event, this, '{{ $oTool->name }}', {{ $oTool->id }})" class="card-fav-btn absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-gray-400 hover:text-red-500 flex items-center justify-center transition-all shadow-sm border border-gray-100/50 hover:scale-105 active:scale-95" data-tool-name="{{ $oTool->name }}" title="Favorite">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                </button>
+
+                @php
+                    $grad = $oTool->logo_url ? '' : $getGradientForName($oTool->name);
+                @endphp
+                <div class="w-14 h-14 @if($oTool->logo_url) bg-gradient-to-br {{ $palette['from'] }} @else bg-gradient-to-br {{ $grad }} shadow-md shadow-black/10 @endif rounded-2xl flex items-center justify-center mb-5 shadow-lg {{ $palette['shadow'] }} group-hover:scale-110 transition-transform duration-300">
                     @if($oTool->logo_url)
                         <img src="{{ asset($oTool->logo_url) }}" alt="{{ $oTool->name }}" class="w-full h-full object-cover rounded-2xl">
                     @else
@@ -224,23 +253,28 @@
 <!-- ═══════════════════════════════════════════════════════════ -->
 @if($trendingTools->count() > 0)
 <div id="trending-section" class="mb-14">
+    <style>
+        .hide-scroll::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
     <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-3">
             <div class="w-1.5 h-8 bg-gradient-to-b from-red-500 to-ans-orange rounded-full"></div>
             <div>
-                <h3 class="text-xl font-heading font-bold text-gray-900">🔥 Herramientas en Tendencia</h3>
-                <p class="text-xs text-gray-500 mt-0.5">Las plataformas más utilizadas por la comunidad de ANS</p>
+                <h3 class="text-xl font-heading font-bold text-gray-900">Trending Tools</h3>
+                <p class="text-xs text-gray-500 mt-0.5">The most popular platforms in the ANS community</p>
             </div>
         </div>
         <span class="inline-flex items-center gap-1 text-xs font-semibold bg-red-500/10 text-red-600 px-3 py-1.5 rounded-full">
             <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping"></span>
-            En alza
+            Trending
         </span>
     </div>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div class="flex overflow-x-auto gap-5 pb-6 pt-3 px-2 snap-x snap-mandatory hide-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
         @foreach($trendingTools as $index => $tTool)
-            <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-xl hover:shadow-red-500/5 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer animate-fade-in-up"
+            <div class="flex-shrink-0 w-80 snap-center group premium-card bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-xl hover:shadow-red-500/5 hover:-translate-y-1 transition-all duration-300 relative overflow-visible cursor-pointer animate-fade-in-up"
                  style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
                  data-tool="{{ json_encode([
                      'id' => $tTool->id,
@@ -252,9 +286,23 @@
                      'logo' => $tTool->logo_url ? asset($tTool->logo_url) : null
                  ]) }}"
                  onclick="openToolModal(JSON.parse(this.dataset.tool))">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-red-500/5 to-transparent rounded-bl-full"></div>
-                <div class="flex items-start justify-between mb-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-50 rounded-xl flex items-center justify-center text-gray-400 font-bold text-xl group-hover:from-red-500/10 group-hover:to-ans-orange/5 group-hover:text-red-500 transition-all duration-300">
+                 
+                <!-- Heart Button -->
+                <button onclick="toggleCardFavorite(event, this, '{{ $tTool->name }}', {{ $tTool->id }})" class="card-fav-btn absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-gray-400 hover:text-red-500 flex items-center justify-center transition-all shadow-sm border border-gray-100/50 hover:scale-105 active:scale-95" data-tool-name="{{ $tTool->name }}" title="Favorite">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                </button>
+
+                <!-- App Store Rank Badge -->
+                <div class="absolute -top-3 -left-3 w-10 h-10 bg-gradient-to-br from-red-500 to-ans-orange rounded-full flex items-center justify-center text-white font-black text-lg shadow-lg border-4 border-white z-10 shadow-red-500/30">
+                    #{{ $index + 1 }}
+                </div>
+
+                <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-red-500/5 to-transparent rounded-bl-full overflow-hidden"></div>
+                @php
+                    $grad = $tTool->logo_url ? '' : $getGradientForName($tTool->name);
+                @endphp
+                <div class="flex items-start justify-between mb-4 relative z-0">
+                    <div class="w-14 h-14 @if($tTool->logo_url) bg-gradient-to-br from-gray-100 to-gray-50 @else bg-gradient-to-br {{ $grad }} shadow-md shadow-black/10 @endif rounded-xl flex items-center justify-center @if(!$tTool->logo_url) text-white @else text-gray-400 @endif font-bold text-2xl group-hover:scale-110 transition-all duration-300 shadow-sm border border-gray-100/50">
                         @if($tTool->logo_url)
                             <img src="{{ asset($tTool->logo_url) }}" alt="{{ $tTool->name }}" class="w-full h-full object-cover rounded-xl">
                         @else
@@ -262,16 +310,16 @@
                         @endif
                     </div>
                     <!-- Click Count Badge -->
-                    <span class="inline-flex items-center gap-1 text-[10px] font-bold bg-red-50 text-red-600 px-2.5 py-1 rounded-lg border border-red-100 group-hover:scale-105 transition-transform duration-300">
+                    <span class="inline-flex items-center gap-1 text-[10px] font-bold bg-red-50 text-red-600 px-2.5 py-1 rounded-lg border border-red-100 group-hover:scale-105 transition-transform duration-300 shadow-sm">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                        {{ $tTool->click_count }} clics
+                        {{ $tTool->click_count }} clicks
                     </span>
                 </div>
                 <h4 class="font-heading font-bold text-gray-900 text-base leading-tight group-hover:text-red-600 transition-colors">{{ $tTool->name }}</h4>
                 <p class="text-xs text-gray-500 mt-2 leading-relaxed line-clamp-2">{{ $tTool->description }}</p>
                 <div class="mt-4 flex items-center gap-2">
                     @if($tTool->is_official)
-                        <span class="text-[9px] font-bold bg-ans-orange/10 text-ans-orange px-2 py-0.5 rounded-full uppercase tracking-wider">★ Oficial</span>
+                        <span class="text-[9px] font-bold bg-ans-orange/10 text-ans-orange px-2 py-0.5 rounded-full uppercase tracking-wider">★ Official</span>
                     @endif
                     @if($tTool->is_google_workspace)
                         <span class="text-[9px] font-bold bg-ans-blue/10 text-ans-blue px-2 py-0.5 rounded-full uppercase tracking-wider">Workspace</span>
@@ -294,7 +342,7 @@
         <div class="flex items-center gap-3">
             <div class="w-1.5 h-8 bg-gradient-to-b from-ans-dark-green to-ans-light-green rounded-full"></div>
             <div>
-                <h3 class="text-xl font-heading font-bold text-gray-900">General Catalog</h3>
+                <h3 class="text-xl font-heading font-bold text-gray-900">EdTech Catalog</h3>
                 <p class="text-xs text-gray-500 mt-0.5">All approved tools available for use</p>
             </div>
         </div>
@@ -328,19 +376,28 @@
         @if($tool->is_official)
             @continue
         @endif
-        <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer animate-fade-in-up"
+        <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-visible animate-fade-in-up"
              style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
              data-tool="{{ json_encode(['id'=>$tool->id,'name'=>$tool->name,'desc'=>$tool->description,'url'=>$tool->url,'cat'=>$tool->category,'type'=>$tool->is_google_workspace?'Google Workspace':'3rd Party','logo'=>$tool->logo_url?asset($tool->logo_url):null]) }}"
              onclick="openToolModal(JSON.parse(this.dataset.tool))">
+            
+            <!-- Heart Button -->
+            <button onclick="toggleCardFavorite(event, this, '{{ $tool->name }}', {{ $tool->id }})" class="card-fav-btn absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-gray-400 hover:text-red-500 flex items-center justify-center transition-all shadow-sm border border-gray-100/50 hover:scale-105 active:scale-95" data-tool-name="{{ $tool->name }}" title="Favorite">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+            </button>
+
             <div class="flex items-start justify-between mb-4">
                 @if($tool->logo_url)
                     <img src="{{ asset($tool->logo_url) }}" alt="{{ $tool->name }}" class="w-12 h-12 rounded-xl object-cover border border-gray-100 group-hover:scale-110 transition-transform duration-300">
                 @else
-                    <div class="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-50 rounded-xl flex items-center justify-center text-gray-400 font-bold text-xl group-hover:from-ans-dark-green/10 group-hover:to-ans-light-green/5 group-hover:text-ans-dark-green transition-all duration-300">
+                    @php
+                        $grad = $getGradientForName($tool->name);
+                    @endphp
+                    <div class="w-12 h-12 bg-gradient-to-br {{ $grad }} rounded-xl flex items-center justify-center text-white font-bold text-xl group-hover:scale-110 transition-all duration-300 shadow-md shadow-black/10">
                         {{ substr($tool->name, 0, 1) }}
                     </div>
                 @endif
-                <svg class="w-5 h-5 text-gray-200 group-hover:text-ans-orange transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                <div class="w-5 h-5"></div>
             </div>
             <h4 class="font-heading font-bold text-gray-900 text-lg leading-tight">{{ $tool->name }}</h4>
             <p class="text-sm text-gray-500 mt-2 leading-relaxed line-clamp-2">{{ $tool->description }}</p>
@@ -373,15 +430,21 @@
             $demoUrls = ['ChatGPT'=>'https://chatgpt.com','Gemini'=>'https://gemini.google.com','Canva AI'=>'https://canva.com','Gamma'=>'https://gamma.app','NotebookLM'=>'https://notebooklm.google.com','Claude'=>'https://claude.ai','Perplexity'=>'https://perplexity.ai','Suno AI'=>'https://suno.ai'];
         @endphp
         @foreach($demoTools as $index => $demo)
-        <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer animate-fade-in-up"
+        <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-visible animate-fade-in-up"
              style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
              data-tool="{{ json_encode(['name'=>$demo['name'],'desc'=>$demo['desc'],'url'=>$demoUrls[$demo['name']]??'#','cat'=>$demo['cat'],'type'=>$demo['type'],'logo'=>null]) }}"
              onclick="openToolModal(JSON.parse(this.dataset.tool))">
+            
+            <!-- Heart Button -->
+            <button onclick="toggleCardFavorite(event, this, '{{ $demo['name'] }}', 0)" class="card-fav-btn absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-gray-400 hover:text-red-500 flex items-center justify-center transition-all shadow-sm border border-gray-100/50 hover:scale-105 active:scale-95" data-tool-name="{{ $demo['name'] }}" title="Favorite">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+            </button>
+
             <div class="flex items-start justify-between mb-4">
                 <div class="w-12 h-12 bg-gradient-to-br {{ $demo['color'] }} rounded-xl flex items-center justify-center {{ $demo['shadow'] }} shadow-lg group-hover:scale-110 transition-transform duration-300">
                     <span class="text-white font-bold text-xl">{{ substr($demo['name'], 0, 1) }}</span>
                 </div>
-                <svg class="w-5 h-5 text-gray-200 group-hover:text-ans-orange transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                <div class="w-5 h-5"></div>
             </div>
             <h4 class="font-heading font-bold text-gray-900 text-lg leading-tight">{{ $demo['name'] }}</h4>
             <p class="text-sm text-gray-500 mt-2 leading-relaxed line-clamp-2">{{ $demo['desc'] }}</p>
@@ -431,7 +494,7 @@
             <h3 class="text-2xl font-heading font-extrabold text-white">Know a great AI tool?</h3>
             <p class="text-white/80 mt-2 max-w-md">Help us grow this directory. Suggest tools you've found useful for teaching or learning.</p>
         </div>
-        <a href="/solicitudes/nueva" class="flex-shrink-0 bg-white text-ans-orange font-bold px-8 py-3.5 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-sm">
+        <a href="{{ route('requests.create') }}" class="flex-shrink-0 bg-white text-ans-orange font-bold px-8 py-3.5 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-sm">
             Suggest a Tool →
         </a>
     </div>
@@ -747,9 +810,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const banner = document.getElementById('new-app-banner');
     if (banner) {
         const toolId = banner.dataset.toolId;
-        if (!localStorage.getItem('dismissed_new_tool_banner_' + toolId)) {
-            banner.classList.remove('hidden');
+        if (localStorage.getItem('dismissed_new_tool_banner_' + toolId)) {
+            banner.classList.add('hidden');
         }
+    }
+    if (typeof initHearts === 'function') {
+        initHearts();
     }
 });
 
@@ -798,11 +864,96 @@ function toggleFav(name) {
     return favs.includes(name);
 }
 
+function updateCardHeartUI(btn, isFav) {
+    const svg = btn.querySelector('svg');
+    if (!svg) return;
+    if (isFav) {
+        btn.classList.remove('text-gray-400');
+        btn.classList.add('text-red-500');
+        svg.setAttribute('fill', 'currentColor');
+    } else {
+        btn.classList.remove('text-red-500');
+        btn.classList.add('text-gray-400');
+        svg.setAttribute('fill', 'none');
+    }
+}
+
+function syncHeartsForTool(toolName, isFav) {
+    document.querySelectorAll(`.card-fav-btn[data-tool-name="${toolName}"]`).forEach(btn => {
+        updateCardHeartUI(btn, isFav);
+    });
+}
+
+function toggleCardFavorite(event, btn, toolName, toolId) {
+    if (event) event.stopPropagation();
+    const isFav = toggleFav(toolName);
+    syncHeartsForTool(toolName, isFav);
+    applyFilters();
+    
+    const csrfTokenEl = document.querySelector('meta[name="csrf-token"]');
+    if (csrfTokenEl && toolId) {
+        const csrfToken = csrfTokenEl.getAttribute('content');
+        fetch(`/tools/${toolId}/favorite`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 401 || response.status === 403) {
+                    toggleFav(toolName);
+                    syncHeartsForTool(toolName, !isFav);
+                    applyFilters();
+                }
+                return response.json().then(data => { throw new Error(data.error || 'Sync error') });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.favorited !== isFav) {
+                localStorage.setItem('ains-favs', JSON.stringify(
+                    data.favorited 
+                        ? [...new Set([...getFavs(), toolName])]
+                        : getFavs().filter(n => n !== toolName)
+                ));
+                syncHeartsForTool(toolName, data.favorited);
+                applyFilters();
+            }
+        })
+        .catch(err => console.error('Error syncing favorite:', err));
+    }
+}
+
 function toggleFavCurrent() {
     if (!activeTool) return;
     const isFav = toggleFav(activeTool.name);
     updateFavBtnState(isFav);
+    syncHeartsForTool(activeTool.name, isFav);
     applyFilters();
+    
+    const csrfTokenEl = document.querySelector('meta[name="csrf-token"]');
+    if (csrfTokenEl && activeTool.id) {
+        const csrfToken = csrfTokenEl.getAttribute('content');
+        fetch(`/tools/${activeTool.id}/favorite`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }).catch(err => console.error('Error syncing favorite:', err));
+    }
+}
+
+function initHearts() {
+    const favs = getFavs();
+    document.querySelectorAll('.card-fav-btn').forEach(btn => {
+        const name = btn.dataset.toolName;
+        updateCardHeartUI(btn, favs.includes(name));
+    });
 }
 
 function updateFavBtnState(isFav) {
@@ -850,10 +1001,29 @@ function openToolModal(tool) {
 
     // Logo
     const logoEl = document.getElementById('modal-logo');
+    logoEl.className = "w-16 h-16 rounded-2xl flex items-center justify-center border-2 border-white/20 flex-shrink-0 overflow-hidden";
     if (tool.logo) {
+        logoEl.classList.add("bg-white/10");
         logoEl.innerHTML = `<img src="${tool.logo}" class="w-full h-full object-cover">`;
     } else {
-        logoEl.innerHTML = `<span class="text-white font-bold text-2xl">${tool.name.charAt(0)}</span>`;
+        const vibrantGradients = [
+            'from-purple-500 to-indigo-600',
+            'from-pink-500 to-rose-600',
+            'from-emerald-500 to-teal-600',
+            'from-blue-500 to-indigo-600',
+            'from-amber-500 to-orange-600',
+            'from-cyan-500 to-blue-600',
+            'from-violet-500 to-fuchsia-600',
+            'from-red-500 to-ans-orange'
+        ];
+        let hash = 0;
+        for (let i = 0; i < tool.name.length; i++) {
+            hash += tool.name.charCodeAt(i);
+        }
+        const grad = vibrantGradients[hash % vibrantGradients.length];
+        grad.split(' ').forEach(cls => logoEl.classList.add(cls));
+        logoEl.classList.add('bg-gradient-to-br');
+        logoEl.innerHTML = `<span class="text-white font-bold text-2xl shadow-sm">${tool.name.charAt(0)}</span>`;
     }
 
     // Type badge

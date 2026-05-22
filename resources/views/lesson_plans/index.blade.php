@@ -1,21 +1,21 @@
 @extends('layouts.app')
 
 @section('header-title', 'AI Lesson Planner')
-@section('header-subtitle', 'Diseña y gestiona tus planeaciones de clase potenciadas con Inteligencia Artificial')
+@section('header-subtitle', 'Design and manage your class planning powered by Artificial Intelligence')
 
 @section('content')
 <div class="space-y-8 animate-fade-in">
     <!-- Header Action Area -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h3 class="text-lg font-bold text-gray-800">Mis Planeaciones</h3>
-            <p class="text-sm text-gray-500">Historial de clases diseñadas con herramientas EdTech AINS</p>
+            <h3 class="text-lg font-bold text-gray-800">My Lesson Plans</h3>
+            <p class="text-sm text-gray-500">History of classes designed with AINS EdTech tools</p>
         </div>
         <a href="{{ route('lesson-plans.create') }}" class="flex items-center justify-center gap-2 bg-gradient-to-r from-ans-dark-green to-ans-seal-green hover:shadow-lg hover:shadow-ans-dark-green/20 text-white px-6 py-3 rounded-xl font-bold transition-all hover:-translate-y-0.5 self-start">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
-            Nueva Planeación
+            New Lesson Plan
         </a>
     </div>
 
@@ -35,12 +35,12 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
             </div>
-            <h4 class="text-xl font-extrabold text-gray-800 mb-2">No tienes planeaciones aún</h4>
+            <h4 class="text-xl font-extrabold text-gray-800 mb-2">You don't have any lesson plans yet</h4>
             <p class="text-gray-500 text-sm mb-8 leading-relaxed">
-                Utiliza nuestro asistente pedagógico para estructurar tus clases en segundos, integrando las herramientas digitales autorizadas de ANS.
+                Use our pedagogical assistant to structure your classes in seconds, integrating the authorized digital tools of ANS.
             </p>
             <a href="{{ route('lesson-plans.create') }}" class="bg-ans-orange hover:bg-[#e67600] text-white px-6 py-3 rounded-xl font-semibold shadow-md shadow-ans-orange/20 transition-all hover:-translate-y-0.5">
-                Comenzar a Planificar
+                Start Planning
             </a>
         </div>
     @else
@@ -76,14 +76,14 @@
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <a href="{{ route('lesson-plans.show', $plan) }}" class="text-ans-dark-green hover:underline font-semibold" title="Ver plan completo">
-                                Ver Plan
+                            <a href="{{ route('lesson-plans.show', $plan) }}" class="text-ans-dark-green hover:underline font-semibold" title="View complete plan">
+                                View Plan
                             </a>
                             <span class="text-gray-200">|</span>
-                            <form action="{{ route('lesson-plans.destroy', $plan) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este plan de clase?')">
+                            <form action="{{ route('lesson-plans.destroy', $plan) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this lesson plan?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-red-500 hover:text-red-700 transition-colors" title="Eliminar plan">
+                                <button type="submit" class="text-red-500 hover:text-red-700 transition-colors" title="Delete plan">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                     </svg>

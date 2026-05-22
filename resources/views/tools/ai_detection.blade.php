@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header-title', 'AI Detection Tools')
-@section('header-subtitle', 'Herramientas para detectar contenido generado por IA en trabajos estudiantiles')
+@section('header-subtitle', 'Tools to detect AI-generated content in student work')
 
 @section('content')
 
@@ -14,17 +14,20 @@
     </div>
     <div class="relative p-8 md:p-12">
         <div class="flex items-start gap-5">
-            <div class="w-16 h-16 rounded-2xl bg-red-500/20 border border-red-500/30 flex items-center justify-center text-3xl flex-shrink-0">
-                🔍
+            <div class="w-16 h-16 rounded-2xl bg-red-500/20 border border-red-500/30 flex items-center justify-center text-red-200 flex-shrink-0">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold text-white mb-2">Centro de Detección de IA</h1>
+                <h1 class="text-2xl md:text-3xl font-bold text-white mb-2">AI Detection Center</h1>
                 <p class="text-red-100/80 text-sm md:text-base max-w-2xl">
-                    Herramientas especializadas para verificar la integridad académica. Identifica contenido generado por IA en ensayos, trabajos de investigación y tareas estudiantiles.
+                    Specialized tools to verify academic integrity. Identify AI-generated content in essays, research papers, and student assignments.
                 </p>
                 <div class="flex flex-wrap gap-3 mt-4">
-                    <span class="px-3 py-1 bg-red-500/20 border border-red-500/30 rounded-full text-xs text-red-200 font-medium">🔒 Solo para Docentes y Administradores</span>
-                    <span class="px-3 py-1 bg-white/10 border border-white/20 rounded-full text-xs text-white/70 font-medium">{{ $tools->count() }} herramientas disponibles</span>
+                    <span class="px-3 py-1 bg-red-500/20 border border-red-500/30 rounded-full text-xs text-red-200 font-medium flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        Only for Teachers and Administrators
+                    </span>
+                    <span class="px-3 py-1 bg-white/10 border border-white/20 rounded-full text-xs text-white/70 font-medium">{{ $tools->count() }} tools available</span>
                 </div>
             </div>
         </div>
@@ -35,20 +38,22 @@
 <div class="mb-6 p-5 bg-amber-50 border border-amber-200 rounded-2xl flex gap-4">
     <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
     <div class="text-sm text-amber-800">
-        <p class="font-semibold mb-1">Uso Responsable de las Herramientas de Detección</p>
-        <p class="text-amber-700/80">Estas herramientas son una <strong>ayuda</strong>, no un veredicto definitivo. Ninguna herramienta tiene precisión del 100%. Se recomienda combinar estos resultados con una evaluación pedagógica y conversación directa con el estudiante antes de tomar decisiones académicas.</p>
+        <p class="font-semibold mb-1">Responsible Use of Detection Tools</p>
+        <p class="text-amber-700/80">These tools are an <strong>aid</strong>, not a definitive verdict. No tool is 100% accurate. We recommend combining these results with pedagogical evaluation and direct conversation with the student before making academic decisions.</p>
     </div>
 </div>
 
 @if($tools->isEmpty())
 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-16 text-center">
     <div class="flex flex-col items-center gap-4">
-        <div class="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center text-3xl">🔍</div>
-        <h3 class="font-semibold text-gray-700">No hay herramientas de detección aún</h3>
-        <p class="text-sm text-gray-400 max-w-xs">El administrador puede agregar herramientas de detección de IA desde el panel de administración.</p>
+        <div class="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+        <h3 class="font-semibold text-gray-700">No detection tools yet</h3>
+        <p class="text-sm text-gray-400 max-w-xs">The administrator can add AI detection tools from the admin panel.</p>
         @if(Auth::user()->isAdmin())
         <a href="{{ route('admin.tools.create') }}" class="mt-2 px-5 py-2.5 bg-ans-dark-green text-white rounded-xl text-sm font-semibold hover:bg-ans-seal-green transition-all">
-            + Agregar herramienta
+            + Add Tool
         </a>
         @endif
     </div>
@@ -64,7 +69,9 @@
                     @if($tool->image)
                     <img src="{{ asset('storage/' . $tool->image) }}" alt="{{ $tool->name }}" class="w-10 h-10 rounded-xl object-cover border border-gray-100">
                     @else
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl bg-red-50 border border-red-100">🔍</div>
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-red-50 border border-red-100 text-red-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
                     @endif
                     <div>
                         <h3 class="font-bold text-gray-900 group-hover:text-ans-dark-green transition-colors">{{ $tool->name }}</h3>
@@ -75,7 +82,7 @@
                     </div>
                 </div>
                 @if($tool->is_official)
-                <span class="px-2 py-0.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full flex-shrink-0">Oficial</span>
+                <span class="px-2 py-0.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full flex-shrink-0">Official</span>
                 @endif
             </div>
             <p class="text-sm text-gray-500 mt-3 leading-relaxed line-clamp-2">{{ $tool->description }}</p>
@@ -99,7 +106,7 @@
                     @endif
                 </div>
                 <span class="text-xs font-medium text-ans-dark-green group-hover:text-ans-seal-green flex items-center gap-1">
-                    Ver herramienta
+                    View Tool
                     <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </span>
             </div>
