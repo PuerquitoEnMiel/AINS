@@ -309,23 +309,25 @@
                             {{ substr($tTool->name, 0, 1) }}
                         @endif
                     </div>
-                    <!-- Click Count Badge -->
-                    <span class="inline-flex items-center gap-1 text-[10px] font-bold bg-red-50 text-red-600 px-2.5 py-1 rounded-lg border border-red-100 group-hover:scale-105 transition-transform duration-300 shadow-sm">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                        {{ $tTool->click_count }} clicks
-                    </span>
                 </div>
                 <h4 class="font-heading font-bold text-gray-900 text-base leading-tight group-hover:text-red-600 transition-colors">{{ $tTool->name }}</h4>
                 <p class="text-xs text-gray-500 mt-2 leading-relaxed line-clamp-2">{{ $tTool->description }}</p>
-                <div class="mt-4 flex items-center gap-2">
-                    @if($tTool->is_official)
-                        <span class="text-[9px] font-bold bg-ans-orange/10 text-ans-orange px-2 py-0.5 rounded-full uppercase tracking-wider">★ Official</span>
-                    @endif
-                    @if($tTool->is_google_workspace)
-                        <span class="text-[9px] font-bold bg-ans-blue/10 text-ans-blue px-2 py-0.5 rounded-full uppercase tracking-wider">Workspace</span>
-                    @else
-                        <span class="text-[9px] font-bold bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full uppercase tracking-wider">3rd Party</span>
-                    @endif
+                <div class="mt-4 flex items-center justify-between">
+                    <div class="flex items-center gap-1.5">
+                        @if($tTool->is_official)
+                            <span class="text-[9px] font-bold bg-ans-orange/10 text-ans-orange px-2 py-0.5 rounded-full uppercase tracking-wider">★ Official</span>
+                        @endif
+                        @if($tTool->is_google_workspace)
+                            <span class="text-[9px] font-bold bg-ans-blue/10 text-ans-blue px-2 py-0.5 rounded-full uppercase tracking-wider">Workspace</span>
+                        @else
+                            <span class="text-[9px] font-bold bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full uppercase tracking-wider">3rd Party</span>
+                        @endif
+                    </div>
+                    <!-- Click Count Badge -->
+                    <span class="inline-flex items-center gap-1 text-[10px] font-bold bg-red-50 text-red-600 px-2 py-0.5 rounded-md border border-red-100 group-hover:scale-105 transition-transform duration-300 shadow-sm">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        {{ $tTool->click_count }} {{ $tTool->click_count == 1 ? 'click' : 'clicks' }}
+                    </span>
                 </div>
             </div>
         @endforeach
@@ -355,6 +357,9 @@
             <div class="h-4 w-[1px] bg-gray-200 mx-1"></div>
             
             @foreach($categories as $category)
+                @if(strtolower($category->name) === 'google workspace' || $category->slug === 'google-workspace')
+                    @continue
+                @endif
                 <button class="text-xs font-semibold px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-full hover:border-ans-dark-green hover:text-ans-dark-green transition-all filter-category-btn" 
                         data-category="{{ $category->name }}" 
                         id="filter-cat-{{ $category->id }}">
@@ -373,7 +378,7 @@
     
     <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         @foreach((is_iterable($tools) ? $tools : []) as $index => $tool)
-        @if($tool->is_official)
+        @if(!is_object($tool) || !empty($tool->is_official))
             @continue
         @endif
         <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-visible animate-fade-in-up"

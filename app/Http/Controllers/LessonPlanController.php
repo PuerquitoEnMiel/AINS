@@ -126,7 +126,7 @@ class LessonPlanController extends Controller
             'grade_level' => $request->grade_level,
             'objectives' => $request->objectives,
             'duration' => $request->duration,
-            'content' => $request->content,
+            'content' => $request->input('content'),
             'selected_tools' => $request->selected_tools ?? [],
         ]);
 
@@ -394,7 +394,7 @@ class LessonPlanController extends Controller
 
         $prompt = "I have this lesson plan:\n\n".
                   "```markdown\n".
-                  $request->content."\n".
+                  $request->input('content')."\n".
                   "```\n\n".
                   "I want you to refine and modify it following exactly these instructions:\n".
                   "\"{$request->instructions}\"\n\n".
@@ -477,7 +477,7 @@ class LessonPlanController extends Controller
             'grade_level' => $request->grade_level ?? $lessonPlan->grade_level,
             'objectives' => $request->objectives ?? $lessonPlan->objectives,
             'duration' => $request->duration ?? $lessonPlan->duration,
-            'content' => $request->content,
+            'content' => $request->input('content'),
             'selected_tools' => $request->selected_tools ?? $lessonPlan->selected_tools ?? [],
         ]);
 
