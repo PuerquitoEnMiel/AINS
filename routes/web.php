@@ -20,6 +20,9 @@ use App\Http\Controllers\ToolRequestController;
 use App\Models\Category;
 use App\Models\Tool;
 use App\Models\User;
+use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\SlidesController;
+use App\Http\Controllers\CalendarController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
@@ -170,6 +173,12 @@ Route::middleware(['auth', 'is_teacher_or_admin'])->group(function () {
     Route::post('/lesson-plans/refine', [LessonPlanController::class, 'refine'])->name('lesson-plans.refine');
     Route::get('/lesson-plans/{lessonPlan}/export', [LessonPlanController::class, 'export'])->name('lesson-plans.export');
     Route::resource('lesson-plans', LessonPlanController::class);
+
+    // Google Workspace Integrations
+    Route::get('/classroom/courses', [ClassroomController::class, 'courses'])->name('classroom.courses');
+    Route::post('/lesson-plans/{lessonPlan}/classroom-share', [ClassroomController::class, 'share'])->name('lesson-plans.classroom-share');
+    Route::post('/lesson-plans/{lessonPlan}/slides', [SlidesController::class, 'generate'])->name('lesson-plans.slides');
+    Route::post('/lesson-plans/{lessonPlan}/calendar', [CalendarController::class, 'schedule'])->name('lesson-plans.calendar');
 
     // AI Detection Hub
     Route::get('/ai-detection', [ToolController::class, 'aiDetection'])->name('ai-detection.index');

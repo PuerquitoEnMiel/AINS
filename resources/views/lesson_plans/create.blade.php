@@ -89,6 +89,14 @@
                     <p id="objectives-error" class="hidden mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">⚠️ This field is required.</p>
                 </div>
 
+                <!-- Attachment (Multimodal Input) -->
+                <div class="mt-6">
+                    <label for="attachment" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Reference Attachment (Optional PDF, JPEG, PNG, WEBP)</label>
+                    <input type="file" id="attachment" accept=".pdf,image/*" 
+                           class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all text-sm file:mr-4 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-ans-dark-green/10 file:text-ans-dark-green hover:file:bg-ans-dark-green/20">
+                    <p class="text-[10px] text-gray-400 mt-1">Upload a syllabus, sheet, or textbook page to guide the AI generation (Max 10MB).</p>
+                </div>
+
                 <!-- Button -->
                 <div class="mt-8 flex justify-end">
                     <button id="btn-generate" type="button" onclick="startGeneration()" class="w-full sm:w-auto px-8 py-3.5 bg-ans-orange hover:bg-[#e67600] text-white font-bold rounded-xl shadow-md shadow-ans-orange/20 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2">
@@ -292,10 +300,6 @@
     }
 
     function startGeneration() {
-        // ===== DEBUG =====
-        var dbg = document.getElementById('debug-status');
-        if (dbg) dbg.textContent = '🟡 startGeneration() CALLED — validating...';
-        // ==================
         console.log('[AINS] startGeneration() called');
         try {
             // Collect and validate form data
@@ -357,20 +361,26 @@
                 }
             }, 3500);
 
+            // Setup FormData for file upload support
+            const formData = new FormData();
+            formData.append('title', titleVal);
+            formData.append('subject', subjectVal);
+            formData.append('grade_level', gradeVal);
+            formData.append('duration', durationVal);
+            formData.append('objectives', objectivesVal);
+            
+            const fileInput = document.getElementById('attachment');
+            if (fileInput && fileInput.files[0]) {
+                formData.append('attachment', fileInput.files[0]);
+            }
+
             // API AJAX request
             fetch('{{ route("lesson-plans.generate") }}', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                body: JSON.stringify({
-                    title: titleVal,
-                    subject: subjectVal,
-                    grade_level: gradeVal,
-                    duration: durationVal,
-                    objectives: objectivesVal
-                })
+                body: formData
             })
             .then(res => {
                 console.log('[AINS] Generate response status:', res.status);

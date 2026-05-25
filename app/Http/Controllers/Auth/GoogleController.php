@@ -29,7 +29,12 @@ class GoogleController extends Controller
 
         return $driver->scopes([
             'https://www.googleapis.com/auth/documents',
-            'https://www.googleapis.com/auth/drive.file'
+            'https://www.googleapis.com/auth/drive.file',
+            'https://www.googleapis.com/auth/classroom.courses.readonly',
+            'https://www.googleapis.com/auth/classroom.coursework.students',
+            'https://www.googleapis.com/auth/classroom.announcements',
+            'https://www.googleapis.com/auth/presentations',
+            'https://www.googleapis.com/auth/calendar.events',
         ])->redirect();
     }
 

@@ -30,6 +30,7 @@ class LessonPlanController extends Controller
             'grade_level' => 'required|string|max:255',
             'objectives' => 'required|string',
             'duration' => 'required|string|max:255',
+            'attachment' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:10240', // 10MB limit
         ]);
 
         $apiKey = env('GEMINI_API_KEY');
@@ -51,22 +52,47 @@ class LessonPlanController extends Controller
                   "- Subject: {$request->subject}\n".
                   "- Grade Level: {$request->grade_level}\n".
                   "- Learning Objectives: {$request->objectives}\n".
-                  "- Duration: {$request->duration}\n\n".
-                  "Pedagogical guidelines:\n".
-                  "1. Structure the plan into clear phases: Warm-up, Activities, Wrap-up, and Assessment.\n".
-                  "2. Explicitly integrate one or more of the following educational technology tools from the approved AINS catalog into the class development. Mention the exact name of the tool in bold (e.g. **Canva**, **Kahoot**):\n".
-                  $toolsContext."\n\n".
-                  "3. Add suggestions for AI prompts or templates applicable for this specific lesson.\n".
-                  "4. Respond in English. Use clean, professional Markdown formatting with subheadings, bulleted lists, and code blocks for templates.";
+                  "- Duration: {$request->duration}\n\n";
+
+        if ($request->hasFile('attachment')) {
+            $prompt .= "I have attached a reference document/image. Please analyze the attached content and incorporate details/materials from it into this lesson plan.\n\n";
+        }
+
+        $prompt .= "Pedagogical guidelines:\n".
+                   "1. Structure the plan into clear phases: Warm-up, Activities, Wrap-up, and Assessment.\n".
+                   "2. Explicitly integrate one or more of the following educational technology tools from the approved AINS catalog into the class development. Mention the exact name of the tool in bold (e.g. **Canva**, **Kahoot**):\n".
+                   $toolsContext."\n\n".
+                   "3. Add suggestions for AI prompts or templates applicable for this specific lesson.\n".
+                   "4. Respond in English. Use clean, professional Markdown formatting with subheadings, bulleted lists, and code blocks for templates.";
+
+        $parts = [
+            ['text' => $prompt]
+        ];
+
+        if ($request->hasFile('attachment')) {
+            try {
+                $file = $request->file('attachment');
+                $mimeType = $file->getMimeType();
+                $base64Data = base64_encode(file_get_contents($file->getRealPath()));
+                $parts[] = [
+                    'inlineData' => [
+                        'mimeType' => $mimeType,
+                        'data' => $base64Data,
+                    ]
+                ];
+            } catch (\Exception $e) {
+                Log::error('Gemini Attachment Read Error: ' . $e->getMessage());
+            }
+        }
 
         try {
-            $response = Http::timeout(30)->withoutVerifying()->post(
+            $response = Http::timeout(60)->withoutVerifying()->post(
                 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='.$apiKey,
                 [
                     'contents' => [
                         [
                             'role' => 'user',
-                            'parts' => [['text' => $prompt]],
+                            'parts' => $parts,
                         ],
                     ],
                 ]
