@@ -218,10 +218,14 @@
                     <span class="whitespace-nowrap">EdTech Prompt Tips</span>
                 </a>
                 @auth
+                @if(Auth::user()->isTeacher() || Auth::user()->isAdmin())
                 <a href="{{ route('badges.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('badges.*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
                     <span class="whitespace-nowrap">EdTech Badges</span>
                 </a>
+                @endif
+                @endauth
+                @auth
                 <a href="{{ route('requests.create') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('requests.create') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span class="whitespace-nowrap">Suggest Tool</span>
@@ -375,10 +379,14 @@
                     <span class="text-sm">EdTech Prompt Tips</span>
                 </a>
                 @auth
+                @if(Auth::user()->isTeacher() || Auth::user()->isAdmin())
                 <a href="{{ route('badges.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->routeIs('badges.*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
                     <span class="text-sm">EdTech Badges</span>
                 </a>
+                @endif
+                @endauth
+                @auth
                 <a href="{{ route('requests.create') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->routeIs('requests.create') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-light-green' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span class="text-sm">Suggest Tool</span>

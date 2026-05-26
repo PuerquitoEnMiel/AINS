@@ -122,10 +122,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/badges/{slug}', [App\Http\Controllers\BadgeController::class, 'show'])->name('badges.show');
     Route::get('/quizzes/{quiz}', [App\Http\Controllers\QuizController::class, 'show'])->name('quizzes.show');
     Route::post('/quizzes/{quiz}/submit', [App\Http\Controllers\QuizController::class, 'submit'])->name('quizzes.submit');
-
-    // ── Badge Evidence (teacher submits proof for manual badges) ─
-    Route::get('/badges/{badge}/evidence', [App\Http\Controllers\BadgeEvidenceController::class, 'create'])->name('badge-evidence.create');
-    Route::post('/badges/{badge}/evidence', [App\Http\Controllers\BadgeEvidenceController::class, 'store'])->name('badge-evidence.store');
 });
 
 // ── Teacher/Admin Routes ───────────────────────────────────────
@@ -144,6 +140,10 @@ Route::middleware(['auth', 'is_teacher_or_admin'])->group(function () {
 
     // AI Detection Hub
     Route::get('/ai-detection', [ToolController::class, 'aiDetection'])->name('ai-detection.index');
+
+    // Badge Evidence Submission (manual badges proof)
+    Route::get('/badges/{badge}/evidence', [App\Http\Controllers\BadgeEvidenceController::class, 'create'])->name('badge-evidence.create');
+    Route::post('/badges/{badge}/evidence', [App\Http\Controllers\BadgeEvidenceController::class, 'store'])->name('badge-evidence.store');
 });
 
 // ═════════════════════════════════════════════════════════════════════════

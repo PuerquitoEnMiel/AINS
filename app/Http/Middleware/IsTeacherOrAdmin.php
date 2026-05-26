@@ -16,7 +16,7 @@ class IsTeacherOrAdmin
     public function handle(Request $request, Closure $next): Response
     {
         if (! auth()->check() || (! auth()->user()->isTeacher() && ! auth()->user()->isAdmin())) {
-            return redirect('/')->with('error', 'Acceso denegado. Se requieren permisos de docente o administrador.');
+            return redirect('/')->with('error', 'Acceso exclusivo para docentes.');
         }
 
         return $next($request);

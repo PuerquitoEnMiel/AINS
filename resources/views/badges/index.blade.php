@@ -26,7 +26,7 @@
     <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
             <h3 class="text-2xl font-heading font-extrabold mb-2">Your Certification Path</h3>
-            <p class="text-white/70 text-sm max-w-md">Complete micro-quizzes based on educational technologies to unlock prestigious professional credentials.</p>
+            <p class="text-white/70 text-sm max-w-md">Envía evidencias para desbloquear prestigiosas credenciales profesionales.</p>
         </div>
         
         <div class="flex-1 max-w-md w-full bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10">
@@ -118,15 +118,9 @@
                             Status: <span class="text-ans-orange">Locked 🔓</span>
                         </div>
                         
-                        @if($badge->criteria_type === 'quiz' && $badge->quiz)
-                            <a href="{{ route('badges.show', $badge->slug) }}" class="px-3.5 py-1.5 bg-ans-dark-green text-white text-xs font-bold rounded-xl hover:bg-ans-seal-green transition-all shadow-sm">
-                                Take Quiz
-                            </a>
-                        @else
-                            <a href="{{ route('badges.show', $badge->slug) }}" class="px-3.5 py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-xl hover:bg-gray-200 transition-all">
-                                View Details
-                            </a>
-                        @endif
+                        <a href="{{ route('badges.show', $badge->slug) }}" class="px-3.5 py-1.5 bg-ans-dark-green text-white text-xs font-bold rounded-xl hover:bg-ans-seal-green transition-all shadow-sm">
+                            Ver Detalles
+                        </a>
                     @endif
                 </div>
             </div>

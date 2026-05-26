@@ -41,18 +41,7 @@
                     @error('difficulty') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
 
-                <!-- Criteria Type -->
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Criteria Type</label>
-                    <select name="criteria_type" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">
-                        <option value="quiz" {{ old('criteria_type') == 'quiz' ? 'selected' : '' }}>Quiz (Complete a quiz)</option>
-                        <option value="usage" {{ old('criteria_type') == 'usage' ? 'selected' : '' }}>Usage (Generate plans or use system)</option>
-                        <option value="manual" {{ old('criteria_type') == 'manual' ? 'selected' : '' }}>Manual (Manual Admin Approval)</option>
-                    </select>
-                    @error('criteria_type') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
-                </div>
-
-                <!-- Sort Order -->
+                 <!-- Sort Order -->
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1">Sort Order</label>
                     <input type="number" name="sort_order" value="{{ old('sort_order', 10) }}" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">
@@ -75,13 +64,13 @@
                     </div>
                     @error('color') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
+            </div>
 
-                <!-- Description -->
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Description / Criteria Requirements</label>
-                    <textarea name="description" rows="4" required placeholder="Describe what the teacher must achieve or understand to earn this badge. This is displayed publicly." class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">{{ old('description') }}</textarea>
-                    @error('description') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
-                </div>
+            <!-- Description -->
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Description / Criteria Requirements</label>
+                <textarea name="description" rows="4" required placeholder="Describe what the teacher must achieve or understand to earn this badge. This is displayed publicly." class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">{{ old('description') }}</textarea>
+                @error('description') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
             </div>
 
             <!-- ── Evidence / Certification Section ──────────────── -->
@@ -91,14 +80,6 @@
                     Evidence & Certification Settings
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Requires Evidence Toggle -->
-                    <div class="md:col-span-2 flex items-center gap-3 p-4 bg-white rounded-xl border border-amber-100">
-                        <input type="checkbox" name="requires_evidence" id="requires_evidence" value="1" {{ old('requires_evidence') ? 'checked' : '' }} class="w-4 h-4 text-amber-600 rounded">
-                        <div>
-                            <label for="requires_evidence" class="text-sm font-semibold text-gray-700 cursor-pointer">Requires Evidence Upload</label>
-                            <p class="text-xs text-gray-500">Teachers must upload proof (file or URL) before admin can approve and activate this badge.</p>
-                        </div>
-                    </div>
                     <!-- Certification URL -->
                     <div class="md:col-span-2">
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Certification Program URL <span class="text-gray-400 font-normal">(optional)</span></label>
@@ -112,23 +93,23 @@
                         <textarea name="evidence_instructions" rows="2" placeholder="Describe exactly what the teacher should submit as evidence. E.g. 'Upload your Google certificate PDF or paste the Credly badge URL.'" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-amber-300 focus:border-amber-400 outline-none transition-all">{{ old('evidence_instructions') }}</textarea>
                         @error('evidence_instructions') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
-                    <!-- Expiry -->
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Badge Validity</label>
-                        <select id="expiry_preset" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-amber-300 focus:border-amber-400 outline-none transition-all" onchange="handleExpiryPreset(this.value)">
-                            <option value="" selected>Permanent (Never Expires)</option>
-                            <option value="365">1 Year</option>
-                            <option value="730">2 Years</option>
-                            <option value="1095">3 Years</option>
-                            <option value="custom">Custom (days)</option>
-                        </select>
+                    <!-- Validity Duration -->
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Duración de Validez <span class="text-gray-400 font-normal">(dejar vacío = permanente)</span></label>
+                        <div class="flex gap-3 items-center">
+                            <input type="number" name="validity_days" id="validity_days" value="{{ old('validity_days') }}" placeholder="Ej: 1095" min="1" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-amber-300 focus:border-amber-400 outline-none transition-all">
+                            <span class="text-xs text-gray-400 whitespace-nowrap" id="validity_label">días</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <button type="button" onclick="setValidity(365)" class="px-3 py-1 text-[11px] font-medium bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all">1 Año</button>
+                            <button type="button" onclick="setValidity(730)" class="px-3 py-1 text-[11px] font-medium bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all">2 Años</button>
+                            <button type="button" onclick="setValidity(1095)" class="px-3 py-1 text-[11px] font-medium bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all">3 Años</button>
+                            <button type="button" onclick="setValidity(1825)" class="px-3 py-1 text-[11px] font-medium bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all">5 Años</button>
+                            <button type="button" onclick="setValidity('')" class="px-3 py-1 text-[11px] font-medium bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 transition-all">Permanente</button>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1">Cada docente tendrá su propia fecha de expiración individual, contada desde que se le aprueba la evidencia.</p>
+                        @error('validity_days') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
-                    <div id="expiry_custom_wrap" class="hidden">
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Custom Expiry (days)</label>
-                        <input type="number" name="expires_in_days" id="expires_in_days" min="1" value="{{ old('expires_in_days') }}" placeholder="e.g. 540" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-amber-300 focus:border-amber-400 outline-none transition-all">
-                        @error('expires_in_days') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
-                    </div>
-                    <input type="hidden" name="expires_in_days" id="expires_in_days_hidden" value="">
                 </div>
             </div>
 
@@ -151,24 +132,23 @@
         }
     });
 
-    function handleExpiryPreset(val) {
-        const customWrap = document.getElementById('expiry_custom_wrap');
-        const hiddenInput = document.getElementById('expires_in_days_hidden');
-        if (val === 'custom') {
-            customWrap.classList.remove('hidden');
-            hiddenInput.disabled = true;
-        } else if (val === '') {
-            customWrap.classList.add('hidden');
-            hiddenInput.value = '';
-            hiddenInput.disabled = false;
-            document.getElementById('expires_in_days').value = '';
-        } else {
-            customWrap.classList.add('hidden');
-            hiddenInput.value = val;
-            hiddenInput.disabled = false;
-            document.getElementById('expires_in_days').value = val;
-        }
+    function setValidity(days) {
+        document.getElementById('validity_days').value = days;
+        updateValidityLabel(days);
     }
+
+    function updateValidityLabel(days) {
+        const label = document.getElementById('validity_label');
+        if (!days || days === '') { label.textContent = 'permanente'; return; }
+        days = parseInt(days);
+        if (days % 365 === 0) { label.textContent = '= ' + (days/365) + (days/365 === 1 ? ' año' : ' años'); }
+        else if (days % 30 === 0) { label.textContent = '= ' + (days/30) + (days/30 === 1 ? ' mes' : ' meses'); }
+        else { label.textContent = 'días'; }
+    }
+
+    document.getElementById('validity_days').addEventListener('input', function(e) {
+        updateValidityLabel(e.target.value);
+    });
 </script>
 
 @endsection

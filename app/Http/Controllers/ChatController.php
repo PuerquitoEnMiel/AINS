@@ -126,7 +126,16 @@ class ChatController extends Controller
             file_put_contents($instructionFile, $defaultInstruction);
         }
         $baseInstruction = file_get_contents($instructionFile);
-        $systemInstruction = $baseInstruction . "\n\nYou know about the AINS Directory, which has these approved apps:\n" . $toolsList;
+
+        // Dynamic user role context and response behavior instructions
+        $roleContext = "\n\nThe current user is logged in with the role: " . strtoupper($user->role) . ".\n";
+        if ($user->isStudent()) {
+            $roleContext .= "Since the user is a student, focus on recommending tools for their homework, tasks, and projects. Do NOT suggest teacher lesson planning tools or professional recognition badges.\n";
+        } else {
+            $roleContext .= "Since the user is a teacher/admin, you can assist them with pedagogical integration, modern teaching methods, lesson planning, and EdTech innovation.\n";
+        }
+
+        $systemInstruction = $baseInstruction . $roleContext . "\n\nYou know about the AINS Directory, which has these approved apps:\n" . $toolsList;
 
         // Format and consolidate history for Gemini API (ensures strictly alternating turns)
         $rawContents = [];

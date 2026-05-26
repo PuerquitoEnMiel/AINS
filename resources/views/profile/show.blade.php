@@ -74,6 +74,7 @@
     <!-- Right Column: Favorites + Reviews -->
     <div class="lg:col-span-2 space-y-6">
         <!-- EdTech Badges -->
+        @if(Auth::user()->isTeacher() || Auth::user()->isAdmin())
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
             <div class="flex items-center justify-between mb-4">
                 <h4 class="font-heading font-bold text-gray-800">🏅 My EdTech Badges</h4>
@@ -96,6 +97,7 @@
                 </div>
             @endif
         </div>
+        @endif
 
         <!-- Favorite Tools -->
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">

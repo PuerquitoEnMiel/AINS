@@ -21,13 +21,12 @@ class Badge extends Model
         'requires_evidence',
         'certification_url',
         'evidence_instructions',
-        'expires_in_days',
+        'validity_days',
     ];
 
     protected $casts = [
         'criteria_config'   => 'array',
         'requires_evidence' => 'boolean',
-        'expires_in_days'   => 'integer',
     ];
 
     // ── Relationships ────────────────────────────────────────────
@@ -51,19 +50,40 @@ class Badge extends Model
 
     // ── Helpers ─────────────────────────────────────────────────
 
-    /** Whether this badge is permanently valid (no expiry). */
-    public function isPermanent(): bool
+    /** Whether this badge expires after a set period. */
+    public function hasExpiry(): bool
     {
-        return is_null($this->expires_in_days);
+        return !is_null($this->validity_days) && $this->validity_days > 0;
     }
 
-    /** Human-readable expiry label. */
-    public function expiryLabel(): string
+    /** Human-readable validity label (e.g. "3 años", "Permanente"). */
+    public function validityLabel(): string
     {
-        if ($this->isPermanent()) {
+        if (!$this->hasExpiry()) {
             return 'Permanente';
         }
-        $years = round($this->expires_in_days / 365, 1);
-        return $years >= 1 ? "{$years} año(s)" : "{$this->expires_in_days} días";
+
+        $days = $this->validity_days;
+
+        if ($days % 365 === 0) {
+            $years = $days / 365;
+            return $years . ' ' . ($years === 1 ? 'año' : 'años');
+        }
+        if ($days % 30 === 0) {
+            $months = $days / 30;
+            return $months . ' ' . ($months === 1 ? 'mes' : 'meses');
+        }
+
+        return $days . ' días';
+    }
+
+    /** Calculate individual expiry date from a given approval date. */
+    public function calculateExpiresAt(\Carbon\Carbon $approvedAt = null): ?\Carbon\Carbon
+    {
+        if (!$this->hasExpiry()) {
+            return null;
+        }
+        $from = $approvedAt ?? now();
+        return $from->copy()->addDays($this->validity_days);
     }
 }

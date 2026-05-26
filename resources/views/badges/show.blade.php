@@ -63,35 +63,20 @@
             <!-- Qualification Criteria -->
             <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 mb-6">
                 <h4 class="font-heading font-bold text-gray-800 text-sm mb-3">Qualification Requirement</h4>
-                @if($badge->criteria_type === 'quiz')
-                    <div class="flex items-start gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-xs font-semibold text-gray-700">Theoretical/Practical Micro-Quiz</p>
-                            <p class="text-[11px] text-gray-500 mt-0.5">Must answer a 5-question multi-choice exam. Passing score is {{ $quiz->passing_score ?? 80 }}% or higher.</p>
-                        </div>
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                        </svg>
                     </div>
-                @else
-                    <div class="flex items-start gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 shrink-0">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-xs font-semibold text-gray-700">Activity Checklist</p>
-                            <p class="text-[11px] text-gray-500 mt-0.5">Assigned manually by platform administrator based on classroom usage metrics.</p>
-                        </div>
+                    <div>
+                        <p class="text-xs font-semibold text-gray-700">Envío de Evidencia</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5">Debe subir una prueba o enlace que demuestre la obtención de la competencia.</p>
                     </div>
-                @endif
+                </div>
             </div>
 
             <!-- Expiry / Validity Info -->
-            @if($badge->certification_url || !$badge->isPermanent())
             <div class="flex flex-wrap gap-3 mb-6">
                 @if($badge->certification_url)
                 <a href="{{ $badge->certification_url }}" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 rounded-xl text-sm text-blue-700 font-medium hover:bg-blue-100 transition-all">
@@ -99,14 +84,11 @@
                     View official certification program
                 </a>
                 @endif
-                @if(!$badge->isPermanent())
                 <span class="flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-100 rounded-xl text-sm text-amber-700 font-medium">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Valid for {{ $badge->expiryLabel() }} after approval
+                    Duración: {{ $badge->validityLabel() }}
                 </span>
-                @endif
             </div>
-            @endif
 
             <!-- Qualification Box / Results -->
             @auth
@@ -232,81 +214,70 @@
             @endif
 
             @if($isEarned)
+                @php
+                    $myEvidenceForExpiry = Auth::user()->badgeEvidences()->where('badge_id', $badge->id)->first();
+                    $individualExpiry = $myEvidenceForExpiry && $myEvidenceForExpiry->expires_at ? $myEvidenceForExpiry->expires_at : null;
+                @endphp
                 <div class="p-6 border border-emerald-200 bg-emerald-50/50 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h4 class="font-heading font-bold text-emerald-800 text-sm mb-1">🎉 You earned this badge!</h4>
-                        <p class="text-xs text-emerald-700">Awarded on {{ $earnedPivot->earned_at ? \Carbon\Carbon::parse($earnedPivot->earned_at)->format('d M Y') : now()->format('d M Y') }} with a score of {{ $earnedPivot->score }}%.</p>
+                        <h4 class="font-heading font-bold text-emerald-800 text-sm mb-1">🎉 ¡Ganaste esta insignia!</h4>
+                        <p class="text-xs text-emerald-700">
+                            Otorgada el {{ $earnedPivot->earned_at ? \Carbon\Carbon::parse($earnedPivot->earned_at)->format('d M Y') : now()->format('d M Y') }}.
+                            @if($individualExpiry)
+                                · Vence el {{ $individualExpiry->format('d M Y') }}
+                                @if($individualExpiry->isPast())
+                                    <span class="text-rose-600 font-bold">(Expirada)</span>
+                                @endif
+                            @else
+                                · Permanente
+                            @endif
+                        </p>
                     </div>
-                    @if($badge->criteria_type === 'quiz' && $quiz)
-                        <a href="{{ route('quizzes.show', $quiz) }}" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow-sm">
-                            Review Answers
-                        </a>
-                    @endif
                 </div>
             @else
                 @auth
-                    @if($badge->requires_evidence)
-                        @if(!$myEvidence)
-                            <div class="p-6 border border-gray-200 bg-gray-50/50 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <div>
-                                    <h4 class="font-heading font-bold text-gray-800 text-sm mb-1">Certification Evidence Required</h4>
-                                    <p class="text-xs text-gray-500">{{ $badge->evidence_instructions ?? 'Upload your certification evidence for the administrator to approve and activate your badge.' }}</p>
-                                </div>
-                                <a href="{{ route('badge-evidence.create', $badge) }}" class="px-5 py-2.5 bg-ans-dark-green text-white text-xs font-bold rounded-xl hover:bg-ans-seal-green transition-all shadow-md whitespace-nowrap">
-                                    📎 Upload Evidence
-                                </a>
-                            </div>
-                        @elseif($myEvidence->isPending())
-                            <div class="p-6 border border-amber-200 bg-amber-50/30 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <div>
-                                    <h4 class="font-heading font-bold text-amber-800 text-sm mb-1">⏳ Evidence Under Review</h4>
-                                    <p class="text-xs text-amber-700">Your evidence has been successfully received and is awaiting validation by the administrator.</p>
-                                    @if($myEvidence->notes)
-                                        <p class="text-[11px] text-amber-600/80 mt-1 italic">Your notes: "{{ $myEvidence->notes }}"</p>
-                                    @endif
-                                </div>
-                                <span class="px-5 py-2.5 bg-amber-100 text-amber-700 text-xs font-bold rounded-xl whitespace-nowrap">In Progress</span>
-                            </div>
-                        @elseif($myEvidence->isRejected())
-                            <div class="p-6 border border-rose-200 bg-rose-50/50 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <div class="flex-1">
-                                    <h4 class="font-heading font-bold text-rose-800 text-sm mb-1">❌ Evidence Rejected</h4>
-                                    <p class="text-xs text-rose-700 font-medium">The administrator has reviewed and rejected your evidence. You can upload a new corrected evidence.</p>
-                                    @if($myEvidence->admin_notes)
-                                        <div class="mt-2 p-3 bg-white rounded-xl border border-rose-100">
-                                            <p class="text-xs font-bold text-rose-800">Administrator comment:</p>
-                                            <p class="text-[11px] text-rose-700/90 mt-0.5">"{{ $myEvidence->admin_notes }}"</p>
-                                        </div>
-                                    @endif
-                                </div>
-                                <a href="{{ route('badge-evidence.create', $badge) }}" class="px-5 py-2.5 bg-rose-600 text-white text-xs font-bold rounded-xl hover:bg-rose-700 transition-all shadow-md whitespace-nowrap">
-                                    📎 Resubmit Evidence
-                                </a>
-                            </div>
-                        @endif
-                    @elseif($badge->criteria_type === 'quiz' && $quiz)
+                    @if(!$myEvidence)
                         <div class="p-6 border border-gray-200 bg-gray-50/50 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div>
-                                <h4 class="font-heading font-bold text-gray-800 text-sm mb-1">Quiz Available</h4>
-                                <p class="text-xs text-gray-500">Complete the micro-quiz to demonstrate your mastery and unlock this badge.</p>
+                                <h4 class="font-heading font-bold text-gray-800 text-sm mb-1">Evidencia de Certificación Requerida</h4>
+                                <p class="text-xs text-gray-500">{{ $badge->evidence_instructions ?? 'Sube tu evidencia de certificación para que el administrador la apruebe y active tu insignia.' }}</p>
                             </div>
-                            <a href="{{ route('quizzes.show', $quiz) }}" class="px-5 py-2.5 bg-ans-dark-green text-white text-xs font-bold rounded-xl hover:bg-ans-seal-green transition-all shadow-md">
-                                Start Quiz
+                            <a href="{{ route('badge-evidence.create', $badge) }}" class="px-5 py-2.5 bg-ans-dark-green text-white text-xs font-bold rounded-xl hover:bg-ans-seal-green transition-all shadow-md whitespace-nowrap">
+                                📎 Subir Evidencia
                             </a>
                         </div>
-                    @else
-                        <div class="p-6 border border-gray-200 bg-gray-50/50 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    @elseif($myEvidence->isPending())
+                        <div class="p-6 border border-amber-200 bg-amber-50/30 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div>
-                                <h4 class="font-heading font-bold text-gray-800 text-sm mb-1">Manual/Automatic Assignment</h4>
-                                <p class="text-xs text-gray-500">This badge is certified when the administrator validates your activity or use of the platform.</p>
+                                <h4 class="font-heading font-bold text-amber-800 text-sm mb-1">⏳ Evidencia en Revisión</h4>
+                                <p class="text-xs text-amber-700">Tu evidencia ha sido recibida y está en espera de validación por el administrador.</p>
+                                @if($myEvidence->notes)
+                                    <p class="text-[11px] text-amber-600/80 mt-1 italic">Tus notas: "{{ $myEvidence->notes }}"</p>
+                                @endif
                             </div>
-                            <span class="text-xs text-gray-400 font-semibold italic">Requires Review</span>
+                            <span class="px-5 py-2.5 bg-amber-100 text-amber-700 text-xs font-bold rounded-xl whitespace-nowrap">En Proceso</span>
+                        </div>
+                    @elseif($myEvidence->isRejected())
+                        <div class="p-6 border border-rose-200 bg-rose-50/50 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="flex-1">
+                                <h4 class="font-heading font-bold text-rose-800 text-sm mb-1">❌ Evidencia Rechazada</h4>
+                                <p class="text-xs text-rose-700 font-medium">El administrador ha rechazado tu evidencia. Puedes subir una nueva evidencia corregida.</p>
+                                @if($myEvidence->admin_notes)
+                                    <div class="mt-2 p-3 bg-white rounded-xl border border-rose-100">
+                                        <p class="text-xs font-bold text-rose-800">Comentario del Administrador:</p>
+                                        <p class="text-[11px] text-rose-700/90 mt-0.5">"{{ $myEvidence->admin_notes }}"</p>
+                                    </div>
+                                @endif
+                            </div>
+                            <a href="{{ route('badge-evidence.create', $badge) }}" class="px-5 py-2.5 bg-rose-600 text-white text-xs font-bold rounded-xl hover:bg-rose-700 transition-all shadow-md whitespace-nowrap">
+                                📎 Reenviar Evidencia
+                            </a>
                         </div>
                     @endif
                 @else
                     <div class="p-6 border border-gray-200 bg-gray-50/50 rounded-2xl">
                         <p class="text-sm text-gray-500 text-center">
-                            <a href="{{ route('login') }}" class="text-ans-dark-green font-semibold hover:underline">Log in</a> to earn this badge.
+                            <a href="{{ route('login') }}" class="text-ans-dark-green font-semibold hover:underline">Inicia sesión</a> para obtener esta insignia.
                         </p>
                     </div>
                 @endauth

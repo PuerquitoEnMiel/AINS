@@ -26,8 +26,6 @@
                     <th class="px-6 py-4">Icon & Badge Name</th>
                     <th class="px-6 py-4">Category</th>
                     <th class="px-6 py-4">Difficulty</th>
-                    <th class="px-6 py-4">Type</th>
-                    <th class="px-6 py-4">Quiz Status</th>
                     <th class="px-6 py-4">Sort Order</th>
                     <th class="px-6 py-4 text-right">Actions</th>
                 </tr>
@@ -64,42 +62,6 @@
                             {{ $badge->difficulty }}
                         </span>
                     </td>
-                    <td class="px-6 py-4">
-                        <span class="px-2 py-0.5 bg-gray-100 rounded text-xs font-medium uppercase text-gray-600">
-                            {{ $badge->criteria_type }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4">
-                        @if($badge->criteria_type === 'quiz')
-                            @if($badge->quiz)
-                                <div class="flex items-center gap-2">
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-50 text-green-700 border border-green-200">
-                                        Active ({{ count($badge->quiz->questions) }} Qs)
-                                    </span>
-                                    <form method="POST" action="{{ route('admin.badges.generateQuiz', $badge) }}" class="inline">
-                                        @csrf
-                                        <button type="submit" class="text-xs text-ans-dark-green hover:underline font-semibold" title="Regenerate questions using Gemini AI">
-                                            Regenerate Qs
-                                        </button>
-                                    </form>
-                                </div>
-                            @else
-                                <div class="flex items-center gap-2">
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
-                                        No Quiz
-                                    </span>
-                                    <form method="POST" action="{{ route('admin.badges.generateQuiz', $badge) }}" class="inline">
-                                        @csrf
-                                        <button type="submit" class="px-2 py-1 bg-ans-dark-green hover:bg-ans-seal-green text-white rounded text-xs font-semibold shadow-sm transition-all">
-                                            ⚡ Generate Quiz with AI
-                                        </button>
-                                    </form>
-                                </div>
-                            @endif
-                        @else
-                            <span class="text-gray-400 text-xs italic">N/A</span>
-                        @endif
-                    </td>
                     <td class="px-6 py-4 text-gray-500 font-medium">{{ $badge->sort_order }}</td>
                     <td class="px-6 py-4 text-right">
                         <div class="flex items-center justify-end gap-2">
@@ -113,7 +75,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="px-6 py-10 text-center text-gray-500 italic bg-gray-50">
+                    <td colspan="5" class="px-6 py-10 text-center text-gray-500 italic bg-gray-50">
                         No badges registered yet. Click "+ New Badge" to get started.
                     </td>
                 </tr>

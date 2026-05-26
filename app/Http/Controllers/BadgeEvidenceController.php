@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Storage;
 
 class BadgeEvidenceController extends Controller
 {
+
+
     /**
      * Show upload form for a specific badge.
      */

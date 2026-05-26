@@ -44,10 +44,10 @@
                             <span class="text-lg">{{ $evidence->badge->icon }}</span>
                             <span class="font-medium text-gray-800">{{ $evidence->badge->name }}</span>
                         </div>
-                        @if($evidence->badge->expires_in_days)
-                        <p class="text-xs text-gray-400 mt-0.5">Expires in {{ $evidence->badge->expiryLabel() }} after approval</p>
+                        @if($evidence->badge->hasExpiry())
+                        <p class="text-xs text-gray-400 mt-0.5">Duración: {{ $evidence->badge->validityLabel() }} desde aprobación</p>
                         @else
-                        <p class="text-xs text-green-600 mt-0.5">Permanent badge</p>
+                        <p class="text-xs text-green-600 mt-0.5">Insignia permanente</p>
                         @endif
                     </td>
                     <td class="px-6 py-4">

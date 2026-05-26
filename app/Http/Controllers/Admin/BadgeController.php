@@ -39,12 +39,11 @@ class BadgeController extends Controller
             'color'                  => 'required|string|size:7',
             'category'               => 'required|string',
             'difficulty'             => 'required|string',
-            'criteria_type'          => 'required|string',
             'sort_order'             => 'required|integer',
             'requires_evidence'      => 'nullable|boolean',
             'certification_url'      => 'nullable|url|max:500',
             'evidence_instructions'  => 'nullable|string|max:1000',
-            'expires_in_days'        => 'nullable|integer|min:1',
+            'validity_days'          => 'nullable|integer|min:1',
         ]);
 
         Badge::create([
@@ -55,12 +54,12 @@ class BadgeController extends Controller
             'color'                 => $request->color,
             'category'              => $request->category,
             'difficulty'            => $request->difficulty,
-            'criteria_type'         => $request->criteria_type,
+            'criteria_type'         => 'manual',
             'sort_order'            => $request->sort_order,
-            'requires_evidence'     => $request->boolean('requires_evidence'),
+            'requires_evidence'     => true, // manual evidence is the only way
             'certification_url'     => $request->certification_url,
             'evidence_instructions' => $request->evidence_instructions,
-            'expires_in_days'       => $request->expires_in_days ?: null,
+            'validity_days'         => $request->validity_days,
         ]);
 
         return redirect()->route('admin.badges.index')
@@ -81,12 +80,11 @@ class BadgeController extends Controller
             'color'                  => 'required|string|size:7',
             'category'               => 'required|string',
             'difficulty'             => 'required|string',
-            'criteria_type'          => 'required|string',
             'sort_order'             => 'required|integer',
             'requires_evidence'      => 'nullable|boolean',
             'certification_url'      => 'nullable|url|max:500',
             'evidence_instructions'  => 'nullable|string|max:1000',
-            'expires_in_days'        => 'nullable|integer|min:1',
+            'validity_days'          => 'nullable|integer|min:1',
         ]);
 
         $badge->update([
@@ -97,12 +95,12 @@ class BadgeController extends Controller
             'color'                 => $request->color,
             'category'              => $request->category,
             'difficulty'            => $request->difficulty,
-            'criteria_type'         => $request->criteria_type,
+            'criteria_type'         => 'manual',
             'sort_order'            => $request->sort_order,
-            'requires_evidence'     => $request->boolean('requires_evidence'),
+            'requires_evidence'     => true,
             'certification_url'     => $request->certification_url,
             'evidence_instructions' => $request->evidence_instructions,
-            'expires_in_days'       => $request->expires_in_days ?: null,
+            'validity_days'         => $request->validity_days,
         ]);
 
         return redirect()->route('admin.badges.index')
@@ -135,9 +133,7 @@ class BadgeController extends Controller
     public function approveEvidence(BadgeEvidence $evidence)
     {
         $badge = $evidence->badge;
-        $expiresAt = $badge->expires_in_days
-            ? now()->addDays($badge->expires_in_days)
-            : null;
+        $expiresAt = $badge->calculateExpiresAt(now());
 
         $evidence->update([
             'status'      => 'approved',
