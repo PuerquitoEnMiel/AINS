@@ -167,7 +167,7 @@
         <!-- Action Button -->
         <div class="flex-shrink-0 pr-8">
             <button onclick="openToolModal(JSON.parse(this.dataset.tool))" 
-                    data-tool='@json(['id'=>$newestTool->id,'name'=>$newestTool->name,'desc'=>$newestTool->description,'url'=>$newestTool->url,'cat'=>$newestTool->categoryRelation?->name,'type'=>$newestTool->is_google_workspace?'Google Workspace':'3rd Party','logo'=>$newestTool->logo_url?asset($newestTool->logo_url):null])'
+                    data-tool='{!! json_encode(['id'=>$newestTool->id,'name'=>$newestTool->name,'desc'=>$newestTool->description,'url'=>$newestTool->url,'cat'=>$newestTool->categoryRelation?->name,'type'=>$newestTool->is_google_workspace?'Google Workspace':'3rd Party','logo'=>$newestTool->logo_url?asset($newestTool->logo_url):null], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}'
                     class="bg-ans-orange hover:bg-ans-orange/90 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-ans-orange/20 hover:scale-105">
                 Explore Now
             </button>
@@ -209,7 +209,7 @@
             @endphp
             <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-ans-orange/5 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer animate-fade-in-up"
                  style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
-                 data-tool='@json([
+                 data-tool='{!! json_encode([
                      'id' => $oTool->id,
                      'name' => $oTool->name,
                      'desc' => $oTool->description,
@@ -217,7 +217,7 @@
                      'cat' => $oTool->categoryRelation?->name,
                      'type' => $oTool->is_google_workspace ? 'Google Workspace' : '3rd Party',
                      'logo' => $oTool->logo_url ? asset($oTool->logo_url) : null
-                 ])'
+                 ], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}'
                  onclick="openToolModal(JSON.parse(this.dataset.tool))">
                 <div class="absolute top-0 right-0 w-24 h-24 {{ $palette['bg'] }} rounded-bl-full"></div>
                 
@@ -276,7 +276,7 @@
         @foreach($trendingTools as $index => $tTool)
             <div class="flex-shrink-0 w-80 snap-center group premium-card bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-xl hover:shadow-red-500/5 hover:-translate-y-1 transition-all duration-300 relative overflow-visible cursor-pointer animate-fade-in-up"
                  style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
-                 data-tool='@json([
+                 data-tool='{!! json_encode([
                      'id' => $tTool->id,
                      'name' => $tTool->name,
                      'desc' => $tTool->description,
@@ -284,7 +284,7 @@
                      'cat' => $tTool->categoryRelation?->name,
                      'type' => $tTool->is_google_workspace ? 'Google Workspace' : '3rd Party',
                      'logo' => $tTool->logo_url ? asset($tTool->logo_url) : null
-                 ])'
+                 ], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}'
                  onclick="openToolModal(JSON.parse(this.dataset.tool))">
                  
                 <!-- Heart Button -->
@@ -399,7 +399,7 @@
         @foreach($demoTools as $index => $demo)
         <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-visible animate-fade-in-up"
              style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
-             data-tool='@json(['name'=>$demo['name'],'desc'=>$demo['desc'],'url'=>$demoUrls[$demo['name']]??'#','cat'=>$demo['cat'],'type'=>$demo['type'],'logo'=>null])'
+             data-tool='{!! json_encode(['name'=>$demo['name'],'desc'=>$demo['desc'],'url'=>$demoUrls[$demo['name']]??'#','cat'=>$demo['cat'],'type'=>$demo['type'],'logo'=>null], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}'
              onclick="openToolModal(JSON.parse(this.dataset.tool))">
             
             <!-- Heart Button -->
@@ -839,7 +839,7 @@ function resetSearchFilters() {
 }
 
 // Server-side loaded favorites fallback
-const serverFavs = @json(Auth::check() ? Auth::user()->favorites()->pluck('name')->toArray() : []);
+const serverFavs = {!! json_encode(Auth::check() ? Auth::user()->favorites()->pluck('name')->toArray() : []) !!};
 
 // Favorites Storage helpers
 function getFavs() {
@@ -848,7 +848,7 @@ function getFavs() {
         favs = JSON.parse(localStorage.getItem('ains-favs')) || [];
     } catch(e) {}
     
-    if (@json(Auth::check())) {
+    if ({!! json_encode(Auth::check()) !!}) {
         return [...new Set([...serverFavs, ...favs])];
     }
     return favs;

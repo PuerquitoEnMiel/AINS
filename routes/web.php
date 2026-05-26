@@ -106,8 +106,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/api/conversations/{conversation}', [ConversationController::class, 'update']);
     Route::delete('/api/conversations/{conversation}', [ConversationController::class, 'destroy']);
 
-    // ── AI Chatbot (requires auth now) ──────────────────────────
-    Route::post('/api/chat', [ChatController::class, 'chat'])->name('api.chat');
+    Route::post('/api/chat', [ChatController::class, 'chat'])->name('api.chat')->middleware('throttle:10,1');
 
     // ── AI Lesson Planner ──────────────────────────────────────
     // (Moved to teacher/admin middleware group below)

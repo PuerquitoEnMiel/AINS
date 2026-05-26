@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryController extends Controller
 {
@@ -35,6 +36,8 @@ class CategoryController extends Controller
 
         Category::create($data);
 
+        Cache::forget('welcome_categories');
+
         return redirect()->route('admin.categories.index')
             ->with('success', "Category \"{$data['name']}\" created.");
     }
@@ -56,6 +59,8 @@ class CategoryController extends Controller
         $data['slug'] = Str::slug($data['name']);
         $category->update($data);
 
+        Cache::forget('welcome_categories');
+
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category updated.');
     }
@@ -64,6 +69,8 @@ class CategoryController extends Controller
     {
         $name = $category->name;
         $category->delete();
+
+        Cache::forget('welcome_categories');
 
         return redirect()->route('admin.categories.index')
             ->with('success', "Category \"{$name}\" deleted.");
