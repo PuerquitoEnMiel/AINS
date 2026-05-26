@@ -35,11 +35,20 @@
                 <tr class="hover:bg-gray-50 transition-colors">
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-3">
+                            @if($badge->image_path)
+                            <img src="{{ asset('storage/' . $badge->image_path) }}" class="rounded-xl flex-shrink-0 w-11 h-11 border border-gray-100 shadow-sm object-cover">
+                            @else
                             <span class="text-2xl p-2 rounded-xl flex-shrink-0 w-11 h-11 flex items-center justify-center border border-gray-100 shadow-sm" style="background-color: {{ $badge->color }}20; border-color: {{ $badge->color }}40;">
                                 {{ $badge->icon }}
                             </span>
+                            @endif
                             <div>
-                                <div class="font-semibold text-gray-800">{{ $badge->name }}</div>
+                                <div class="flex items-center gap-1.5">
+                                    <div class="font-semibold text-gray-800">{{ $badge->name }}</div>
+                                    @if($badge->is_mandatory)
+                                    <span class="px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider bg-red-100 text-red-700 rounded-md">Obligatorio</span>
+                                    @endif
+                                </div>
                                 <div class="text-xs text-gray-400 font-mono">{{ $badge->slug }}</div>
                             </div>
                         </div>

@@ -87,16 +87,25 @@
                     <td class="px-6 py-4 text-xs text-gray-500">{{ $evidence->created_at->diffForHumans() }}</td>
                     <td class="px-6 py-4">
                         @if($evidence->isPending())
-                        <div class="flex items-center gap-2">
-                            <form method="POST" action="{{ route('admin.badge-evidence.approve', $evidence) }}">
+                        <div class="flex flex-col gap-2 min-w-[200px]">
+                            <form method="POST" action="{{ route('admin.badge-evidence.approve', $evidence) }}" class="space-y-2">
                                 @csrf
-                                <button type="submit" class="px-3 py-1.5 bg-green-600 text-white text-xs font-semibold rounded-lg hover:bg-green-700 transition-all">
-                                    ✓ Approve
-                                </button>
+                                <div>
+                                    <label class="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                                        Fecha de Certificación
+                                    </label>
+                                    <input type="date" name="certified_at" value="{{ date('Y-m-d') }}" 
+                                           class="w-full px-2 py-1 text-xs border border-gray-200 rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 outline-none transition-all">
+                                </div>
+                                <div class="flex gap-2">
+                                    <button type="submit" class="flex-1 px-3 py-1.5 bg-green-600 text-white text-xs font-semibold rounded-lg hover:bg-green-700 transition-all text-center">
+                                        ✓ Approve
+                                    </button>
+                                    <button type="button" onclick="showRejectModal({{ $evidence->id }})" class="px-3 py-1.5 bg-red-100 text-red-700 text-xs font-semibold rounded-lg hover:bg-red-200 transition-all">
+                                        ✗ Reject
+                                    </button>
+                                </div>
                             </form>
-                            <button onclick="showRejectModal({{ $evidence->id }})" class="px-3 py-1.5 bg-red-100 text-red-700 text-xs font-semibold rounded-lg hover:bg-red-200 transition-all">
-                                ✗ Reject
-                            </button>
                         </div>
                         <!-- Hidden reject form -->
                         <form id="reject-form-{{ $evidence->id }}" method="POST" action="{{ route('admin.badge-evidence.reject', $evidence) }}" class="hidden mt-2 space-y-2">

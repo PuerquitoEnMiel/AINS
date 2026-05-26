@@ -9,7 +9,7 @@ class BadgeController extends Controller
 {
     public function index()
     {
-        $badges = Badge::orderBy('sort_order')->get();
+        $badges = Badge::orderByDesc('is_mandatory')->orderBy('sort_order')->get();
         $user = auth()->user();
         
         // Progress metrics

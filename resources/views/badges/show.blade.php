@@ -22,8 +22,12 @@
             <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle, white 10%, transparent 11%); background-size: 12px 12px;"></div>
             
             <!-- Floating Badge Icon -->
-            <div class="absolute -bottom-10 left-8 w-24 h-24 rounded-3xl bg-white border-4 border-white shadow-2xl flex items-center justify-center text-5xl">
-                {{ $badge->icon }}
+            <div class="absolute -bottom-10 left-8 w-24 h-24 rounded-3xl bg-white border-4 border-white shadow-2xl flex items-center justify-center text-5xl overflow-hidden">
+                @if($badge->image_path)
+                    <img src="{{ asset('storage/' . $badge->image_path) }}" class="w-full h-full object-cover">
+                @else
+                    {{ $badge->icon }}
+                @endif
             </div>
         </div>
 

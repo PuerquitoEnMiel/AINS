@@ -7,7 +7,7 @@
 
 <div class="max-w-3xl">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
-        <form method="POST" action="{{ route('admin.badges.update', $badge) }}" class="space-y-6">
+        <form method="POST" action="{{ route('admin.badges.update', $badge) }}" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @method('PUT')
 
@@ -54,6 +54,28 @@
                     <label class="block text-xs font-semibold text-gray-600 mb-1">Icon (Emoji)</label>
                     <input type="text" name="icon" value="{{ old('icon', $badge->icon) }}" placeholder="e.g. 🎨, 🤖, 📝" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">
                     @error('icon') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                </div>
+
+                <!-- Icon Image Upload -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Subir Imagen de Icono (Opcional)</label>
+                    <input type="file" name="icon_image" class="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all file:mr-4 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-ans-dark-green/10 file:text-ans-dark-green hover:file:bg-ans-dark-green/20">
+                    @if($badge->image_path)
+                        <div class="mt-2 flex items-center gap-2">
+                            <span class="text-xs text-gray-500">Imagen actual:</span>
+                            <img src="{{ asset('storage/' . $badge->image_path) }}" class="w-8 h-8 rounded border object-cover">
+                        </div>
+                    @endif
+                    @error('icon_image') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                </div>
+
+                <!-- Is Mandatory -->
+                <div class="md:col-span-2 flex items-center gap-3 bg-red-50/50 p-4 border border-red-100 rounded-xl">
+                    <input type="checkbox" name="is_mandatory" id="is_mandatory" value="1" {{ old('is_mandatory', $badge->is_mandatory) ? 'checked' : '' }} class="w-4 h-4 text-ans-dark-green border-gray-300 rounded focus:ring-ans-dark-green/20">
+                    <div>
+                        <label for="is_mandatory" class="block text-xs font-bold text-red-800">¿Es credencial obligatoria?</label>
+                        <p class="text-[11px] text-red-600/80">Las credenciales obligatorias se destacan con borde distintivo y se posicionan arriba en la galería.</p>
+                    </div>
                 </div>
 
                 <!-- Color -->

@@ -150,6 +150,14 @@ class User extends Authenticatable
         return $this->hasMany(BadgeEvidence::class);
     }
 
+    /**
+     * Badge suggestions submitted by this user.
+     */
+    public function badgeSuggestions(): HasMany
+    {
+        return $this->hasMany(BadgeSuggestion::class);
+    }
+
     // ── Badge Helpers ───────────────────────────────────────────
 
     public function hasBadge(string $slug): bool

@@ -144,6 +144,11 @@ Route::middleware(['auth', 'is_teacher_or_admin'])->group(function () {
     // Badge Evidence Submission (manual badges proof)
     Route::get('/badges/{badge}/evidence', [App\Http\Controllers\BadgeEvidenceController::class, 'create'])->name('badge-evidence.create');
     Route::post('/badges/{badge}/evidence', [App\Http\Controllers\BadgeEvidenceController::class, 'store'])->name('badge-evidence.store');
+
+    // Badge Suggestions (suggest external/new badges)
+    Route::get('/badge-suggestions/new', [App\Http\Controllers\BadgeSuggestionController::class, 'create'])->name('badge-suggestions.create');
+    Route::post('/badge-suggestions', [App\Http\Controllers\BadgeSuggestionController::class, 'store'])->name('badge-suggestions.store');
+    Route::get('/badge-suggestions', [App\Http\Controllers\BadgeSuggestionController::class, 'index'])->name('badge-suggestions.index');
 });
 
 // ═════════════════════════════════════════════════════════════════════════
@@ -201,6 +206,11 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/badge-evidence', [App\Http\Controllers\Admin\BadgeController::class, 'evidenceQueue'])->name('badge-evidence.index');
     Route::post('/badge-evidence/{evidence}/approve', [App\Http\Controllers\Admin\BadgeController::class, 'approveEvidence'])->name('badge-evidence.approve');
     Route::post('/badge-evidence/{evidence}/reject', [App\Http\Controllers\Admin\BadgeController::class, 'rejectEvidence'])->name('badge-evidence.reject');
+
+    // ── Badge Suggestion Review ──────────────────────────────────
+    Route::get('/badge-suggestions', [App\Http\Controllers\Admin\BadgeController::class, 'suggestionsQueue'])->name('badge-suggestions.index');
+    Route::post('/badge-suggestions/{suggestion}/approve', [App\Http\Controllers\Admin\BadgeController::class, 'approveSuggestion'])->name('badge-suggestions.approve');
+    Route::post('/badge-suggestions/{suggestion}/reject', [App\Http\Controllers\Admin\BadgeController::class, 'rejectSuggestion'])->name('badge-suggestions.reject');
 });
 
 // ═════════════════════════════════════════════════════════════════════════

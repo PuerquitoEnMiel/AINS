@@ -54,13 +54,19 @@
             <p class="text-xs text-gray-500">Filter by category or difficulty level</p>
         </div>
         
-        <!-- Filter Tabs (Vanilla dynamic filtering via simple JS) -->
-        <div class="flex flex-wrap gap-2" id="filter-buttons">
-            <button onclick="filterBadges('all')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-ans-dark-green text-white shadow-sm transition-all">All</button>
-            <button onclick="filterBadges('tool_mastery')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">Tool Mastery</button>
-            <button onclick="filterBadges('ai_safety')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">AI Safety</button>
-            <button onclick="filterBadges('pedagogy')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">Pedagogy</button>
-            <button onclick="filterBadges('platform')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">Platform</button>
+        <div class="flex flex-wrap items-center gap-3">
+            <a href="{{ route('badge-suggestions.create') }}" class="px-4 py-2 bg-ans-dark-green text-white text-xs font-semibold rounded-xl hover:bg-ans-seal-green transition-all shadow-sm">
+                💡 Sugerir Insignia
+            </a>
+            
+            <!-- Filter Tabs (Vanilla dynamic filtering via simple JS) -->
+            <div class="flex flex-wrap gap-2" id="filter-buttons">
+                <button onclick="filterBadges('all')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-ans-dark-green text-white shadow-sm transition-all">All</button>
+                <button onclick="filterBadges('tool_mastery')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">Tool Mastery</button>
+                <button onclick="filterBadges('ai_safety')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">AI Safety</button>
+                <button onclick="filterBadges('pedagogy')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">Pedagogy</button>
+                <button onclick="filterBadges('platform')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">Platform</button>
+            </div>
         </div>
     </div>
 
@@ -77,16 +83,24 @@
                     default => '#6B7280'
                 };
                 $glowClass = 'glow-' . $badge->difficulty;
+                $mandatoryBorder = $badge->is_mandatory ? 'border-2 border-red-500/30 ring-2 ring-red-500/10' : '';
             @endphp
-            <div class="badge-card bg-white rounded-2xl p-6 {{ $glowClass }} flex flex-col justify-between relative overflow-hidden" 
+            <div class="badge-card bg-white rounded-2xl p-6 {{ $glowClass }} {{ $mandatoryBorder }} flex flex-col justify-between relative overflow-hidden" 
                  data-category="{{ $badge->category }}">
                 
                 <!-- Category/Difficulty Top Row -->
                 <div class="flex justify-between items-center mb-4">
-                    <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider" 
-                          style="background-color: {{ $badge->color }}20; color: {{ $badge->color }}">
-                        {{ str_replace('_', ' ', $badge->category) }}
-                    </span>
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider" 
+                              style="background-color: {{ $badge->color }}20; color: {{ $badge->color }}">
+                            {{ str_replace('_', ' ', $badge->category) }}
+                        </span>
+                        @if($badge->is_mandatory)
+                        <span class="px-2 py-0.5 rounded bg-red-100 text-red-700 text-[9px] font-extrabold uppercase tracking-wider">
+                            Obligatorio
+                        </span>
+                        @endif
+                    </div>
                     <span class="text-[10px] font-extrabold uppercase tracking-widest" style="color: {{ $difficultyColor }}">
                         {{ $badge->difficulty }}
                     </span>
@@ -94,8 +108,12 @@
 
                 <!-- Insignia Info -->
                 <div class="flex items-start gap-4 mb-6">
-                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl shadow-md border shrink-0 bg-gray-50 transition-all border-gray-100">
-                        {{ $badge->icon }}
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl shadow-md border shrink-0 bg-gray-50 transition-all border-gray-100 overflow-hidden">
+                        @if($badge->image_path)
+                            <img src="{{ asset('storage/' . $badge->image_path) }}" class="w-full h-full object-cover">
+                        @else
+                            {{ $badge->icon }}
+                        @endif
                     </div>
                     <div class="min-w-0">
                         <h4 class="font-heading font-bold text-gray-800 text-base truncate mb-1">{{ $badge->name }}</h4>

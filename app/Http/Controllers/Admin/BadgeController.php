@@ -17,6 +17,7 @@ class BadgeController extends Controller
     {
         $badges = Badge::with('quiz')
             ->withCount('evidences')
+            ->orderByDesc('is_mandatory')
             ->orderBy('sort_order')
             ->get();
 
@@ -36,6 +37,7 @@ class BadgeController extends Controller
             'name'                   => 'required|string|max:255',
             'description'            => 'required|string',
             'icon'                   => 'nullable|string|max:255',
+            'icon_image'             => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'color'                  => 'required|string|size:7',
             'category'               => 'required|string',
             'difficulty'             => 'required|string',
@@ -44,13 +46,20 @@ class BadgeController extends Controller
             'certification_url'      => 'nullable|url|max:500',
             'evidence_instructions'  => 'nullable|string|max:1000',
             'validity_days'          => 'nullable|integer|min:1',
+            'is_mandatory'           => 'nullable|boolean',
         ]);
+
+        $imagePath = null;
+        if ($request->hasFile('icon_image')) {
+            $imagePath = $request->file('icon_image')->store('badge_icons', 'public');
+        }
 
         Badge::create([
             'name'                  => $request->name,
             'slug'                  => Str::slug($request->name),
             'description'           => $request->description,
             'icon'                  => $request->icon ?? '🏅',
+            'image_path'            => $imagePath,
             'color'                 => $request->color,
             'category'              => $request->category,
             'difficulty'            => $request->difficulty,
@@ -60,6 +69,7 @@ class BadgeController extends Controller
             'certification_url'     => $request->certification_url,
             'evidence_instructions' => $request->evidence_instructions,
             'validity_days'         => $request->validity_days,
+            'is_mandatory'          => $request->boolean('is_mandatory'),
         ]);
 
         return redirect()->route('admin.badges.index')
@@ -77,6 +87,7 @@ class BadgeController extends Controller
             'name'                   => 'required|string|max:255',
             'description'            => 'required|string',
             'icon'                   => 'nullable|string|max:255',
+            'icon_image'             => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'color'                  => 'required|string|size:7',
             'category'               => 'required|string',
             'difficulty'             => 'required|string',
@@ -85,13 +96,20 @@ class BadgeController extends Controller
             'certification_url'      => 'nullable|url|max:500',
             'evidence_instructions'  => 'nullable|string|max:1000',
             'validity_days'          => 'nullable|integer|min:1',
+            'is_mandatory'           => 'nullable|boolean',
         ]);
+
+        $imagePath = $badge->image_path;
+        if ($request->hasFile('icon_image')) {
+            $imagePath = $request->file('icon_image')->store('badge_icons', 'public');
+        }
 
         $badge->update([
             'name'                  => $request->name,
             'slug'                  => Str::slug($request->name),
             'description'           => $request->description,
             'icon'                  => $request->icon ?? '🏅',
+            'image_path'            => $imagePath,
             'color'                 => $request->color,
             'category'              => $request->category,
             'difficulty'            => $request->difficulty,
@@ -101,6 +119,7 @@ class BadgeController extends Controller
             'certification_url'     => $request->certification_url,
             'evidence_instructions' => $request->evidence_instructions,
             'validity_days'         => $request->validity_days,
+            'is_mandatory'          => $request->boolean('is_mandatory'),
         ]);
 
         return redirect()->route('admin.badges.index')
@@ -130,10 +149,20 @@ class BadgeController extends Controller
     /**
      * Approve a badge evidence submission and grant the badge.
      */
-    public function approveEvidence(BadgeEvidence $evidence)
+    public function approveEvidence(Request $request, BadgeEvidence $evidence)
     {
         $badge = $evidence->badge;
-        $expiresAt = $badge->calculateExpiresAt(now());
+        
+        $certifiedAt = now();
+        if ($request->filled('certified_at')) {
+            try {
+                $certifiedAt = \Carbon\Carbon::parse($request->certified_at);
+            } catch (\Exception $e) {
+                // Fallback to now if invalid date
+            }
+        }
+        
+        $expiresAt = $badge->calculateExpiresAt($certifiedAt);
 
         $evidence->update([
             'status'      => 'approved',
@@ -145,7 +174,7 @@ class BadgeController extends Controller
         // Grant badge via pivot (update or create)
         $evidence->user->badges()->syncWithoutDetaching([
             $badge->id => [
-                'earned_at' => now(),
+                'earned_at' => $certifiedAt,
                 'score'     => 100,
             ],
         ]);
@@ -182,5 +211,49 @@ class BadgeController extends Controller
 
         return redirect()->route('admin.badges.index')
             ->with('error', 'Failed to generate quiz with AI: ' . ($data['error'] ?? 'Unknown'));
+    }
+
+    /**
+     * Show badge suggestions queue.
+     */
+    public function suggestionsQueue()
+    {
+        $suggestions = \App\Models\BadgeSuggestion::with('user')
+            ->orderByRaw("CASE status WHEN 'pending' THEN 0 WHEN 'approved' THEN 1 ELSE 2 END")
+            ->latest()
+            ->paginate(15);
+
+        return view('admin.badge_suggestions.index', compact('suggestions'));
+    }
+
+    /**
+     * Approve a badge suggestion.
+     */
+    public function approveSuggestion(Request $request, \App\Models\BadgeSuggestion $suggestion)
+    {
+        $suggestion->update([
+            'status' => 'approved',
+            'admin_notes' => $request->admin_notes,
+        ]);
+
+        // Redirect to create badge pre-filled with suggestion data
+        return redirect()->route('admin.badges.create', [
+            'name' => $suggestion->name,
+            'description' => $suggestion->description,
+            'certification_url' => $suggestion->certification_url,
+        ])->with('success', 'Sugerencia aprobada. Completa la creación de la insignia aquí.');
+    }
+
+    /**
+     * Reject a badge suggestion.
+     */
+    public function rejectSuggestion(Request $request, \App\Models\BadgeSuggestion $suggestion)
+    {
+        $suggestion->update([
+            'status' => 'rejected',
+            'admin_notes' => $request->admin_notes,
+        ]);
+
+        return back()->with('success', 'Sugerencia rechazada.');
     }
 }

@@ -11,6 +11,7 @@ class Badge extends Model
         'slug',
         'description',
         'icon',
+        'image_path',
         'color',
         'category',
         'difficulty',
@@ -22,11 +23,13 @@ class Badge extends Model
         'certification_url',
         'evidence_instructions',
         'validity_days',
+        'is_mandatory',
     ];
 
     protected $casts = [
         'criteria_config'   => 'array',
         'requires_evidence' => 'boolean',
+        'is_mandatory'      => 'boolean',
     ];
 
     // ── Relationships ────────────────────────────────────────────

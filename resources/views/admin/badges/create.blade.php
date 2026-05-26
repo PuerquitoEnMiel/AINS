@@ -7,14 +7,14 @@
 
 <div class="max-w-3xl">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
-        <form method="POST" action="{{ route('admin.badges.store') }}" class="space-y-6">
+        <form method="POST" action="{{ route('admin.badges.store') }}" enctype="multipart/form-data" class="space-y-6">
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Name -->
                 <div class="md:col-span-2">
                     <label class="block text-xs font-semibold text-gray-600 mb-1">Badge Name</label>
-                    <input type="text" name="name" value="{{ old('name') }}" required placeholder="e.g. Canva Classroom Pro" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">
+                    <input type="text" name="name" value="{{ old('name', request('name')) }}" required placeholder="e.g. Canva Classroom Pro" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">
                     @error('name') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
 
@@ -55,6 +55,22 @@
                     @error('icon') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
 
+                <!-- Icon Image Upload -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Subir Imagen de Icono (Opcional)</label>
+                    <input type="file" name="icon_image" class="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all file:mr-4 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-ans-dark-green/10 file:text-ans-dark-green hover:file:bg-ans-dark-green/20">
+                    @error('icon_image') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                </div>
+
+                <!-- Is Mandatory -->
+                <div class="md:col-span-2 flex items-center gap-3 bg-red-50/50 p-4 border border-red-100 rounded-xl">
+                    <input type="checkbox" name="is_mandatory" id="is_mandatory" value="1" {{ old('is_mandatory') ? 'checked' : '' }} class="w-4 h-4 text-ans-dark-green border-gray-300 rounded focus:ring-ans-dark-green/20">
+                    <div>
+                        <label for="is_mandatory" class="block text-xs font-bold text-red-800">¿Es credencial obligatoria?</label>
+                        <p class="text-[11px] text-red-600/80">Las credenciales obligatorias se destacan con borde distintivo y se posicionan arriba en la galería.</p>
+                    </div>
+                </div>
+
                 <!-- Color -->
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1">Theme Color</label>
@@ -69,7 +85,7 @@
             <!-- Description -->
             <div>
                 <label class="block text-xs font-semibold text-gray-600 mb-1">Description / Criteria Requirements</label>
-                <textarea name="description" rows="4" required placeholder="Describe what the teacher must achieve or understand to earn this badge. This is displayed publicly." class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">{{ old('description') }}</textarea>
+                <textarea name="description" rows="4" required placeholder="Describe what the teacher must achieve or understand to earn this badge. This is displayed publicly." class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all">{{ old('description', request('description')) }}</textarea>
                 @error('description') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
             </div>
 
@@ -83,7 +99,7 @@
                     <!-- Certification URL -->
                     <div class="md:col-span-2">
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Certification Program URL <span class="text-gray-400 font-normal">(optional)</span></label>
-                        <input type="url" name="certification_url" value="{{ old('certification_url') }}" placeholder="https://grow.google/certificates/" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-amber-300 focus:border-amber-400 outline-none transition-all">
+                        <input type="url" name="certification_url" value="{{ old('certification_url', request('certification_url')) }}" placeholder="https://grow.google/certificates/" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-amber-300 focus:border-amber-400 outline-none transition-all">
                         <p class="text-xs text-gray-400 mt-1">Link to the official certification program page (e.g. Google, Microsoft, ISTE).</p>
                         @error('certification_url') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
