@@ -68,28 +68,65 @@ class ChatController extends Controller
         $user = Auth::user();
         $canSeeDetection = $user && ($user->isTeacher() || $user->isAdmin());
 
-        $approvedTools = Tool::approved()
+        // Extract keywords from user message to search relevant tools (limit to 5)
+        $keywords = collect(preg_split('/[\s,\.\?\!\-\_]+/', strtolower($message)))
+            ->filter(fn($w) => strlen($w) > 3)
+            ->values();
+
+        $toolsQuery = Tool::approved()
             ->with('categoryRelation')
-            ->get()
-            ->filter(function ($t) use ($canSeeDetection) {
-                if ($t->categoryRelation?->slug === 'ai-detection') {
-                    return $canSeeDetection;
-                }
-                return true;
+            ->when(! $canSeeDetection, function($q) {
+                $q->whereHas('categoryRelation', function($cQ) {
+                    $cQ->where('slug', '!=', 'ai-detection');
+                });
             });
+
+        if ($keywords->isNotEmpty()) {
+            $toolsQuery->where(function($q) use ($keywords) {
+                foreach ($keywords as $word) {
+                    $q->orWhere('name', 'like', "%{$word}%")
+                      ->orWhere('description', 'like', "%{$word}%");
+                }
+            });
+        }
+
+        $approvedTools = $toolsQuery->take(5)->get();
+
+        // Fallback to top 5 trending tools if no keywords matched
+        if ($approvedTools->isEmpty()) {
+            $approvedTools = Tool::approved()
+                ->with('categoryRelation')
+                ->when(! $canSeeDetection, function($q) {
+                    $q->whereHas('categoryRelation', function($cQ) {
+                        $cQ->where('slug', '!=', 'ai-detection');
+                    });
+                })
+                ->orderByDesc('click_count')
+                ->take(5)
+                ->get();
+        }
 
         $toolsList = $approvedTools->map(fn ($t) => "- {$t->name}: {$t->description} ({$t->url})")->implode("\n");
 
-        // Deep pedagogical and institutional system prompt
-        $systemInstruction = "You are 'AINS AI Companion', a premium EdTech Coach and AI pedagogical advisor at the American Nicaraguan School (ANS). ".
-                             'Your purpose is to assist teachers and students in integrating technology, generative AI, and modern tools into teaching, research, and collaborative learning. '.
-                             "You know about the AINS Directory, which has these approved apps:\n".
-                             $toolsList."\n\n".
-                             "Guidelines:\n".
-                             "1. Provide rich, highly practical pedagogical recommendations (align with SAMR or TPACK models when appropriate).\n".
-                             "2. Write clear, detailed prompt engineering templates for teachers and students (e.g. prompt blueprints they can copy).\n".
-                             "3. Always reply in English. Keep your tone friendly, professional, institutional, and highly motivating.\n".
-                             '4. Use clear markdown formatting, bold points, bullet lists, and code blocks for prompt templates. Never mention system limits; act as a helpful ANS staff assistant.';
+        // Load chatbot instruction from file (or generate default if not exists)
+        $instructionFile = storage_path('app/chatbot_instruction.txt');
+        if (!file_exists($instructionFile)) {
+            $defaultInstruction = "You are 'AINS AI Companion', a premium EdTech Coach and AI pedagogical advisor at the American Nicaraguan School (ANS).\n".
+                                 "Your purpose is to assist teachers and students in integrating technology, generative AI, and modern tools into teaching, research, and collaborative learning.\n\n".
+                                 "Guidelines:\n".
+                                 "1. Provide rich, highly practical pedagogical recommendations (align with SAMR or TPACK models when appropriate).\n".
+                                 "2. Write clear, detailed prompt engineering templates for teachers and students (e.g. prompt blueprints they can copy).\n".
+                                 "3. Always reply in English. Keep your tone friendly, professional, institutional, and highly motivating.\n".
+                                 "4. Use clear markdown formatting, bold points, bullet lists, and code blocks for prompt templates. Never mention system limits; act as a helpful ANS staff assistant.";
+            
+            // Ensure directory exists
+            if (!is_dir(dirname($instructionFile))) {
+                mkdir(dirname($instructionFile), 0755, true);
+            }
+            file_put_contents($instructionFile, $defaultInstruction);
+        }
+        $baseInstruction = file_get_contents($instructionFile);
+        $systemInstruction = $baseInstruction . "\n\nYou know about the AINS Directory, which has these approved apps:\n" . $toolsList;
 
         // Format and consolidate history for Gemini API (ensures strictly alternating turns)
         $rawContents = [];
@@ -116,17 +153,35 @@ class ChatController extends Controller
             }
         }
 
-        try {
-            $response = Http::timeout(25)->withoutVerifying()->withHeaders([
-                'Content-Type' => 'application/json',
-            ])->post('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='.$apiKey, [
-                'contents' => $contents,
-                'systemInstruction' => [
-                    'parts' => [['text' => $systemInstruction]],
-                ],
-            ]);
+        $models = ['gemini-3.5-flash', 'gemini-3.1-flash-lite', 'gemini-2.5-flash'];
+        $response = null;
+        $lastError = '';
 
-            if ($response->successful()) {
+        foreach ($models as $model) {
+            try {
+                $response = Http::timeout(25)
+                    ->retry(2, 1000)
+                    ->post('https://generativelanguage.googleapis.com/v1beta/models/'.$model.':generateContent?key='.$apiKey, [
+                        'contents' => $contents,
+                        'systemInstruction' => [
+                            'parts' => [['text' => $systemInstruction]],
+                        ],
+                    ]);
+
+                if ($response->successful()) {
+                    break;
+                }
+
+                $lastError = 'Status '.$response->status().' - '.$response->body();
+                Log::warning("Gemini chatbot model {$model} failed: ".$lastError);
+            } catch (\Exception $e) {
+                $lastError = $e->getMessage();
+                Log::warning("Gemini chatbot model {$model} exception: ".$lastError);
+            }
+        }
+
+        try {
+            if ($response && $response->successful()) {
                 $data = $response->json();
                 $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
 
@@ -145,10 +200,11 @@ class ChatController extends Controller
                 }
             }
 
-            Log::error('Gemini API Error: Status '.$response->status().' - '.$response->body());
+            $errorMsg = $response ? ('Status '.$response->status().' - '.$response->body()) : ($lastError ?: 'No response');
+            Log::error('Gemini Chatbot Error: '.$errorMsg);
 
             return response()->json([
-                'reply' => '⚠️ *ANS Companion: I had a problem processing the response with the AI server. Please try again in a few moments.*',
+                'reply' => '⚠️ *ANS Companion: I had a problem processing the response with the AI server. Details: '.$errorMsg.'*',
                 'conversation_id' => $conversation->id,
             ]);
 

@@ -10,6 +10,10 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     && docker-php-ext-install pdo pdo_pgsql bcmath gd zip
+# Set custom PHP upload and memory limits
+RUN echo "upload_max_filesize = 50M" > /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "post_max_size = 55M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/uploads.ini
 
 # Install Node.js & NPM (for building assets)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \

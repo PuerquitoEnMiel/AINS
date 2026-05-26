@@ -18,7 +18,15 @@ class GoogleController extends Controller
         $driver = Socialite::driver('google');
         $driver->setHttpClient(new Client(['verify' => false]));
 
-        return $driver->redirect();
+        return $driver->scopes([
+            'https://www.googleapis.com/auth/documents',
+            'https://www.googleapis.com/auth/drive.file',
+            'https://www.googleapis.com/auth/classroom.courses.readonly',
+            'https://www.googleapis.com/auth/classroom.coursework.students',
+            'https://www.googleapis.com/auth/classroom.announcements',
+            'https://www.googleapis.com/auth/presentations',
+            'https://www.googleapis.com/auth/calendar.events',
+        ])->with(['prompt' => 'select_account'])->redirect();
     }
 
     public function exportAuthorize()
@@ -35,7 +43,7 @@ class GoogleController extends Controller
             'https://www.googleapis.com/auth/classroom.announcements',
             'https://www.googleapis.com/auth/presentations',
             'https://www.googleapis.com/auth/calendar.events',
-        ])->redirect();
+        ])->with(['prompt' => 'consent'])->redirect();
     }
 
     public function callback()
@@ -74,7 +82,7 @@ class GoogleController extends Controller
             Auth::login($user);
 
             // Store google access token in session for API access (Google Docs export)
-            session(['google_access_token' => $googleUser->token]);
+            session(['google_access_token' => $googleUser->token ?? ($googleUser->accessTokenResponseBody['access_token'] ?? null)]);
 
             if (session()->has('google_export_redirect')) {
                 $redirectUrl = session()->pull('google_export_redirect');
@@ -99,6 +107,7 @@ class GoogleController extends Controller
     public function logout()
     {
         Auth::logout();
+        session()->flush();
 
         return redirect('/');
     }

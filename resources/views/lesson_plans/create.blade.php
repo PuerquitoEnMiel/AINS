@@ -91,10 +91,10 @@
 
                 <!-- Attachment (Multimodal Input) -->
                 <div class="mt-6">
-                    <label for="attachment" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Reference Attachment (Optional PDF, JPEG, PNG, WEBP)</label>
-                    <input type="file" id="attachment" accept=".pdf,image/*" 
+                    <label for="attachment" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Reference Attachment (Optional PDF, Office Docs, Image, Audio, Video)</label>
+                    <input type="file" id="attachment" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,image/*,audio/*,video/*" 
                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all text-sm file:mr-4 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-ans-dark-green/10 file:text-ans-dark-green hover:file:bg-ans-dark-green/20">
-                    <p class="text-[10px] text-gray-400 mt-1">Upload a syllabus, sheet, or textbook page to guide the AI generation (Max 10MB).</p>
+                    <p class="text-[10px] text-gray-400 mt-1">Upload a syllabus, textbook chapter, worksheet, audio clip, or reference video (Max 50MB).</p>
                 </div>
 
                 <!-- Button -->
@@ -378,14 +378,21 @@
             fetch('{{ route("lesson-plans.generate") }}', {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
                 },
                 body: formData
             })
             .then(res => {
                 console.log('[AINS] Generate response status:', res.status);
                 if (!res.ok) {
-                    return res.json().then(data => { throw new Error(data.error || 'Server error ' + res.status) });
+                    return res.json().then(data => {
+                        let errMsg = data.error;
+                        if (data.errors) {
+                            errMsg = Object.values(data.errors).flat().join(' ');
+                        }
+                        throw new Error(errMsg || 'Server error ' + res.status);
+                    });
                 }
                 return res.json();
             })

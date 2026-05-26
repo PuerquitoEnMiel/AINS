@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Review;
 use App\Models\Tool;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreReviewRequest;
 use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
@@ -12,7 +12,7 @@ class ReviewController extends Controller
     /**
      * Store or update a review for a tool.
      */
-    public function store(Request $request, Tool $tool)
+    public function store(StoreReviewRequest $request, Tool $tool)
     {
         // Students and guests cannot review AI Detection tools
         $user = Auth::user();
@@ -22,10 +22,7 @@ class ReviewController extends Controller
             }
         }
 
-        $data = $request->validate([
-            'rating'  => 'required|integer|min:1|max:5',
-            'comment' => 'nullable|string|max:1000',
-        ]);
+        $data = $request->validated();
 
         Review::updateOrCreate(
             ['user_id' => Auth::id(), 'tool_id' => $tool->id],

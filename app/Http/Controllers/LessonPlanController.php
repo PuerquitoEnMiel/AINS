@@ -24,13 +24,15 @@ class LessonPlanController extends Controller
 
     public function generate(Request $request)
     {
+        set_time_limit(300);
+
         $request->validate([
             'title' => 'required|string|max:255',
             'subject' => 'required|string|max:255',
             'grade_level' => 'required|string|max:255',
             'objectives' => 'required|string',
             'duration' => 'required|string|max:255',
-            'attachment' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:10240', // 10MB limit
+            'attachment' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,jpg,jpeg,png,webp,mp3,wav,mp4,mov|max:51200', // 50MB limit
         ]);
 
         $apiKey = env('GEMINI_API_KEY');
@@ -41,9 +43,10 @@ class LessonPlanController extends Controller
         }
 
         // Get approved tools context
-        $tools = Tool::approved()->get(['id', 'name', 'description', 'category']);
+        $tools = Tool::approved()->with('categoryRelation')->get();
         $toolsContext = $tools->map(function ($t) {
-            return "- {$t->name} (Category: {$t->category}): {$t->description}";
+            $catName = $t->categoryRelation?->name ?? 'Other';
+            return "- {$t->name} (Category: {$catName}): {$t->description}";
         })->implode("\n");
 
         $prompt = "Design a detailed and professional lesson plan for the American Nicaraguan School (ANS).\n\n".
@@ -85,20 +88,41 @@ class LessonPlanController extends Controller
             }
         }
 
-        try {
-            $response = Http::timeout(60)->withoutVerifying()->post(
-                'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='.$apiKey,
-                [
-                    'contents' => [
-                        [
-                            'role' => 'user',
-                            'parts' => $parts,
-                        ],
-                    ],
-                ]
-            );
+        $models = ['gemini-3.5-flash', 'gemini-3.1-flash-lite', 'gemini-2.5-flash'];
+        $response = null;
+        $lastError = '';
 
-            if ($response->successful()) {
+        foreach ($models as $model) {
+            try {
+                $response = Http::timeout(180)
+                    ->withoutVerifying()
+                    ->retry(2, 1000)
+                    ->post(
+                        'https://generativelanguage.googleapis.com/v1beta/models/'.$model.':generateContent?key='.$apiKey,
+                        [
+                            'contents' => [
+                                [
+                                    'role' => 'user',
+                                    'parts' => $parts,
+                                ],
+                            ],
+                        ]
+                    );
+
+                if ($response->successful()) {
+                    break;
+                }
+
+                $lastError = 'Status '.$response->status().' - '.$response->body();
+                Log::warning("Gemini model {$model} failed: ".$lastError);
+            } catch (\Exception $e) {
+                $lastError = $e->getMessage();
+                Log::warning("Gemini model {$model} exception: ".$lastError);
+            }
+        }
+
+        try {
+            if ($response && $response->successful()) {
                 $data = $response->json();
                 $markdown = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
 
@@ -118,10 +142,11 @@ class LessonPlanController extends Controller
                 }
             }
 
-            Log::error('Gemini Planner Error: Status '.$response->status().' - '.$response->body());
+            $errorMsg = $response ? ('Status '.$response->status().' - '.$response->body()) : ($lastError ?: 'No response');
+            Log::error('Gemini Planner Error: '.$errorMsg);
 
             return response()->json([
-                'error' => 'Error generating the lesson plan from the AI server.',
+                'error' => 'Error generating the lesson plan from the AI server: '.$errorMsg,
             ], 500);
 
         } catch (\Exception $e) {
@@ -276,23 +301,20 @@ class LessonPlanController extends Controller
             $cleanLine = $line;
             $lineStyle = 'normal';
 
-            if (str_starts_with($line, '# ')) {
-                $cleanLine = substr($line, 2);
-                $lineStyle = 'h1';
-            } elseif (str_starts_with($line, '## ')) {
-                $cleanLine = substr($line, 3);
-                $lineStyle = 'h2';
-            } elseif (str_starts_with($line, '### ')) {
-                $cleanLine = substr($line, 4);
-                $lineStyle = 'h3';
-            } elseif (str_starts_with($line, '- ')) {
-                $cleanLine = '• ' . substr($line, 2);
+            // Match headings: #, ##, ###, ####, #####, ######
+            if (preg_match('/^(#{1,6})\s+(.*)$/', trim($line), $matches)) {
+                $level = strlen($matches[1]);
+                $cleanLine = $matches[2];
+                $lineStyle = 'h' . $level;
+            } elseif (str_starts_with(trim($line), '- ')) {
+                $cleanLine = '• ' . substr(trim($line), 2);
                 $lineStyle = 'list';
-            } elseif (str_starts_with($line, '* ')) {
-                $cleanLine = '• ' . substr($line, 2);
+            } elseif (str_starts_with(trim($line), '* ')) {
+                $cleanLine = '• ' . substr(trim($line), 2);
                 $lineStyle = 'list';
             }
 
+            // Remove bold/italic markdown signs
             $cleanLine = str_replace(['**', '*'], '', $cleanLine);
             $textToInsert = $cleanLine . "\n";
 
@@ -380,6 +402,25 @@ class LessonPlanController extends Controller
                             'foregroundColor' => [
                                 'color' => [
                                     'rgbColor' => ['red' => 0.08, 'green' => 0.38, 'blue' => 0.31]
+                                ]
+                            ]
+                        ],
+                        'fields' => 'fontSize,bold,foregroundColor'
+                    ]
+                ];
+            } elseif (in_array($s['style'], ['h4', 'h5', 'h6'])) {
+                $requests[] = [
+                    'updateTextStyle' => [
+                        'range' => [
+                            'startIndex' => $s['start'],
+                            'endIndex' => $s['end']
+                        ],
+                        'textStyle' => [
+                            'fontSize' => ['magnitude' => 11, 'unit' => 'PT'],
+                            'bold' => true,
+                            'foregroundColor' => [
+                                'color' => [
+                                    'rgbColor' => ['red' => 0.2, 'green' => 0.2, 'blue' => 0.2]
                                 ]
                             ]
                         ],

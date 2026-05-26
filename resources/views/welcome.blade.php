@@ -167,7 +167,7 @@
         <!-- Action Button -->
         <div class="flex-shrink-0 pr-8">
             <button onclick="openToolModal(JSON.parse(this.dataset.tool))" 
-                    data-tool="{{ json_encode(['id'=>$newestTool->id,'name'=>$newestTool->name,'desc'=>$newestTool->description,'url'=>$newestTool->url,'cat'=>$newestTool->category,'type'=>$newestTool->is_google_workspace?'Google Workspace':'3rd Party','logo'=>$newestTool->logo_url?asset($newestTool->logo_url):null]) }}"
+                    data-tool='@json(['id'=>$newestTool->id,'name'=>$newestTool->name,'desc'=>$newestTool->description,'url'=>$newestTool->url,'cat'=>$newestTool->categoryRelation?->name,'type'=>$newestTool->is_google_workspace?'Google Workspace':'3rd Party','logo'=>$newestTool->logo_url?asset($newestTool->logo_url):null])'
                     class="bg-ans-orange hover:bg-ans-orange/90 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-ans-orange/20 hover:scale-105">
                 Explore Now
             </button>
@@ -209,15 +209,15 @@
             @endphp
             <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-ans-orange/5 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer animate-fade-in-up"
                  style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
-                 data-tool="{{ json_encode([
+                 data-tool='@json([
                      'id' => $oTool->id,
                      'name' => $oTool->name,
                      'desc' => $oTool->description,
                      'url' => $oTool->url,
-                     'cat' => $oTool->category,
+                     'cat' => $oTool->categoryRelation?->name,
                      'type' => $oTool->is_google_workspace ? 'Google Workspace' : '3rd Party',
                      'logo' => $oTool->logo_url ? asset($oTool->logo_url) : null
-                 ]) }}"
+                 ])'
                  onclick="openToolModal(JSON.parse(this.dataset.tool))">
                 <div class="absolute top-0 right-0 w-24 h-24 {{ $palette['bg'] }} rounded-bl-full"></div>
                 
@@ -276,15 +276,15 @@
         @foreach($trendingTools as $index => $tTool)
             <div class="flex-shrink-0 w-80 snap-center group premium-card bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-xl hover:shadow-red-500/5 hover:-translate-y-1 transition-all duration-300 relative overflow-visible cursor-pointer animate-fade-in-up"
                  style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
-                 data-tool="{{ json_encode([
+                 data-tool='@json([
                      'id' => $tTool->id,
                      'name' => $tTool->name,
                      'desc' => $tTool->description,
                      'url' => $tTool->url,
-                     'cat' => $tTool->category,
+                     'cat' => $tTool->categoryRelation?->name,
                      'type' => $tTool->is_google_workspace ? 'Google Workspace' : '3rd Party',
                      'logo' => $tTool->logo_url ? asset($tTool->logo_url) : null
-                 ]) }}"
+                 ])'
                  onclick="openToolModal(JSON.parse(this.dataset.tool))">
                  
                 <!-- Heart Button -->
@@ -377,47 +377,9 @@
     </div>
     
     <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        @foreach((is_iterable($tools) ? $tools : []) as $index => $tool)
-        @if(!is_object($tool) || !empty($tool->is_official))
-            @continue
-        @endif
-        <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-visible animate-fade-in-up"
-             style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
-             data-tool="{{ json_encode(['id'=>$tool->id,'name'=>$tool->name,'desc'=>$tool->description,'url'=>$tool->url,'cat'=>$tool->category,'type'=>$tool->is_google_workspace?'Google Workspace':'3rd Party','logo'=>$tool->logo_url?asset($tool->logo_url):null]) }}"
-             onclick="openToolModal(JSON.parse(this.dataset.tool))">
-            
-            <!-- Heart Button -->
-            <button onclick="toggleCardFavorite(event, this, '{{ $tool->name }}', {{ $tool->id }})" class="card-fav-btn absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-gray-400 hover:text-red-500 flex items-center justify-center transition-all shadow-sm border border-gray-100/50 hover:scale-105 active:scale-95" data-tool-name="{{ $tool->name }}" title="Favorite">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-            </button>
+        @include('partials.tool_grid')
 
-            <div class="flex items-start justify-between mb-4">
-                @if($tool->logo_url)
-                    <img src="{{ asset($tool->logo_url) }}" alt="{{ $tool->name }}" class="w-12 h-12 rounded-xl object-cover border border-gray-100 group-hover:scale-110 transition-transform duration-300">
-                @else
-                    @php
-                        $grad = $getGradientForName($tool->name);
-                    @endphp
-                    <div class="w-12 h-12 bg-gradient-to-br {{ $grad }} rounded-xl flex items-center justify-center text-white font-bold text-xl group-hover:scale-110 transition-all duration-300 shadow-md shadow-black/10">
-                        {{ substr($tool->name, 0, 1) }}
-                    </div>
-                @endif
-                <div class="w-5 h-5"></div>
-            </div>
-            <h4 class="font-heading font-bold text-gray-900 text-lg leading-tight">{{ $tool->name }}</h4>
-            <p class="text-sm text-gray-500 mt-2 leading-relaxed line-clamp-2">{{ $tool->description }}</p>
-            <div class="mt-5 flex items-center gap-2">
-                @if($tool->is_google_workspace)
-                    <span class="text-[10px] font-bold bg-ans-blue/10 text-ans-blue px-2.5 py-1 rounded-full uppercase tracking-wider">Workspace</span>
-                @else
-                    <span class="text-[10px] font-bold bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full uppercase tracking-wider">3rd Party</span>
-                @endif
-                <span class="text-[10px] text-gray-300 ml-auto">Click for details</span>
-            </div>
-        </div>
-        @endforeach
-
-        @if(!is_iterable($tools) || count($tools) == 0)
+        @if((!is_iterable($tools) || count($tools) == 0) && (!request()->filled('search') && !request()->filled('category')))
         <!-- Demo Cards when DB is empty -->
         @php
             $demoTools = [
@@ -437,7 +399,7 @@
         @foreach($demoTools as $index => $demo)
         <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-visible animate-fade-in-up"
              style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
-             data-tool="{{ json_encode(['name'=>$demo['name'],'desc'=>$demo['desc'],'url'=>$demoUrls[$demo['name']]??'#','cat'=>$demo['cat'],'type'=>$demo['type'],'logo'=>null]) }}"
+             data-tool='@json(['name'=>$demo['name'],'desc'=>$demo['desc'],'url'=>$demoUrls[$demo['name']]??'#','cat'=>$demo['cat'],'type'=>$demo['type'],'logo'=>null])'
              onclick="openToolModal(JSON.parse(this.dataset.tool))">
             
             <!-- Heart Button -->
@@ -464,6 +426,11 @@
         </div>
         @endforeach
         @endif
+    </div>
+
+    <!-- Pagination Container -->
+    <div id="pagination-container" class="mt-8 flex justify-center">
+        {{ $tools->links() }}
     </div>
 
     <!-- Dynamic Empty State -->
@@ -569,6 +536,7 @@
 let currentCategory = 'all';
 let currentSearchQuery = '';
 let activeTool = null;
+let debounceTimer = null;
 
 // Parse Query URL Category & Search
 (function() {
@@ -618,7 +586,7 @@ let activeTool = null;
     }
 })();
 
-// Real-time Search input binding
+// Real-time Search input binding with Debounce
 const searchInput = document.getElementById('global-search');
 if (searchInput) {
     searchInput.addEventListener('input', e => {
@@ -666,17 +634,15 @@ function setActiveFilter(id) {
 function applyFilters() {
     const favs = getFavs();
     let officialVisibleCount = 0;
-    let catalogVisibleCount = 0;
     let trendingVisibleCount = 0;
     
-    // Filter Official Tools
+    // Filter Official Tools (local instant filtering)
     document.querySelectorAll('#official-section .group[data-tool]').forEach(card => {
         try {
             const tool = JSON.parse(card.dataset.tool);
             const name = tool.name.toLowerCase();
             const desc = tool.desc.toLowerCase();
             const cat = (tool.cat || 'General').toLowerCase();
-            const type = (tool.type || '').toLowerCase();
             
             const matchesSearch = name.includes(currentSearchQuery) || 
                                   desc.includes(currentSearchQuery) || 
@@ -686,9 +652,9 @@ function applyFilters() {
             if (currentCategory === 'all') {
                 matchesCategory = true;
             } else if (currentCategory === 'workspace') {
-                matchesCategory = true; // All official tools fall under workspace/featured
+                matchesCategory = true;
             } else if (currentCategory === '3rdparty') {
-                matchesCategory = false; // Official tools are institutional platforms
+                matchesCategory = false;
             } else if (currentCategory === 'favs') {
                 matchesCategory = favs.includes(tool.name);
             } else {
@@ -706,7 +672,7 @@ function applyFilters() {
         } catch (err) {}
     });
     
-    // Filter Trending Tools
+    // Filter Trending Tools (local instant filtering)
     document.querySelectorAll('#trending-section .group[data-tool]').forEach(card => {
         try {
             const tool = JSON.parse(card.dataset.tool);
@@ -742,73 +708,95 @@ function applyFilters() {
             }
         } catch (err) {}
     });
-    
-    // Filter Catalog Tools
-    document.querySelectorAll('#catalog-grid .group[data-tool]').forEach(card => {
-        try {
-            const tool = JSON.parse(card.dataset.tool);
-            const name = tool.name.toLowerCase();
-            const desc = tool.desc.toLowerCase();
-            const cat = (tool.cat || 'General').toLowerCase();
-            const type = (tool.type || '').toLowerCase();
-            
-            const matchesSearch = name.includes(currentSearchQuery) || 
-                                  desc.includes(currentSearchQuery) || 
-                                  cat.includes(currentSearchQuery);
-            
-            let matchesCategory = false;
-            if (currentCategory === 'all') {
-                matchesCategory = true;
-            } else if (currentCategory === 'workspace') {
-                matchesCategory = (type === 'google workspace' || type === 'workspace');
-            } else if (currentCategory === '3rdparty') {
-                matchesCategory = (type === '3rd party');
-            } else if (currentCategory === 'favs') {
-                matchesCategory = favs.includes(tool.name);
-            } else {
-                matchesCategory = (cat === currentCategory.toLowerCase());
-            }
-            
-            if (matchesSearch && matchesCategory) {
-                card.style.display = '';
-                card.classList.add('animate-fade-in-up');
-                catalogVisibleCount++;
-            } else {
-                card.style.display = 'none';
-                card.classList.remove('animate-fade-in-up');
-            }
-        } catch (err) {}
-    });
 
     // Dynamic header visibility based on filter visibility
     const officialSection = document.getElementById('official-section');
     if (officialSection) {
-        if (officialVisibleCount === 0) {
-            officialSection.style.display = 'none';
-        } else {
-            officialSection.style.display = '';
-        }
+        officialSection.style.display = officialVisibleCount === 0 ? 'none' : '';
     }
 
     const trendingSection = document.getElementById('trending-section');
     if (trendingSection) {
-        if (trendingVisibleCount === 0) {
-            trendingSection.style.display = 'none';
-        } else {
-            trendingSection.style.display = '';
-        }
+        trendingSection.style.display = trendingVisibleCount === 0 ? 'none' : '';
     }
 
-    // Dynamic global empty state toggle
-    const emptyState = document.getElementById('catalog-empty-state');
-    if (emptyState) {
-        if (officialVisibleCount === 0 && catalogVisibleCount === 0 && trendingVisibleCount === 0) {
-            emptyState.classList.remove('hidden');
-        } else {
-            emptyState.classList.add('hidden');
-        }
-    }
+    // Server-side dynamic catalog grid filtering with 250ms debounce
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+        fetchCatalogData(1);
+    }, 250);
 }
+
+function fetchCatalogData(page = 1) {
+    const favs = getFavs();
+    const url = new URL(window.location.origin + window.location.pathname);
+    url.searchParams.set('page', page);
+    url.searchParams.set('category', currentCategory);
+    url.searchParams.set('search', currentSearchQuery);
+    url.searchParams.set('ajax', '1');
+    
+    favs.forEach(fav => url.searchParams.append('favs[]', fav));
+
+    const grid = document.getElementById('catalog-grid');
+    if (grid) grid.style.opacity = '0.6';
+
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            if (grid) {
+                grid.style.opacity = '1';
+                grid.innerHTML = data.html;
+            }
+            
+            const paginationContainer = document.getElementById('pagination-container');
+            if (paginationContainer) {
+                paginationContainer.innerHTML = data.pagination;
+                bindPaginationClicks();
+            }
+
+            // Dynamic global empty state toggle
+            const emptyState = document.getElementById('catalog-empty-state');
+            if (emptyState) {
+                const officialSection = document.getElementById('official-section');
+                const trendingSection = document.getElementById('trending-section');
+                const officialVisible = officialSection && officialSection.style.display !== 'none';
+                const trendingVisible = trendingSection && trendingSection.style.display !== 'none';
+                if (!officialVisible && !trendingVisible && data.total === 0) {
+                    emptyState.classList.remove('hidden');
+                } else {
+                    emptyState.classList.add('hidden');
+                }
+            }
+            
+            if (typeof initHearts === 'function') {
+                initHearts();
+            }
+        })
+        .catch(err => {
+            console.error('Error fetching catalog data:', err);
+            if (grid) grid.style.opacity = '1';
+        });
+}
+
+function bindPaginationClicks() {
+    const container = document.getElementById('pagination-container');
+    if (!container) return;
+    container.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            const urlObj = new URL(link.href);
+            const page = urlObj.searchParams.get('page') || 1;
+            fetchCatalogData(page);
+            
+            // Smooth scroll to catalog
+            const grid = document.getElementById('catalog-grid');
+            if (grid) {
+                grid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        });
+    });
+}
+
 
 // Banner Novedades functions
 document.addEventListener('DOMContentLoaded', () => {
@@ -822,6 +810,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof initHearts === 'function') {
         initHearts();
     }
+    bindPaginationClicks();
 });
 
 function dismissNewAppBanner(toolId) {
@@ -849,13 +838,20 @@ function resetSearchFilters() {
     setActiveFilter('filter-all');
 }
 
+// Server-side loaded favorites fallback
+const serverFavs = @json(Auth::check() ? Auth::user()->favorites()->pluck('name')->toArray() : []);
+
 // Favorites Storage helpers
 function getFavs() {
+    let favs = [];
     try {
-        return JSON.parse(localStorage.getItem('ains-favs')) || [];
-    } catch(e) {
-        return [];
+        favs = JSON.parse(localStorage.getItem('ains-favs')) || [];
+    } catch(e) {}
+    
+    if (@json(Auth::check())) {
+        return [...new Set([...serverFavs, ...favs])];
     }
+    return favs;
 }
 
 function toggleFav(name) {

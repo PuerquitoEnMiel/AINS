@@ -285,6 +285,10 @@
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
                     <span class="whitespace-nowrap">Badge Evidence</span>
                 </a>
+                <a href="{{ route('admin.chatbot-settings') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('admin.chatbot-settings') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span class="whitespace-nowrap">Chatbot Settings</span>
+                </a>
             </div>
             @endif
             @endauth
@@ -437,6 +441,10 @@
                 <a href="{{ route('admin.badge-evidence.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('admin/badge-evidence*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
                     <span class="text-sm">Badge Evidence</span>
+                </a>
+                <a href="{{ route('admin.chatbot-settings') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->routeIs('admin.chatbot-settings') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span class="text-sm">Chatbot Settings</span>
                 </a>
             </div>
             @endif
@@ -908,16 +916,87 @@ function showTypingIndicator(show) {
     }
 }
 
+function copyToClipboard(base64Text, btn) {
+    try {
+        const text = decodeURIComponent(escape(atob(base64Text)));
+        navigator.clipboard.writeText(text).then(() => {
+            const span = btn.querySelector('span');
+            const originalText = span.textContent;
+            span.textContent = 'Copied!';
+            btn.classList.add('bg-green-600/30', 'border-green-500/30', 'text-green-300');
+            setTimeout(() => {
+                span.textContent = originalText;
+                btn.classList.remove('bg-green-600/30', 'border-green-500/30', 'text-green-300');
+            }, 2000);
+        });
+    } catch (err) {
+        console.error('Failed to copy: ', err);
+    }
+}
+
 function parseBotMarkdown(text) {
-    // Bold
-    let formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    // Escape HTML first to prevent XSS
+    let escaped = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+    // Code blocks with Copy Button
+    let codeBlockCount = 0;
+    let formatted = escaped.replace(/```(?:[a-zA-Z0-9]+)?\n([\s\S]*?)```/g, function(match, code) {
+        codeBlockCount++;
+        const cleanCode = code.trim();
+        const base64Code = btoa(unescape(encodeURIComponent(cleanCode)));
+        
+        return `<div class="relative group my-3">
+            <div class="absolute right-3 top-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                <button onclick="copyToClipboard('${base64Code}', this)" class="bg-white/10 hover:bg-white/20 text-white text-[10px] px-2 py-1.5 rounded-lg border border-white/10 transition-all font-sans flex items-center gap-1 shadow-sm">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m-3 8h3m-3 3h3m-9-13h3m-3 3h3"></path></svg>
+                    <span>Copy</span>
+                </button>
+            </div>
+            <pre class="bg-gray-900/95 text-gray-100 rounded-2xl p-4 font-mono text-[10px] overflow-x-auto whitespace-pre leading-relaxed border border-white/5">${cleanCode}</pre>
+        </div>`;
+    });
+
+    // Headings (H1 to H6)
+    formatted = formatted.replace(/^(#{1,6})\s+(.*?)$/gm, function(match, hashes, title) {
+        const level = hashes.length;
+        const classes = {
+            1: 'text-base font-bold my-2 text-ans-dark-green',
+            2: 'text-sm font-bold my-2 text-ans-dark-green',
+            3: 'text-xs font-bold my-1.5 text-ans-dark-green',
+            4: 'text-xs font-bold my-1 text-gray-800',
+            5: 'text-[11px] font-bold my-1 text-gray-700',
+            6: 'text-[11px] font-bold my-1 text-gray-600'
+        };
+        const cls = classes[level] || 'font-bold';
+        return `<div class="${cls}">${title}</div>`;
+    });
+
+    // Bold (**text** or __text__)
+    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    formatted = formatted.replace(/__(.*?)__/g, '<strong>$1</strong>');
+
+    // Italic (*text* or _text_)
     formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    // Code blocks
-    formatted = formatted.replace(/```([\s\S]*?)```/g, '<pre class="bg-gray-900/90 text-white rounded-xl p-3 my-2 font-mono text-[10px] overflow-x-auto whitespace-pre">$1</pre>');
-    // Bullet lists
-    formatted = formatted.replace(/^\s*-\s+(.*?)$/gm, '<li class="ml-4 list-disc">$1</li>');
-    // Paragraphs / Newlines
-    formatted = formatted.replace(/\n/g, '<br>');
+    formatted = formatted.replace(/_(.*?)_/g, '<em>$1</em>');
+
+    // Bullet lists starting with - or *
+    formatted = formatted.replace(/^\s*[-*]\s+(.*?)$/gm, '<li class="ml-4 list-disc text-gray-700 my-0.5">$1</li>');
+
+    // Group consecutive list items into a ul container
+    formatted = formatted.replace(/(<li.*?>.*?<\/li>)+/g, '<ul class="my-2 space-y-1">$1</ul>');
+
+    // Convert newlines to <br> (but not inside <pre> tags)
+    let parts = formatted.split(/(<pre[\s\S]*?<\/pre>)/g);
+    for (let i = 0; i < parts.length; i++) {
+        if (!parts[i].startsWith('<pre')) {
+            parts[i] = parts[i].replace(/\n/g, '<br>');
+        }
+    }
+    formatted = parts.join('');
+
     return formatted;
 }
 
@@ -966,11 +1045,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="max-w-[78%] px-4 py-3 bg-white border border-gray-100 rounded-2xl rounded-bl-none text-xs leading-relaxed shadow-sm text-gray-800">
                     <p class="font-bold text-ans-dark-green mb-1">Hello!</p>
-                    I am **AINS AI Companion**, your digital advisor at ANS. I can help you to:
+                    I am <strong>AINS AI Companion</strong>, your digital advisor at ANS. I can help you to:
                     <ul class="list-disc list-inside mt-1.5 space-y-1 text-gray-600">
-                        <li>Design lesson plans under the **SAMR** model.</li>
-                        <li>Write **efficient prompts** for your classes.</li>
-                        <li>Recommend the best **approved apps** in the portal.</li>
+                        <li>Design lesson plans under the <strong>SAMR</strong> model.</li>
+                        <li>Write <strong>efficient prompts</strong> for your classes.</li>
+                        <li>Recommend the best <strong>approved apps</strong> in the portal.</li>
                     </ul>
                     <p class="mt-2 text-gray-500 italic text-[10px]">What would you like to talk about today?</p>
                 </div>

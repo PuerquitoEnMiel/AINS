@@ -20,6 +20,7 @@ use App\Http\Controllers\ToolRequestController;
 use App\Models\Category;
 use App\Models\Tool;
 use App\Models\User;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\SlidesController;
 use App\Http\Controllers\CalendarController;
@@ -32,45 +33,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/lang/{locale}', [App\Http\Controllers\LanguageController::class, 'switch'])->name('lang.switch');
 
-Route::get('/', function () {
-    $tools = Cache::rememberForever('welcome_tools', function () {
-        return Tool::approved()
-            ->with('categoryRelation')
-            ->get();
-    });
-
-    if ($tools instanceof \__PHP_Incomplete_Class || !is_iterable($tools)) {
-        Cache::forget('welcome_tools');
-        $tools = Tool::approved()
-            ->with('categoryRelation')
-            ->get();
-    }
-
-    $categories = Cache::rememberForever('welcome_categories', function () {
-        return Category::withCount('approvedTools')
-            ->orderBy('sort_order')
-            ->get();
-    });
-
-    if ($categories instanceof \__PHP_Incomplete_Class || !is_iterable($categories)) {
-        Cache::forget('welcome_categories');
-        $categories = Category::withCount('approvedTools')
-            ->orderBy('sort_order')
-            ->get();
-    }
-
-    // Hide AI Detection category/tools from students and public guests
-    $canSeeDetection = Auth::check() && (Auth::user()->isTeacher() || Auth::user()->isAdmin());
-    if (! $canSeeDetection) {
-        $categories = $categories->filter(fn($c) => $c->slug !== 'ai-detection')->values();
-        $tools = $tools->filter(fn($t) => $t->categoryRelation?->slug !== 'ai-detection')->values();
-    }
-
-    $latestTool = $tools->sortByDesc('created_at')->first();
-    $trendingTools = $tools->sortByDesc('click_count')->take(4);
-
-    return view('welcome', compact('tools', 'categories', 'latestTool', 'trendingTools'));
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Tool detail page (public, tracks views)
 Route::get('/tools/{tool}', [ToolController::class, 'show'])->name('tools.show');
@@ -192,6 +155,10 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
 
     // ── Dashboard ───────────────────────────────────────────────
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // ── Chatbot Settings ────────────────────────────────────────
+    Route::get('/chatbot-settings', [DashboardController::class, 'chatbotSettings'])->name('chatbot-settings');
+    Route::post('/chatbot-settings', [DashboardController::class, 'updateChatbotSettings'])->name('chatbot-settings.update');
 
     // ── Tool Requests ───────────────────────────────────────────
     Route::get('/requests', [App\Http\Controllers\Admin\ToolRequestController::class, 'index'])->name('requests.index');

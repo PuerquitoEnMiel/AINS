@@ -162,4 +162,41 @@ class DashboardController extends Controller
             'avgReviewsPerTool'
         ));
     }
+
+    public function chatbotSettings()
+    {
+        $instructionFile = storage_path('app/chatbot_instruction.txt');
+        $instructions = '';
+        if (file_exists($instructionFile)) {
+            $instructions = file_get_contents($instructionFile);
+        } else {
+            $instructions = "You are 'AINS AI Companion', a premium EdTech Coach and AI pedagogical advisor at the American Nicaraguan School (ANS).\n".
+                             "Your purpose is to assist teachers and students in integrating technology, generative AI, and modern tools into teaching, research, and collaborative learning.\n\n".
+                             "Guidelines:\n".
+                             "1. Provide rich, highly practical pedagogical recommendations (align with SAMR or TPACK models when appropriate).\n".
+                             "2. Write clear, detailed prompt engineering templates for teachers and students (e.g. prompt blueprints they can copy).\n".
+                             "3. Always reply in English. Keep your tone friendly, professional, institutional, and highly motivating.\n".
+                             "4. Use clear markdown formatting, bold points, bullet lists, and code blocks for prompt templates. Never mention system limits; act as a helpful ANS staff assistant.";
+        }
+
+        return view('admin.chatbot_settings', compact('instructions'));
+    }
+
+    public function updateChatbotSettings(\Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'instructions' => 'required|string',
+        ]);
+
+        $instructionFile = storage_path('app/chatbot_instruction.txt');
+        
+        if (!is_dir(dirname($instructionFile))) {
+            mkdir(dirname($instructionFile), 0755, true);
+        }
+        
+        file_put_contents($instructionFile, $request->input('instructions'));
+
+        return redirect()->route('admin.chatbot-settings')
+            ->with('success', 'Chatbot instructions updated successfully!');
+    }
 }

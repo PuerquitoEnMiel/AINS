@@ -52,7 +52,6 @@ class ToolController extends Controller
         $data['is_google_workspace'] = $request->boolean('is_google_workspace');
         $data['is_official'] = $request->boolean('is_official');
         $category = Category::find($request->category_id);
-        $data['category'] = $category->name;
         $data['category_id'] = $category->id;
 
         Tool::create($data);
@@ -107,7 +106,6 @@ class ToolController extends Controller
         $data['is_google_workspace'] = $request->boolean('is_google_workspace');
         $data['is_official'] = $request->boolean('is_official');
         $category = Category::find($request->category_id);
-        $data['category'] = $category->name;
         $data['category_id'] = $category->id;
 
         $tool->update($data);

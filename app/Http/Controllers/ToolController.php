@@ -20,8 +20,12 @@ class ToolController extends Controller
             }
         }
 
-        // Track click/view
-        $tool->trackClick(Auth::id(), request()->ip());
+        // Track click/view once per session to prevent metrics inflation
+        $viewed = session()->get("viewed_tool_{$tool->id}");
+        if (!$viewed) {
+            $tool->trackClick(Auth::id(), request()->ip());
+            session()->put("viewed_tool_{$tool->id}", true);
+        }
 
         // Load relationships
         $tool->load(['categoryRelation', 'creator', 'reviews.user', 'insight']);
