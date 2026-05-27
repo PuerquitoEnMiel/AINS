@@ -48,6 +48,15 @@ class ToolController extends Controller
             ->take(4)
             ->get();
 
+        if (request()->ajax() || request()->wantsJson() || request()->input('ajax') == 1) {
+            return response()->json([
+                'tool' => $tool,
+                'isFavorited' => $isFavorited,
+                'userReview' => $userReview,
+                'reviews' => $tool->reviews()->with('user')->latest()->get(),
+            ]);
+        }
+
         return view('tools.show', compact('tool', 'isFavorited', 'userReview', 'relatedTools'));
     }
 

@@ -24,13 +24,23 @@ class ReviewController extends Controller
 
         $data = $request->validated();
 
-        Review::updateOrCreate(
+        $review = Review::updateOrCreate(
             ['user_id' => Auth::id(), 'tool_id' => $tool->id],
             $data
         );
 
         // Recalculate cached average
         $tool->recalculateRating();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Review saved!',
+                'review' => $review->load('user'),
+                'avg_rating' => $tool->avg_rating,
+                'reviews_count' => $tool->reviews()->count(),
+            ]);
+        }
 
         return back()->with('success', 'Review saved!');
     }

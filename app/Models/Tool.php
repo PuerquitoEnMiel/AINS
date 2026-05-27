@@ -23,6 +23,7 @@ class Tool extends Model
         'featured',
         'click_count',
         'avg_rating',
+        'compatibility',
         'created_by',
     ];
 
