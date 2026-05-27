@@ -15,8 +15,8 @@
         $showNewestBanner = \Carbon\Carbon::parse($newestTool->created_at)->gt(now()->subDays(15));
     }
     
-    // Trending tools (top 4 by clicks)
-    $trendingTools = $allTools->sortByDesc('click_count')->take(4);
+    // Trending tools (top 3 by clicks)
+    $trendingTools = $allTools->sortByDesc('click_count')->take(3);
 
     // Vibrant Tailwind Gradients for placeholders
     $vibrantGradients = [
@@ -834,56 +834,55 @@
 <!-- ═══════════════════════════════════════════════════════════ -->
 @if($trendingTools->count() > 0)
 <div id="trending-section" class="mb-14">
-    <style>
-        .hide-scroll::-webkit-scrollbar {
-            display: none;
-        }
-    </style>
     <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-3">
             <div class="w-1.5 h-8 bg-gradient-to-b from-red-500 to-ans-orange rounded-full"></div>
             <div>
-                <h3 class="text-xl font-heading font-bold text-gray-900">Trending Tools</h3>
-                <p class="text-xs text-gray-500 mt-0.5">The most popular platforms in the ANS community</p>
+                <h3 class="text-xl font-heading font-bold text-gray-900">Trending Now</h3>
+                <p class="text-xs text-gray-500 mt-0.5">Most used AI platforms this week</p>
             </div>
         </div>
-        <span class="inline-flex items-center gap-1 text-xs font-semibold bg-red-500/10 text-red-600 px-3 py-1.5 rounded-full">
-            <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping"></span>
-            Trending
+        <span class="inline-flex items-center gap-1.5 text-xs font-semibold bg-red-50 text-red-600 px-3 py-1.5 rounded-full border border-red-100">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+            </span>
+            Live Stats
         </span>
     </div>
     
-    <div class="flex overflow-x-auto gap-5 pb-6 pt-3 px-2 snap-x snap-mandatory hide-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
-        @foreach($trendingTools as $index => $tTool)
-            <div class="flex-shrink-0 w-80 snap-center group premium-card bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-xl hover:shadow-red-500/5 hover:-translate-y-1 transition-all duration-300 relative overflow-visible cursor-pointer animate-fade-in-up"
-                 style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        @foreach($trendingTools as $tTool)
+            <div class="group premium-card bg-gradient-to-br from-white to-red-50/10 rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-red-500/5 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer animate-fade-in-up"
+                 style="animation-delay: {{ 0.05 * $loop->iteration }}s;"
                  data-tool='@include("partials._tool_data", ["tool" => $tTool])'
                  onclick="openToolModal(JSON.parse(this.dataset.tool))">
                  
                 <!-- Heart Button -->
                 @include('partials._tool_heart', ['tool' => $tTool])
 
-                <!-- App Store Rank Badge -->
-                <div class="absolute -top-3 -left-3 w-10 h-10 bg-gradient-to-br from-red-500 to-ans-orange rounded-full flex items-center justify-center text-white font-black text-lg shadow-lg border-4 border-white z-10 shadow-red-500/30">
-                    #{{ $index + 1 }}
-                </div>
-
                 <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-red-500/5 to-transparent rounded-bl-full overflow-hidden"></div>
                 @php
                     $grad = $tTool->logo_url ? '' : $getGradientForName($tTool->name);
                 @endphp
-                <div class="flex items-start justify-between mb-4 relative z-0">
-                    <div class="w-14 h-14 @if($tTool->logo_url) bg-gradient-to-br from-gray-100 to-gray-50 @else bg-gradient-to-br {{ $grad }} shadow-md shadow-black/10 @endif rounded-xl flex items-center justify-center @if(!$tTool->logo_url) text-white @else text-gray-400 @endif font-bold text-2xl group-hover:scale-110 transition-all duration-300 shadow-sm border border-gray-100/50">
+                
+                <div class="flex items-center gap-4 mb-4 relative z-10">
+                    <div class="w-14 h-14 @if($tTool->logo_url) bg-gradient-to-br from-gray-100 to-gray-50 @else bg-gradient-to-br {{ $grad }} shadow-md shadow-black/10 @endif rounded-xl flex items-center justify-center @if(!$tTool->logo_url) text-white @else text-gray-400 @endif font-bold text-2xl group-hover:scale-105 transition-all duration-300 shadow-sm border border-gray-100/50 flex-shrink-0">
                         @if($tTool->logo_url)
                             <img src="{{ asset($tTool->logo_url) }}" alt="{{ $tTool->name }}" class="w-full h-full object-cover rounded-xl">
                         @else
                             {{ substr($tTool->name, 0, 1) }}
                         @endif
                     </div>
+                    <div class="min-w-0">
+                        <span class="text-[10px] font-bold text-red-500 uppercase tracking-wider block mb-0.5">Top {{ $loop->iteration }}</span>
+                        <h4 class="font-heading font-bold text-gray-900 text-base leading-tight truncate group-hover:text-red-600 transition-colors">{{ $tTool->name }}</h4>
+                    </div>
                 </div>
-                <h4 class="font-heading font-bold text-gray-900 text-base leading-tight group-hover:text-red-600 transition-colors">{{ $tTool->name }}</h4>
-                <p class="text-xs text-gray-500 mt-2 leading-relaxed line-clamp-2">{{ $tTool->description }}</p>
-                <div class="mt-4 flex items-center justify-between">
+
+                <p class="text-xs text-gray-500 leading-relaxed line-clamp-2 mb-4">{{ $tTool->description }}</p>
+                
+                <div class="flex items-center justify-between pt-3 border-t border-gray-100/80">
                     <div class="flex items-center gap-1.5">
                         @if($tTool->is_official)
                             <span class="text-[9px] font-bold bg-ans-orange/10 text-ans-orange px-2 py-0.5 rounded-full uppercase tracking-wider">★ Official</span>
@@ -895,9 +894,9 @@
                         @endif
                     </div>
                     <!-- Click Count Badge -->
-                    <span class="inline-flex items-center gap-1 text-[10px] font-bold bg-red-50 text-red-600 px-2 py-0.5 rounded-md border border-red-100 group-hover:scale-105 transition-transform duration-300 shadow-sm">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                        {{ $tTool->click_count }} {{ $tTool->click_count == 1 ? 'click' : 'clicks' }}
+                    <span class="inline-flex items-center gap-1 text-[10px] font-bold bg-red-50 text-red-600 px-2.5 py-1 rounded-md border border-red-100 group-hover:scale-105 transition-transform duration-300">
+                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.555-.398-1.15-.398-1.81a1 1 0 00-.263-.683c-.23-.25-.568-.4-.925-.4a1 1 0 00-.973.763 8.243 8.243 0 00-.17 1.834c0 3.328 2.673 6.033 6 6.033s6-2.705 6-6.033c0-2.457-1.11-4.66-2.847-6.033zM10 18a6 6 0 006-6c0-2.316-.763-4.454-2.055-6.183A5.022 5.022 0 0112 9.5a1 1 0 01-1 1 5.002 5.002 0 01-5-5c0 .324.017.653.053.98A7.002 7.002 0 0010 18z" clip-rule="evenodd"></path></svg>
+                        {{ $tTool->click_count }}
                     </span>
                 </div>
             </div>
@@ -950,60 +949,7 @@
     <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         @include('partials.tool_grid')
 
-        @if((!is_iterable($tools) || count($tools) == 0) && (!request()->filled('search') && !request()->filled('category')))
-        <!-- Demo Cards when DB is empty -->
-        @php
-            $demoTools = [
-                ['name' => 'ChatGPT', 'desc' => 'Advanced language model for general-purpose assistance and content creation.', 'color' => 'from-emerald-500 to-emerald-700', 'shadow' => 'shadow-emerald-500/20', 'type' => '3rd Party', 'cat' => 'Text & Writing'],
-                ['name' => 'Gemini', 'desc' => 'Google\'s multimodal AI for research, analysis and creative tasks.', 'color' => 'from-ans-blue to-ans-light-blue', 'shadow' => 'shadow-ans-blue/20', 'type' => 'Workspace', 'cat' => 'Text & Writing'],
-                ['name' => 'Canva AI', 'desc' => 'AI-powered design tool for presentations, posters and visual content.', 'color' => 'from-ans-purple to-pink-600', 'shadow' => 'shadow-ans-purple/20', 'type' => '3rd Party', 'cat' => 'Image & Design'],
-                ['name' => 'Gamma', 'desc' => 'AI-powered presentation and document builder for educators.', 'color' => 'from-ans-orange to-ans-yellow', 'shadow' => 'shadow-ans-orange/20', 'type' => '3rd Party', 'cat' => 'Image & Design'],
-                ['name' => 'NotebookLM', 'desc' => 'Google\'s AI research assistant for summarizing and exploring documents.', 'color' => 'from-ans-dark-green to-ans-2nd-green', 'shadow' => 'shadow-ans-dark-green/20', 'type' => 'Workspace', 'cat' => 'Data & Analysis'],
-                ['name' => 'Claude', 'desc' => 'AI assistant optimized for analysis, writing, and safe conversations.', 'color' => 'from-amber-500 to-orange-600', 'shadow' => 'shadow-amber-500/20', 'type' => '3rd Party', 'cat' => 'Text & Writing'],
-                ['name' => 'Perplexity', 'desc' => 'AI-powered search engine with cited sources for academic research.', 'color' => 'from-cyan-500 to-blue-600', 'shadow' => 'shadow-cyan-500/20', 'type' => '3rd Party', 'cat' => 'Data & Analysis'],
-                ['name' => 'Suno AI', 'desc' => 'AI music generation tool for creative audio projects.', 'color' => 'from-pink-500 to-rose-600', 'shadow' => 'shadow-pink-500/20', 'type' => '3rd Party', 'cat' => 'Video & Animation'],
-            ];
-        @endphp
-        @php
-            $demoUrls = ['ChatGPT'=>'https://chatgpt.com','Gemini'=>'https://gemini.google.com','Canva AI'=>'https://canva.com','Gamma'=>'https://gamma.app','NotebookLM'=>'https://notebooklm.google.com','Claude'=>'https://claude.ai','Perplexity'=>'https://perplexity.ai','Suno AI'=>'https://suno.ai'];
-        @endphp
-        @foreach($demoTools as $index => $demo)
-        <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-visible animate-fade-in-up"
-             style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
-             data-tool='@include("partials._tool_data", ["tool" => [
-                 "id" => 0,
-                 "name" => $demo["name"],
-                 "desc" => $demo["desc"],
-                 "url" => $demoUrls[$demo["name"]] ?? "#",
-                 "cat" => $demo["cat"],
-                 "type" => $demo["type"],
-                 "logo" => null,
-                 "compatibility" => "Chromebook, iPad, Windows, MacOS, iOS, Android"
-             ], "isModel" => false])'
-             onclick="openToolModal(JSON.parse(this.dataset.tool))">
-            
-            <!-- Heart Button -->
-            @include('partials._tool_heart', ['toolName' => $demo['name'], 'toolId' => 0])
 
-            <div class="flex items-start justify-between mb-4">
-                <div class="w-12 h-12 bg-gradient-to-br {{ $demo['color'] }} rounded-xl flex items-center justify-center {{ $demo['shadow'] }} shadow-lg group-hover:scale-110 transition-transform duration-300">
-                    <span class="text-white font-bold text-xl">{{ substr($demo['name'], 0, 1) }}</span>
-                </div>
-                <div class="w-5 h-5"></div>
-            </div>
-            <h4 class="font-heading font-bold text-gray-900 text-lg leading-tight">{{ $demo['name'] }}</h4>
-            <p class="text-sm text-gray-500 mt-2 leading-relaxed line-clamp-2">{{ $demo['desc'] }}</p>
-            <div class="mt-5 flex items-center gap-2">
-                @if($demo['type'] === 'Workspace')
-                    <span class="text-[10px] font-bold bg-ans-blue/10 text-ans-blue px-2.5 py-1 rounded-full uppercase tracking-wider">Workspace</span>
-                @else
-                    <span class="text-[10px] font-bold bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full uppercase tracking-wider">3rd Party</span>
-                @endif
-                <span class="text-[10px] text-gray-300 ml-auto">Click for details</span>
-            </div>
-        </div>
-        @endforeach
-        @endif
     </div>
 
     <!-- Pagination Container -->

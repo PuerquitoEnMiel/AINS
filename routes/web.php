@@ -37,6 +37,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Tool detail page (public, tracks views)
 Route::get('/tools/{tool}', [ToolController::class, 'show'])->name('tools.show');
+Route::post('/tools/{tool}/click', [ToolController::class, 'trackClick'])->name('tools.click');
 
 // Educational Platform Static Pages
 Route::get('/policy', function () {
@@ -211,6 +212,16 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/badge-suggestions', [App\Http\Controllers\Admin\BadgeController::class, 'suggestionsQueue'])->name('badge-suggestions.index');
     Route::post('/badge-suggestions/{suggestion}/approve', [App\Http\Controllers\Admin\BadgeController::class, 'approveSuggestion'])->name('badge-suggestions.approve');
     Route::post('/badge-suggestions/{suggestion}/reject', [App\Http\Controllers\Admin\BadgeController::class, 'rejectSuggestion'])->name('badge-suggestions.reject');
+
+    // ── Admin Notifications ──────────────────────────────────────
+    Route::get('/notifications', [App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{notification}/read', [App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [App\Http\Controllers\Admin\NotificationController::class, 'readAll'])->name('notifications.readAll');
+
+    // ── Notification Templates CRUD ──────────────────────────────
+    Route::get('/notification-templates', [App\Http\Controllers\Admin\NotificationTemplateController::class, 'index'])->name('notification-templates.index');
+    Route::get('/notification-templates/{template}/edit', [App\Http\Controllers\Admin\NotificationTemplateController::class, 'edit'])->name('notification-templates.edit');
+    Route::put('/notification-templates/{template}', [App\Http\Controllers\Admin\NotificationTemplateController::class, 'update'])->name('notification-templates.update');
 });
 
 // ═════════════════════════════════════════════════════════════════════════

@@ -62,7 +62,7 @@ class BadgeEvidenceController extends Controller
             $fileType = $file->getClientOriginalExtension();
         }
 
-        BadgeEvidence::updateOrCreate(
+        $evidence = BadgeEvidence::updateOrCreate(
             ['user_id' => Auth::id(), 'badge_id' => $badge->id],
             [
                 'file_path'       => $filePath,
@@ -77,6 +77,19 @@ class BadgeEvidenceController extends Controller
                 'expires_at'      => null,
             ]
         );
+
+        // Notify admins
+        \App\Models\AdminNotification::create([
+            'user_id' => Auth::id(),
+            'title' => 'Evidencia de Insignia subida',
+            'message' => 'El docente ' . Auth::user()->name . ' ha subido evidencia para la insignia "' . $badge->name . '".',
+            'type' => 'evidence',
+            'data' => [
+                'badge_id' => $badge->id,
+                'badge_name' => $badge->name,
+                'evidence_id' => $evidence->id,
+            ],
+        ]);
 
         return redirect()->route('badges.show', $badge->slug)
             ->with('success', 'Evidence submitted! The administrator will review it soon and activate your badge.');

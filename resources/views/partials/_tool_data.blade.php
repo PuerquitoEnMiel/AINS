@@ -18,6 +18,7 @@
             'type' => $tool->is_google_workspace ? 'Google Workspace' : '3rd Party',
             'logo' => $tool->logo_url ? asset($tool->logo_url) : null,
             'compatibility' => $tool->compatibility ?? null,
+            'clicks' => $tool->click_count ?? 0,
         ];
     } else {
         $toolData = $tool;

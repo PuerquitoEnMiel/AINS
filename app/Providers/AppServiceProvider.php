@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \App\Models\Tool::observe(\App\Observers\ToolObserver::class);
+
         view()->composer('*', function ($view) {
             $categories = \Illuminate\Support\Facades\Cache::rememberForever('welcome_categories', function () {
                 return \App\Models\Category::withCount('approvedTools')

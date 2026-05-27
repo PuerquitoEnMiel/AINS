@@ -101,9 +101,15 @@ class DashboardController extends Controller
 
         // ── Monthly Adoption Trend (favorites per month, last 6 months) ──
         $sixMonthsAgo = Carbon::now()->subMonths(6);
+        $isSqlite = DB::getDriverName() === 'sqlite';
+
+        $monthRaw = $isSqlite 
+            ? "strftime('%Y-%m', created_at) as month" 
+            : "TO_CHAR(created_at, 'YYYY-MM') as month";
+
         $monthlyAdoption = DB::table('tool_user')
             ->select(
-                DB::raw("TO_CHAR(created_at, 'YYYY-MM') as month"),
+                DB::raw($monthRaw),
                 DB::raw('count(*) as favorites')
             )
             ->where('created_at', '>=', $sixMonthsAgo)
@@ -121,8 +127,12 @@ class DashboardController extends Controller
         }
 
         // ── Weekly Activity Heatmap (views by day of week) ──────
+        $dowRaw = $isSqlite
+            ? "cast(strftime('%w', created_at) as integer) as dow"
+            : "EXTRACT(DOW FROM created_at) as dow";
+
         $weeklyHeatmap = ToolView::select(
-            DB::raw("EXTRACT(DOW FROM created_at) as dow"),
+            DB::raw($dowRaw),
             DB::raw('count(*) as views')
         )
             ->where('created_at', '>=', $thirtyDaysAgo)

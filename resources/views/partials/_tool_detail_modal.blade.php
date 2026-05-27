@@ -1,7 +1,7 @@
 {{-- Tool Detail Modal Component --}}
 <div id="tool-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 md:p-6" onclick="if(event.target===this)closeToolModal()">
     <!-- Backdrop -->
-    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md opacity-0 transition-opacity duration-300" id="modal-backdrop"></div>
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md opacity-0 transition-opacity duration-300 cursor-pointer" id="modal-backdrop" onclick="closeToolModal()"></div>
     <!-- Panel -->
     <div class="relative w-full max-w-2xl bg-white/95 backdrop-blur-xl border border-gray-100 rounded-3xl shadow-2xl flex flex-col transform transition-all duration-300 scale-95 opacity-0 overflow-hidden max-h-[90vh]" id="modal-panel">
         <!-- Header -->
@@ -369,7 +369,7 @@ function openToolModal(tool) {
 
     updateFavBtnState(getFavs().includes(tool.name));
 
-    const clickCount = getClicks(tool.name);
+    const clickCount = tool.clicks !== undefined ? tool.clicks : getClicks(tool.name);
     document.getElementById('modal-clicks-count').textContent = clickCount;
 
     renderDeviceCompatibility(tool.compatibility);
@@ -424,6 +424,24 @@ if (openBtn) {
         if (activeTool) {
             const newCount = incrementClicks(activeTool.name);
             document.getElementById('modal-clicks-count').textContent = newCount;
+
+            if (activeTool.id) {
+                const csrfTokenEl = document.querySelector('meta[name="csrf-token"]');
+                const headers = { 'Accept': 'application/json' };
+                if (csrfTokenEl) headers['X-CSRF-TOKEN'] = csrfTokenEl.getAttribute('content');
+
+                fetch(`/tools/${activeTool.id}/click`, {
+                    method: 'POST',
+                    headers: headers
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.click_count !== undefined) {
+                        document.getElementById('modal-clicks-count').textContent = data.click_count;
+                    }
+                })
+                .catch(err => console.error('Error tracking click:', err));
+            }
         }
     });
 }
@@ -656,6 +674,10 @@ function fetchReviewsData(toolId) {
                 const avg = parseFloat(data.tool.avg_rating || 0);
                 document.getElementById('modal-avg-rating').textContent = avg.toFixed(1);
                 updateStarsContainer('modal-stars-container', avg);
+
+                if (data.tool && data.tool.click_count !== undefined) {
+                    document.getElementById('modal-clicks-count').textContent = data.tool.click_count;
+                }
                 
                 const reviewsCount = data.reviews ? data.reviews.length : 0;
                 document.getElementById('modal-total-reviews').textContent = `${reviewsCount} ${reviewsCount === 1 ? 'review' : 'reviews'}`;

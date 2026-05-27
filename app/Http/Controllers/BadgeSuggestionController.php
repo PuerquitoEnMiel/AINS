@@ -27,11 +27,23 @@ class BadgeSuggestionController extends Controller
             'certification_url' => 'nullable|url|max:500',
         ]);
 
-        auth()->user()->badgeSuggestions()->create([
+        $suggestion = auth()->user()->badgeSuggestions()->create([
             'name'              => $request->name,
             'description'       => $request->description,
             'certification_url' => $request->certification_url,
             'status'            => 'pending',
+        ]);
+
+        // Notify admins
+        \App\Models\AdminNotification::create([
+            'user_id' => auth()->id(),
+            'title' => 'Nueva Sugerencia de Insignia',
+            'message' => 'El docente ' . auth()->user()->name . ' ha sugerido una nueva insignia: "' . $request->name . '".',
+            'type' => 'suggestion',
+            'data' => [
+                'suggestion_id' => $suggestion->id,
+                'suggestion_name' => $suggestion->name,
+            ],
         ]);
 
         return redirect()->route('badge-suggestions.index')

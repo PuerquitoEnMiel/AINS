@@ -21,7 +21,7 @@
 @endphp
 
 @foreach((is_iterable($tools) ? $tools : []) as $index => $tool)
-@if(!is_object($tool) || !empty($tool->is_official))
+@if(!is_object($tool))
     @continue
 @endif
 <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-visible animate-fade-in-up"

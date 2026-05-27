@@ -74,4 +74,16 @@ class ToolController extends Controller
 
         return view('tools.ai_detection', compact('tools', 'category'));
     }
+
+    /**
+     * Increment click/view counter for tool redirect clicks.
+     */
+    public function trackClick(Tool $tool)
+    {
+        $tool->trackClick(Auth::id(), request()->ip());
+        return response()->json([
+            'success' => true,
+            'click_count' => $tool->click_count
+        ]);
+    }
 }

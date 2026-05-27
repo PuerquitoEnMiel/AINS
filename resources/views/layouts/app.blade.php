@@ -265,6 +265,9 @@
             <!-- Admin Controls -->
             @auth
             @if(Auth::user()->role === 'admin')
+            @php
+                $unreadNotificationsCount = \App\Models\AdminNotification::whereNull('read_at')->count();
+            @endphp
             <div class="pt-4 border-t border-white/10 space-y-1">
                 <p class="px-4 text-[10px] font-bold text-ans-orange uppercase tracking-wider mb-2">Administration</p>
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->is('admin/dashboard') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
@@ -310,6 +313,19 @@
                 <a href="{{ route('admin.chatbot-settings') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('admin.chatbot-settings') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                     <span class="whitespace-nowrap">Chatbot Settings</span>
+                </a>
+                <a href="{{ route('admin.notifications.index') }}" class="flex items-center justify-between px-4 py-2.5 rounded-xl {{ request()->is('admin/notifications*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        <span class="whitespace-nowrap">Telemetry Alerts</span>
+                    </div>
+                    @if($unreadNotificationsCount > 0)
+                        <span class="px-2 py-0.5 text-[10px] font-bold bg-red-500 text-white rounded-full animate-pulse">{{ $unreadNotificationsCount }}</span>
+                    @endif
+                </a>
+                <a href="{{ route('admin.notification-templates.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->is('admin/notification-templates*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    <span class="whitespace-nowrap">Email Templates</span>
                 </a>
             </div>
             @endif
@@ -471,6 +487,19 @@
                 <a href="{{ route('admin.chatbot-settings') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->routeIs('admin.chatbot-settings') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
                     <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                     <span class="text-sm">Chatbot Settings</span>
+                </a>
+                <a href="{{ route('admin.notifications.index') }}" class="flex items-center justify-between px-4 py-2 rounded-xl {{ request()->is('admin/notifications*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        <span class="text-sm">Telemetry Alerts</span>
+                    </div>
+                    @if($unreadNotificationsCount > 0)
+                        <span class="px-2 py-0.5 text-[10px] font-bold bg-red-500 text-white rounded-full animate-pulse">{{ $unreadNotificationsCount }}</span>
+                    @endif
+                </a>
+                <a href="{{ route('admin.notification-templates.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-xl {{ request()->is('admin/notification-templates*') ? 'bg-white/10 text-white font-medium border-l-4 border-ans-orange shadow-inner' : 'hover:bg-white/5 text-gray-300 hover:text-white border-l-4 border-transparent hover:border-ans-orange' }} transition-all">
+                    <svg class="w-5 h-5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    <span class="text-sm">Email Templates</span>
                 </a>
             </div>
             @endif

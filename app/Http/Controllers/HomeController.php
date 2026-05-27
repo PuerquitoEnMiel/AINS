@@ -116,8 +116,10 @@ class HomeController extends Controller
 
         // Hide AI Detection category/tools from students and public guests
         if (! $canSeeDetection) {
-            $query->whereHas('categoryRelation', function($q) {
-                $q->where('slug', '!=', 'ai-detection');
+            $query->where(function($q) {
+                $q->whereHas('categoryRelation', function($sub) {
+                    $sub->where('slug', '!=', 'ai-detection');
+                })->orWhereNull('category_id');
             });
         }
 
@@ -145,8 +147,10 @@ class HomeController extends Controller
             ->where('is_official', true)
             ->with(['categoryRelation', 'reviews'])
             ->when(! $canSeeDetection, function($q) {
-                $q->whereHas('categoryRelation', function($cQ) {
-                    $cQ->where('slug', '!=', 'ai-detection');
+                $q->where(function($sub) {
+                    $sub->whereHas('categoryRelation', function($cQ) {
+                        $cQ->where('slug', '!=', 'ai-detection');
+                    })->orWhereNull('category_id');
                 });
             })
             ->latest()
@@ -156,18 +160,22 @@ class HomeController extends Controller
         $trendingTools = Tool::approved()
             ->with(['categoryRelation', 'reviews'])
             ->when(! $canSeeDetection, function($q) {
-                $q->whereHas('categoryRelation', function($cQ) {
-                    $cQ->where('slug', '!=', 'ai-detection');
+                $q->where(function($sub) {
+                    $sub->whereHas('categoryRelation', function($cQ) {
+                        $cQ->where('slug', '!=', 'ai-detection');
+                    })->orWhereNull('category_id');
                 });
             })
             ->orderByDesc('click_count')
-            ->take(4)
+            ->take(3)
             ->get();
 
         $latestTool = Tool::approved()
             ->when(! $canSeeDetection, function($q) {
-                $q->whereHas('categoryRelation', function($cQ) {
-                    $cQ->where('slug', '!=', 'ai-detection');
+                $q->where(function($sub) {
+                    $sub->whereHas('categoryRelation', function($cQ) {
+                        $cQ->where('slug', '!=', 'ai-detection');
+                    })->orWhereNull('category_id');
                 });
             })
             ->latest()
