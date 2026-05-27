@@ -158,7 +158,7 @@
         <div class="splash-shockwave"></div>
     </div>
     <div class="splash-text">
-        <p class="font-heading font-extrabold text-2xl tracking-tight">AINS AI Portal</p>
+        <p class="font-heading font-extrabold text-2xl tracking-tight">Innovation Hub ANS</p>
         <p style="color: rgba(255,255,255,0.6); font-size: 13px; margin-top: 4px;">American Nicaraguan School</p>
     </div>
     <div class="splash-bar">
@@ -178,8 +178,8 @@
                     <img src="{{ asset('logo.png') }}" alt="ANS Logo" class="w-full h-full object-cover scale-110">
                 </div>
                 <div>
-                    <h1 class="text-2xl font-heading font-extrabold tracking-tight text-white leading-none">AINS</h1>
-                    <span class="text-[10px] font-bold tracking-wider text-ans-light-green uppercase">AI Portal</span>
+                    <h1 class="text-2xl font-heading font-extrabold tracking-tight text-white leading-none">Innovation Hub</h1>
+                    <span class="text-[10px] font-bold tracking-wider text-ans-light-green uppercase">ANS</span>
                 </div>
             </div>
         </div>
@@ -363,8 +363,8 @@
                     <img src="{{ asset('logo.png') }}" alt="ANS Logo" class="w-full h-full object-cover scale-110">
                 </div>
                 <div>
-                    <h1 class="text-xl font-heading font-extrabold tracking-tight text-white leading-none">AINS</h1>
-                    <span class="text-[9px] font-bold tracking-wider text-ans-light-green uppercase">AI Portal</span>
+                    <h1 class="text-xl font-heading font-extrabold tracking-tight text-white leading-none">Innovation Hub</h1>
+                    <span class="text-[9px] font-bold tracking-wider text-ans-light-green uppercase">ANS</span>
                 </div>
             </div>
         </div>
@@ -1084,7 +1084,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <svg class="w-5 h-5 text-ans-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold tracking-tight">AINS AI Companion</h4>
+                    <h4 class="text-sm font-bold tracking-tight">ELEVATE AI Companion</h4>
                     <span class="text-[9px] text-ans-light-green font-bold tracking-wider uppercase flex items-center gap-1">
                         <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"></span>
                         EdTech Advisor
@@ -1110,7 +1110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="max-w-[78%] px-4 py-3 bg-white border border-gray-100 rounded-2xl rounded-bl-none text-xs leading-relaxed shadow-sm text-gray-800">
                         <p class="font-bold text-ans-dark-green mb-1">Hello, {{ $firstName }}! 👋</p>
-                        I am <strong>AINS AI Companion</strong>, your personal digital advisor at ANS.
+                        I am <strong>ELEVATE AI Companion</strong>, your personal digital advisor at ANS.
                         @if(Auth::user()->isStudent())
                             I can help you as a <strong>student</strong> to:
                             <ul class="list-disc list-inside mt-1.5 space-y-1 text-gray-600">
@@ -1136,7 +1136,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="max-w-[78%] px-4 py-3 bg-white border border-gray-100 rounded-2xl rounded-bl-none text-xs leading-relaxed shadow-sm text-gray-800">
                         <p class="font-bold text-ans-dark-green mb-1">Hello!</p>
-                        I am <strong>AINS AI Companion</strong>, your digital advisor at ANS. I can help you to:
+                        I am <strong>ELEVATE AI Companion</strong>, your digital advisor at ANS. I can help you to:
                         <ul class="list-disc list-inside mt-1.5 space-y-1 text-gray-600">
                             <li>Design lesson plans under the <strong>SAMR</strong> model.</li>
                             <li>Write <strong>efficient prompts</strong> for your classes.</li>
