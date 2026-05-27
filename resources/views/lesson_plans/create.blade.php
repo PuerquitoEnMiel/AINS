@@ -33,14 +33,14 @@
                     <div class="md:col-span-2">
                         <label for="title" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Topic or Class Title</label>
                         <input type="text" id="title" placeholder="e.g. Introduction to photosynthesis in natural sciences"
-                               class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm">
+                               class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all placeholder:text-gray-400">
                         <p id="title-error" class="hidden mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">⚠️ This field is required.</p>
                     </div>
 
                     <!-- Asignatura -->
                     <div>
                         <label for="subject" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Subject</label>
-                        <select id="subject" onchange="toggleCustomField('subject')" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all text-sm bg-white">
+                        <select id="subject" onchange="toggleCustomField('subject')" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all appearance-none cursor-pointer">
                             <option value="Natural Sciences">Natural Sciences</option>
                             <option value="Mathematics">Mathematics</option>
                             <option value="Spanish">Spanish</option>
@@ -50,13 +50,13 @@
                             <option value="Art & Music">Art & Music</option>
                             <option value="OTHER">Other (Specify)</option>
                         </select>
-                        <input type="text" id="subject_custom" placeholder="Specify subject" class="w-full mt-3 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm hidden">
+                        <input type="text" id="subject_custom" placeholder="Specify subject" class="w-full bg-gray-50 border border-gray-200 rounded-xl mt-3 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all placeholder:text-gray-400 hidden">
                     </div>
 
                     <!-- Grado/Nivel -->
                     <div>
                         <label for="grade_level" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Grade or School Level</label>
-                        <select id="grade_level" onchange="toggleCustomField('grade_level')" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all text-sm bg-white">
+                        <select id="grade_level" onchange="toggleCustomField('grade_level')" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all appearance-none cursor-pointer">
                             <option value="Pre-K / Kindergarten">Pre-K / Kindergarten</option>
                             <option value="1st - 3rd Grade (Elementary)">1st - 3rd Grade (Elementary)</option>
                             <option value="4th - 5th Grade (Elementary)">4th - 5th Grade (Elementary)</option>
@@ -64,20 +64,20 @@
                             <option value="9th - 12th Grade (High School)">9th - 12th Grade (High School)</option>
                             <option value="OTHER">Other (Specify)</option>
                         </select>
-                        <input type="text" id="grade_level_custom" placeholder="Specify grade" class="w-full mt-3 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm hidden">
+                        <input type="text" id="grade_level_custom" placeholder="Specify grade" class="w-full bg-gray-50 border border-gray-200 rounded-xl mt-3 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all placeholder:text-gray-400 hidden">
                     </div>
 
                     <!-- Duración -->
                     <div>
                         <label for="duration" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Estimated Duration</label>
-                        <select id="duration" onchange="toggleCustomField('duration')" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all text-sm bg-white">
+                        <select id="duration" onchange="toggleCustomField('duration')" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all appearance-none cursor-pointer">
                             <option value="45 Minutes">45 Minutes</option>
                             <option value="60 Minutes">60 Minutes</option>
                             <option value="90 Minutes">90 Minutes</option>
                             <option value="120 Minutes">120 Minutes</option>
                             <option value="OTHER">Other (Specify)</option>
                         </select>
-                        <input type="text" id="duration_custom" placeholder="Specify duration (e.g. 3 hours)" class="w-full mt-3 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm hidden">
+                        <input type="text" id="duration_custom" placeholder="Specify duration (e.g. 3 hours)" class="w-full bg-gray-50 border border-gray-200 rounded-xl mt-3 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all placeholder:text-gray-400 hidden">
                     </div>
                 </div>
 
@@ -85,7 +85,7 @@
                 <div class="mt-6">
                     <label for="objectives" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Learning Objectives (What will students achieve?)</label>
                     <textarea id="objectives" rows="4" placeholder="e.g. Understand the process of photosynthesis, identify the chemical elements involved (water, carbon dioxide, and light), and the product generated (oxygen and glucose)."
-                              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all placeholder:text-gray-400 text-sm leading-relaxed"></textarea>
+                              class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all placeholder:text-gray-400 leading-relaxed resize-none"></textarea>
                     <p id="objectives-error" class="hidden mt-1.5 text-xs font-semibold text-red-500 flex items-center gap-1">⚠️ This field is required.</p>
                 </div>
 
@@ -93,7 +93,7 @@
                 <div class="mt-6">
                     <label for="attachment" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Reference Attachment (Optional PDF, Office Docs, Image, Audio, Video)</label>
                     <input type="file" id="attachment" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,image/*,audio/*,video/*" 
-                           class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green transition-all text-sm file:mr-4 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-ans-dark-green/10 file:text-ans-dark-green hover:file:bg-ans-dark-green/20">
+                           class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all file:mr-4 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-ans-dark-green/10 file:text-ans-dark-green hover:file:bg-ans-dark-green/20">
                     <p class="text-[10px] text-gray-400 mt-1">Upload a syllabus, textbook chapter, worksheet, audio clip, or reference video (Max 50MB).</p>
                 </div>
 

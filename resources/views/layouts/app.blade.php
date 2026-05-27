@@ -1047,7 +1047,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 @auth
     <!-- Chat Drawer Panel -->
-    <div id="ai-chatbot-panel" class="fixed bottom-24 right-6 z-50 w-96 h-[520px] bg-white/80 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl flex flex-col overflow-hidden mb-4 opacity-0 scale-95 pointer-events-none transition-all duration-300 transform origin-bottom-right">
+    <div id="ai-chatbot-panel" class="fixed bottom-0 right-0 md:bottom-24 md:right-6 z-50 w-full h-full md:w-96 md:h-[520px] bg-white/80 backdrop-blur-xl border border-white/20 rounded-none md:rounded-3xl shadow-2xl flex flex-col overflow-hidden md:mb-4 opacity-0 scale-95 pointer-events-none transition-all duration-300 transform origin-bottom-right">
         <!-- Header -->
         <div class="p-4 bg-gradient-to-r from-ans-dark-green to-ans-seal-green text-white flex items-center justify-between shadow-md">
             <div class="flex items-center gap-3">

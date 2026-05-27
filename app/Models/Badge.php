@@ -89,4 +89,44 @@ class Badge extends Model
         $from = $approvedAt ?? now();
         return $from->copy()->addDays($this->validity_days);
     }
+
+    /**
+     * Compute expiry status for a user who earned this badge at $earnedAt.
+     *
+     * @return array{status: string, days_remaining: int|null, expires_at: \Carbon\Carbon|null, progress: float}
+     *   status: 'permanent' | 'active' | 'warning' | 'expired'
+     *   warning = less than 30 days remaining
+     */
+    public function expiryStatusFor(\Carbon\Carbon $earnedAt): array
+    {
+        if (!$this->hasExpiry()) {
+            return [
+                'status' => 'permanent',
+                'days_remaining' => null,
+                'expires_at' => null,
+                'progress' => 0,
+            ];
+        }
+
+        $expiresAt = $earnedAt->copy()->addDays($this->validity_days);
+        $now = now();
+        $daysRemaining = (int) max(0, $now->diffInDays($expiresAt, false));
+        $daysElapsed = (int) $earnedAt->diffInDays($now);
+        $progress = min(100, round(($daysElapsed / $this->validity_days) * 100, 1));
+
+        if ($expiresAt->isPast()) {
+            $status = 'expired';
+        } elseif ($daysRemaining <= 30) {
+            $status = 'warning';
+        } else {
+            $status = 'active';
+        }
+
+        return [
+            'status' => $status,
+            'days_remaining' => $daysRemaining,
+            'expires_at' => $expiresAt,
+            'progress' => $progress,
+        ];
+    }
 }

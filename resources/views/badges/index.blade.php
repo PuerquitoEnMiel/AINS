@@ -74,8 +74,9 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="badge-grid">
         @forelse($badges as $badge)
             @php
-                $isEarned = auth()->user() && auth()->user()->hasBadge($badge->slug);
-                $earnedPivot = $isEarned ? auth()->user()->badges()->where('slug', $badge->slug)->first()->pivot : null;
+                $earnedBadge = $earnedBadgesMap->get($badge->id);
+                $isEarned = !!$earnedBadge;
+                $earnedPivot = $isEarned ? $earnedBadge->pivot : null;
                 $difficultyColor = match($badge->difficulty) {
                     'bronze' => '#CD7F32',
                     'silver' => '#9CA3AF',
@@ -84,10 +85,38 @@
                 };
                 $glowClass = 'glow-' . $badge->difficulty;
                 $mandatoryBorder = $badge->is_mandatory ? 'border-2 border-red-500/30 ring-2 ring-red-500/10' : '';
+
+                // Expiry status computation
+                $expiry = null;
+                if ($isEarned && $earnedPivot?->earned_at) {
+                    $expiry = $badge->expiryStatusFor(\Carbon\Carbon::parse($earnedPivot->earned_at));
+                }
             @endphp
             <div class="badge-card bg-white rounded-2xl p-6 {{ $glowClass }} {{ $mandatoryBorder }} flex flex-col justify-between relative overflow-hidden" 
                  data-category="{{ $badge->category }}">
                 
+                {{-- Floating expiry status badge (top-right corner) --}}
+                @if($isEarned && $expiry)
+                    @if($expiry['status'] === 'expired')
+                        <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-red-100 text-red-600 border border-red-200 animate-pulse">
+                            ⚠ Expirada
+                        </div>
+                    @elseif($expiry['status'] === 'warning')
+                        <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider border animate-pulse"
+                             style="background-color: #FF830015; color: #FF8300; border-color: #FF830040;">
+                            ⏰ {{ $expiry['days_remaining'] }}d restantes
+                        </div>
+                    @elseif($expiry['status'] === 'active')
+                        <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-emerald-50 text-emerald-600 border border-emerald-200">
+                            ✓ Vigente
+                        </div>
+                    @elseif($expiry['status'] === 'permanent')
+                        <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider bg-gray-50 text-gray-400 border border-gray-200">
+                            ∞ Permanente
+                        </div>
+                    @endif
+                @endif
+
                 <!-- Category/Difficulty Top Row -->
                 <div class="flex justify-between items-center mb-4">
                     <div class="flex items-center gap-2">
@@ -107,7 +136,7 @@
                 </div>
 
                 <!-- Insignia Info -->
-                <div class="flex items-start gap-4 mb-6">
+                <div class="flex items-start gap-4 mb-4">
                     <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl shadow-md border shrink-0 bg-gray-50 transition-all border-gray-100 overflow-hidden">
                         @if($badge->image_path)
                             <img src="{{ asset('storage/' . $badge->image_path) }}" class="w-full h-full object-cover">
@@ -121,24 +150,81 @@
                     </div>
                 </div>
 
+                {{-- Expiry Progress Bar (only for earned badges with validity) --}}
+                @if($isEarned && $expiry && $expiry['status'] !== 'permanent')
+                    <div class="mb-4 px-1">
+                        @php
+                            $barColor = match($expiry['status']) {
+                                'active'  => 'from-emerald-400 to-emerald-500',
+                                'warning' => 'from-amber-400 to-orange-500',
+                                'expired' => 'from-red-400 to-red-500',
+                                default   => 'from-gray-300 to-gray-400',
+                            };
+                            $barBg = match($expiry['status']) {
+                                'warning' => 'bg-orange-100',
+                                'expired' => 'bg-red-100',
+                                default   => 'bg-gray-100',
+                            };
+                        @endphp
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-[10px] font-semibold text-gray-500">Validez: {{ $badge->validityLabel() }}</span>
+                            @if($expiry['status'] === 'expired')
+                                <span class="text-[10px] font-bold text-red-500">Expirada</span>
+                            @else
+                                <span class="text-[10px] font-bold" style="color: {{ $expiry['status'] === 'warning' ? '#FF8300' : '#10B981' }}">
+                                    {{ $expiry['days_remaining'] }} días restantes
+                                </span>
+                            @endif
+                        </div>
+                        <div class="w-full {{ $barBg }} rounded-full h-2 overflow-hidden">
+                            <div class="bg-gradient-to-r {{ $barColor }} h-full rounded-full transition-all duration-1000 ease-out"
+                                 style="width: {{ min($expiry['progress'], 100) }}%"></div>
+                        </div>
+                        @if($expiry['expires_at'])
+                            <div class="text-[9px] text-gray-400 mt-1">
+                                Expira: {{ $expiry['expires_at']->format('d M Y') }}
+                            </div>
+                        @endif
+                    </div>
+                @endif
+
                 <!-- Status & Action Block -->
-                <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                <div class="pt-4 border-t border-gray-100 flex flex-col gap-3">
                     @if($isEarned)
-                        <div class="flex items-center gap-1.5 text-emerald-600 text-xs font-bold">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                            <span>Earned (Score: {{ $earnedPivot->score }}%)</span>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-1.5 text-emerald-600 text-xs font-bold">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span>Earned{{ $earnedPivot?->score ? " (Score: {$earnedPivot->score}%)" : '' }}</span>
+                            </div>
+                            <a href="{{ route('badges.show', $badge->slug) }}" class="text-xs text-ans-dark-green font-semibold hover:underline">Review Detail</a>
                         </div>
-                        <a href="{{ route('badges.show', $badge->slug) }}" class="text-xs text-ans-dark-green font-semibold hover:underline">Review Detail</a>
+
+                        {{-- Warning CTA: Re-certification needed --}}
+                        @if($expiry && $expiry['status'] === 'warning')
+                            <a href="{{ route('badges.show', $badge->slug) }}" 
+                               class="w-full text-center px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm border"
+                               style="background-color: #FF830012; color: #FF8300; border-color: #FF830030;"
+                               onmouseenter="this.style.backgroundColor='#FF830025'" onmouseleave="this.style.backgroundColor='#FF830012'">
+                                🔄 Próxima a expirar — Re-certifícate
+                            </a>
+                        @elseif($expiry && $expiry['status'] === 'expired')
+                            <a href="{{ route('badges.show', $badge->slug) }}" 
+                               class="w-full text-center px-3.5 py-2 bg-red-50 text-red-600 border border-red-200 rounded-xl text-xs font-bold hover:bg-red-100 transition-all shadow-sm">
+                                📋 Certificación expirada — Enviar nueva evidencia
+                            </a>
+                        @endif
                     @else
-                        <div class="text-[10px] font-semibold text-gray-400">
-                            Status: <span class="text-ans-orange">Locked 🔓</span>
+                        <div class="flex items-center justify-between">
+                            <div class="text-[10px] font-semibold text-gray-400">
+                                Status: <span class="text-ans-orange">Locked 🔓</span>
+                            </div>
+                            
+                            <a href="{{ route('badges.show', $badge->slug) }}" class="px-3.5 py-1.5 bg-ans-dark-green text-white text-xs font-bold rounded-xl hover:bg-ans-seal-green transition-all shadow-sm">
+                                Ver Detalles
+                            </a>
                         </div>
-                        
-                        <a href="{{ route('badges.show', $badge->slug) }}" class="px-3.5 py-1.5 bg-ans-dark-green text-white text-xs font-bold rounded-xl hover:bg-ans-seal-green transition-all shadow-sm">
-                            Ver Detalles
-                        </a>
                     @endif
                 </div>
             </div>

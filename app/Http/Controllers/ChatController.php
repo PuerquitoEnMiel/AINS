@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Services\PromptGuard;
+use App\Services\ToolSearchService;
 
 class ChatController extends Controller
 {
@@ -27,6 +29,24 @@ class ChatController extends Controller
 
         $message = $request->input('message');
         $conversationId = $request->input('conversation_id');
+
+        // ── Prompt Injection Guardrail ──────────────────────────────
+        $guardResult = PromptGuard::analyze($message);
+        if (! $guardResult['safe']) {
+            $firstName = explode(' ', Auth::user()->name)[0];
+            Log::warning('PromptGuard blocked message', [
+                'user_id'  => Auth::id(),
+                'category' => $guardResult['category'],
+                'reason'   => $guardResult['reason'],
+                'message'  => Str::limit($message, 200),
+            ]);
+
+            return response()->json([
+                'reply' => PromptGuard::getRejectionMessage($guardResult['category'], $firstName),
+                'conversation_id' => $conversationId,
+            ]);
+        }
+        // ────────────────────────────────────────────────────────────
 
         $apiKey = env('GEMINI_API_KEY');
 
@@ -69,43 +89,9 @@ class ChatController extends Controller
         $user = Auth::user();
         $canSeeDetection = $user && ($user->isTeacher() || $user->isAdmin());
 
-        // Extract keywords from user message to search relevant tools (limit to 5)
-        $keywords = collect(preg_split('/[\s,\.\?\!\-\_]+/', strtolower($message)))
-            ->filter(fn($w) => strlen($w) > 3)
-            ->values();
-
-        $toolsQuery = Tool::approved()
-            ->with('categoryRelation')
-            ->when(! $canSeeDetection, function($q) {
-                $q->whereHas('categoryRelation', function($cQ) {
-                    $cQ->where('slug', '!=', 'ai-detection');
-                });
-            });
-
-        if ($keywords->isNotEmpty()) {
-            $toolsQuery->where(function($q) use ($keywords) {
-                foreach ($keywords as $word) {
-                    $q->orWhere('name', 'like', "%{$word}%")
-                      ->orWhere('description', 'like', "%{$word}%");
-                }
-            });
-        }
-
-        $approvedTools = $toolsQuery->take(5)->get();
-
-        // Fallback to top 5 trending tools if no keywords matched
-        if ($approvedTools->isEmpty()) {
-            $approvedTools = Tool::approved()
-                ->with('categoryRelation')
-                ->when(! $canSeeDetection, function($q) {
-                    $q->whereHas('categoryRelation', function($cQ) {
-                        $cQ->where('slug', '!=', 'ai-detection');
-                    });
-                })
-                ->orderByDesc('click_count')
-                ->take(5)
-                ->get();
-        }
+        // Optimized RAG: FTS5 full-text search → PostgreSQL tsquery → LIKE fallback
+        $keywords = ToolSearchService::extractKeywords($message);
+        $approvedTools = ToolSearchService::search($keywords, $canSeeDetection, 5);
 
         $toolsList = $approvedTools->map(fn ($t) => "- {$t->name}: {$t->description} ({$t->url})")->implode("\n");
 

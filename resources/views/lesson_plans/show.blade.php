@@ -36,15 +36,17 @@
     }
 </style>
 
+<!-- Minimalist Back Button -->
+<div class="mb-4">
+    <a href="{{ route('lesson-plans.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-ans-dark-green transition-colors">
+        <span>← Volver a Mis Planes</span>
+    </a>
+</div>
+
 <div class="space-y-6 animate-fade-in">
     <!-- ACTION BAR -->
     <div id="print-action-bar" class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white border border-gray-100 p-6 rounded-2xl shadow-sm">
         <div class="flex items-center gap-3">
-            <a href="{{ route('lesson-plans.index') }}" class="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:text-ans-dark-green hover:bg-gray-50 transition-all">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-            </a>
             <div>
                 <h3 class="font-extrabold text-gray-800 text-base">Plan: {{ $lessonPlan->title }}</h3>
                 <p class="text-xs text-gray-500">{{ $lessonPlan->subject }} • {{ $lessonPlan->grade_level }}</p>

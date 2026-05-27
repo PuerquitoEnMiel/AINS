@@ -86,14 +86,14 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
                             <input type="text" name="requester_name" required value="{{ old('requester_name', Auth::user()->name ?? '') }}"
-                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green focus:bg-white transition-all @error('requester_name') border-red-400 bg-red-50 @enderror"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all @error('requester_name') border-red-400 bg-red-50 @enderror"
                                 placeholder="John Doe">
                             @error('requester_name')<p class="text-red-500 text-xs mt-1.5 font-medium">{{ $message }}</p>@enderror
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Institutional Email</label>
                             <input type="email" name="requester_email" required value="{{ old('requester_email', Auth::user()->email ?? '') }}"
-                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green focus:bg-white transition-all @error('requester_email') border-red-400 bg-red-50 @enderror"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all @error('requester_email') border-red-400 bg-red-50 @enderror"
                                 placeholder="jdoe@ans.edu.ni">
                             @error('requester_email')<p class="text-red-500 text-xs mt-1.5 font-medium">{{ $message }}</p>@enderror
                         </div>
@@ -112,7 +112,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Tool Name</label>
                             <input type="text" id="input-name" name="tool_name" required value="{{ old('tool_name') }}"
-                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green focus:bg-white transition-all"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all"
                                 placeholder="e.g. ChatGPT, Gamma, Canva AI...">
                         </div>
                         <div>
@@ -122,13 +122,13 @@
                                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
                                 </div>
                                 <input type="url" name="url" required value="{{ old('url') }}" placeholder="https://example.com"
-                                    class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green focus:bg-white transition-all">
+                                    class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all">
                             </div>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
                             <textarea id="input-desc" name="description" required rows="4" placeholder="Briefly describe what this tool does and how it can be used in the classroom..."
-                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green focus:bg-white transition-all resize-none">{{ old('description') }}</textarea>
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all resize-none">{{ old('description') }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -145,7 +145,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
                             <select name="category" required
-                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green focus:bg-white transition-all appearance-none cursor-pointer">
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all appearance-none cursor-pointer">
                                 <option value="">Select a category...</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->name }}" {{ old('category') === $category->name ? 'selected' : '' }}>

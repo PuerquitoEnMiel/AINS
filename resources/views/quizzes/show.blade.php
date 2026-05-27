@@ -7,6 +7,13 @@
 <!-- Canvas Confetti CDN -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+<!-- Minimalist Back Button -->
+<div class="max-w-3xl mx-auto mb-4">
+    <a href="{{ route('badges.show', $badge->slug) }}" class="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-ans-dark-green transition-colors">
+        <span>← Volver a la Insignia</span>
+    </a>
+</div>
+
 <div class="max-w-3xl mx-auto" id="quiz-container">
     <!-- Quiz Card -->
     <div class="bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden relative">

@@ -5,6 +5,13 @@
 
 @section('content')
 
+<!-- Minimalist Back Button -->
+<div class="mb-6">
+    <a href="/" class="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-ans-dark-green transition-colors">
+        <span>← Volver al Directorio</span>
+    </a>
+</div>
+
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- Main Content -->
     <div class="lg:col-span-2 space-y-6">

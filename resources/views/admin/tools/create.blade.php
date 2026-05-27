@@ -48,7 +48,7 @@
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Tool Name *</label>
                         <input type="text" id="input-name" name="name" required value="{{ old('name') }}" placeholder="e.g. ChatGPT"
-                            class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-blue/20 focus:border-ans-blue focus:bg-white transition-all">
+                            class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all">
                         @error('name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div>
@@ -58,7 +58,7 @@
                                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
                             </div>
                             <input type="url" name="url" required value="{{ old('url') }}" placeholder="https://..."
-                                class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-blue/20 focus:border-ans-blue focus:bg-white transition-all">
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all">
                         </div>
                     </div>
                 </div>
@@ -66,14 +66,14 @@
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Description *</label>
                     <textarea id="input-desc" name="description" required rows="3" placeholder="Brief description of the tool and its educational use..."
-                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-blue/20 focus:border-ans-blue focus:bg-white transition-all resize-none">{{ old('description') }}</textarea>
+                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all resize-none">{{ old('description') }}</textarea>
                     @error('description')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Category *</label>
-                        <select name="category_id" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-blue/20 focus:border-ans-blue focus:bg-white transition-all appearance-none">
+                        <select name="category_id" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all appearance-none">
                             <option value="">Select...</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -84,7 +84,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Status *</label>
-                        <select name="approval_status" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-blue/20 focus:border-ans-blue focus:bg-white transition-all appearance-none">
+                        <select name="approval_status" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ans-light-green/20 focus:border-ans-light-green focus:bg-white transition-all appearance-none">
                             <option value="approved" {{ old('approval_status','approved') === 'approved' ? 'selected' : '' }}>✓ Published</option>
                             <option value="pending" {{ old('approval_status') === 'pending' ? 'selected' : '' }}>Draft</option>
                         </select>

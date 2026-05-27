@@ -24,47 +24,49 @@
 
 <!-- Users Table -->
 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-    <table class="w-full text-sm">
-        <thead>
-            <tr class="text-left text-xs text-gray-500 uppercase tracking-wider bg-gray-50 border-b border-gray-100">
-                <th class="px-6 py-4">User</th>
-                <th class="px-6 py-4">Email</th>
-                <th class="px-6 py-4">Role</th>
-                <th class="px-6 py-4">Favorites</th>
-                <th class="px-6 py-4">Reviews</th>
-                <th class="px-6 py-4">Chats</th>
-                <th class="px-6 py-4">Joined</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-50">
-            @foreach($users as $u)
-            <tr class="hover:bg-gray-50 transition-colors">
-                <td class="px-6 py-4">
-                    <div class="flex items-center gap-3">
-                        @if($u->avatar)
-                            <img src="{{ $u->avatar }}" alt="" class="w-9 h-9 rounded-full border border-gray-200">
-                        @else
-                            <div class="w-9 h-9 rounded-full bg-ans-dark-green text-white flex items-center justify-center text-sm font-bold">{{ substr($u->name, 0, 1) }}</div>
-                        @endif
-                        <span class="font-semibold text-gray-800">{{ $u->name }}</span>
-                    </div>
-                </td>
-                <td class="px-6 py-4 text-gray-600 text-xs">{{ $u->email }}</td>
-                <td class="px-6 py-4">
-                    <select onchange="updateRole({{ $u->id }}, this.value)" class="px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold bg-white focus:ring-2 focus:ring-ans-dark-green/20 outline-none {{ $u->role === 'admin' ? 'text-red-600' : ($u->role === 'teacher' ? 'text-blue-600' : 'text-green-600') }}">
-                        <option value="admin" {{ $u->role === 'admin' ? 'selected' : '' }}>Admin</option>
-                        <option value="teacher" {{ $u->role === 'teacher' ? 'selected' : '' }}>Teacher</option>
-                        <option value="student" {{ $u->role === 'student' ? 'selected' : '' }}>Student</option>
-                    </select>
-                </td>
-                <td class="px-6 py-4 text-center text-gray-600">{{ $u->favorites_count }}</td>
-                <td class="px-6 py-4 text-center text-gray-600">{{ $u->reviews_count }}</td>
-                <td class="px-6 py-4 text-center text-gray-600">{{ $u->conversations_count }}</td>
-                <td class="px-6 py-4 text-xs text-gray-500">{{ $u->created_at->format('M d, Y') }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="text-left text-xs text-gray-500 uppercase tracking-wider bg-gray-50 border-b border-gray-100">
+                    <th class="px-6 py-4">User</th>
+                    <th class="px-6 py-4">Email</th>
+                    <th class="px-6 py-4">Role</th>
+                    <th class="px-6 py-4">Favorites</th>
+                    <th class="px-6 py-4">Reviews</th>
+                    <th class="px-6 py-4">Chats</th>
+                    <th class="px-6 py-4">Joined</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                @foreach($users as $u)
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            @if($u->avatar)
+                                <img src="{{ $u->avatar }}" alt="" class="w-9 h-9 rounded-full border border-gray-200">
+                            @else
+                                <div class="w-9 h-9 rounded-full bg-ans-dark-green text-white flex items-center justify-center text-sm font-bold">{{ substr($u->name, 0, 1) }}</div>
+                            @endif
+                            <span class="font-semibold text-gray-800">{{ $u->name }}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-gray-600 text-xs">{{ $u->email }}</td>
+                    <td class="px-6 py-4">
+                        <select onchange="updateRole({{ $u->id }}, this.value)" class="px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold bg-white focus:ring-2 focus:ring-ans-dark-green/20 outline-none {{ $u->role === 'admin' ? 'text-red-600' : ($u->role === 'teacher' ? 'text-blue-600' : 'text-green-600') }}">
+                            <option value="admin" {{ $u->role === 'admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="teacher" {{ $u->role === 'teacher' ? 'selected' : '' }}>Teacher</option>
+                            <option value="student" {{ $u->role === 'student' ? 'selected' : '' }}>Student</option>
+                        </select>
+                    </td>
+                    <td class="px-6 py-4 text-center text-gray-600">{{ $u->favorites_count }}</td>
+                    <td class="px-6 py-4 text-center text-gray-600">{{ $u->reviews_count }}</td>
+                    <td class="px-6 py-4 text-center text-gray-600">{{ $u->conversations_count }}</td>
+                    <td class="px-6 py-4 text-xs text-gray-500">{{ $u->created_at->format('M d, Y') }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <!-- Pagination -->

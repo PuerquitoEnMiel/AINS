@@ -26,13 +26,11 @@
 @endif
 <div class="group premium-card bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100 hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-visible animate-fade-in-up"
      style="animation-delay: {{ 0.05 * ($index + 1) }}s;"
-     data-tool='{!! json_encode(['id'=>$tool->id,'name'=>$tool->name,'desc'=>$tool->description,'url'=>$tool->url,'cat'=>$tool->categoryRelation?->name, 'type'=>$tool->is_google_workspace?'Google Workspace':'3rd Party','logo'=>$tool->logo_url?asset($tool->logo_url):null,'compatibility'=>$tool->compatibility], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}'
+     data-tool='@include("partials._tool_data", ["tool" => $tool])'
      onclick="openToolModal(JSON.parse(this.dataset.tool))">
     
     <!-- Heart Button -->
-    <button onclick="toggleCardFavorite(event, this, '{{ $tool->name }}', {{ $tool->id }})" class="card-fav-btn absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-gray-400 hover:text-red-500 flex items-center justify-center transition-all shadow-sm border border-gray-100/50 hover:scale-105 active:scale-95" data-tool-name="{{ $tool->name }}" title="Favorite">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-    </button>
+    @include('partials._tool_heart', ['tool' => $tool])
 
     <div class="flex items-start justify-between mb-4">
         @if($tool->logo_url)

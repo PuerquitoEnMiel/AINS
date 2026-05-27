@@ -15,40 +15,42 @@
 </div>
 
 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-    <table class="w-full text-sm">
-        <thead>
-            <tr class="text-left text-xs text-gray-500 uppercase tracking-wider bg-gray-50 border-b border-gray-100">
-                <th class="px-6 py-4">Icon</th>
-                <th class="px-6 py-4">Name</th>
-                <th class="px-6 py-4">Slug</th>
-                <th class="px-6 py-4">Color</th>
-                <th class="px-6 py-4">Tools</th>
-                <th class="px-6 py-4">Order</th>
-                <th class="px-6 py-4 text-right">Actions</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-50">
-            @foreach($categories as $cat)
-            <tr class="hover:bg-gray-50 transition-colors">
-                <td class="px-6 py-4 text-xl">{{ $cat->icon }}</td>
-                <td class="px-6 py-4 font-semibold text-gray-800">{{ $cat->name }}</td>
-                <td class="px-6 py-4 text-gray-500 font-mono text-xs">{{ $cat->slug }}</td>
-                <td class="px-6 py-4"><div class="w-6 h-6 rounded-lg border border-gray-200" style="background: {{ $cat->color }}"></div></td>
-                <td class="px-6 py-4"><span class="px-2.5 py-1 bg-gray-100 rounded-lg text-xs font-bold">{{ $cat->approved_tools_count }}</span></td>
-                <td class="px-6 py-4 text-gray-500">{{ $cat->sort_order }}</td>
-                <td class="px-6 py-4 text-right">
-                    <div class="flex items-center justify-end gap-2">
-                        <a href="{{ route('admin.categories.edit', $cat) }}" class="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-100 transition-colors">Edit</a>
-                        <form method="POST" action="{{ route('admin.categories.destroy', $cat) }}" onsubmit="return confirm('Delete this category?')">
-                            @csrf @method('DELETE')
-                            <button class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-semibold hover:bg-red-100 transition-colors">Delete</button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="text-left text-xs text-gray-500 uppercase tracking-wider bg-gray-50 border-b border-gray-100">
+                    <th class="px-6 py-4">Icon</th>
+                    <th class="px-6 py-4">Name</th>
+                    <th class="px-6 py-4">Slug</th>
+                    <th class="px-6 py-4">Color</th>
+                    <th class="px-6 py-4">Tools</th>
+                    <th class="px-6 py-4">Order</th>
+                    <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                @foreach($categories as $cat)
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-4 text-xl">{{ $cat->icon }}</td>
+                    <td class="px-6 py-4 font-semibold text-gray-800">{{ $cat->name }}</td>
+                    <td class="px-6 py-4 text-gray-500 font-mono text-xs">{{ $cat->slug }}</td>
+                    <td class="px-6 py-4"><div class="w-6 h-6 rounded-lg border border-gray-200" style="background: {{ $cat->color }}"></div></td>
+                    <td class="px-6 py-4"><span class="px-2.5 py-1 bg-gray-100 rounded-lg text-xs font-bold">{{ $cat->approved_tools_count }}</span></td>
+                    <td class="px-6 py-4 text-gray-500">{{ $cat->sort_order }}</td>
+                    <td class="px-6 py-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <a href="{{ route('admin.categories.edit', $cat) }}" class="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-100 transition-colors">Edit</a>
+                            <form method="POST" action="{{ route('admin.categories.destroy', $cat) }}" onsubmit="return confirm('Delete this category?')">
+                                @csrf @method('DELETE')
+                                <button class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-semibold hover:bg-red-100 transition-colors">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
 
 @endsection

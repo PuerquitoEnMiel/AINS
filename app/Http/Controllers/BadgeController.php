@@ -20,7 +20,15 @@ class BadgeController extends Controller
             ? round(($earnedBadgesCount / $totalBadgesCount) * 100) 
             : 0;
 
-        return view('badges.index', compact('badges', 'earnedBadgesCount', 'totalBadgesCount', 'progressPercent'));
+        // Build earned badges map keyed by badge_id for expiry status lookup
+        $earnedBadgesMap = collect();
+        if ($user) {
+            $earnedBadgesMap = $user->badges->keyBy('id');
+        }
+
+        return view('badges.index', compact(
+            'badges', 'earnedBadgesCount', 'totalBadgesCount', 'progressPercent', 'earnedBadgesMap'
+        ));
     }
 
     public function show($slug)
