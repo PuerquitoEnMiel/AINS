@@ -59,25 +59,25 @@ class Badge extends Model
         return !is_null($this->validity_days) && $this->validity_days > 0;
     }
 
-    /** Human-readable validity label (e.g. "3 años", "Permanente"). */
+    /** Human-readable validity label (e.g. "3 years", "Permanent"). */
     public function validityLabel(): string
     {
         if (!$this->hasExpiry()) {
-            return 'Permanente';
+            return 'Permanent';
         }
 
         $days = $this->validity_days;
 
         if ($days % 365 === 0) {
             $years = $days / 365;
-            return $years . ' ' . ($years === 1 ? 'año' : 'años');
+            return $years . ' ' . ($years === 1 ? 'year' : 'years');
         }
         if ($days % 30 === 0) {
             $months = $days / 30;
-            return $months . ' ' . ($months === 1 ? 'mes' : 'meses');
+            return $months . ' ' . ($months === 1 ? 'month' : 'months');
         }
 
-        return $days . ' días';
+        return $days . ' days';
     }
 
     /** Calculate individual expiry date from a given approval date. */

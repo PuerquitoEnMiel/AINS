@@ -19,9 +19,9 @@
                 <div class="flex items-center gap-3 mt-2">
                     <span class="px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide bg-gray-100 text-gray-600">{{ $badge->difficulty }}</span>
                     @if($badge->hasExpiry())
-                    <span class="text-xs text-amber-600 font-medium">⏱ Duración: {{ $badge->validityLabel() }}</span>
+                    <span class="text-xs text-amber-600 font-medium">⏱ Validity: {{ $badge->validityLabel() }}</span>
                     @else
-                    <span class="text-xs text-green-600 font-medium">🟢 Permanente (Sin Expiración)</span>
+                    <span class="text-xs text-green-600 font-medium">🟢 Permanent (No Expiration)</span>
                     @endif
                 </div>
             </div>

@@ -74,8 +74,8 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs font-semibold text-gray-700">Envío de Evidencia</p>
-                        <p class="text-[11px] text-gray-500 mt-0.5">Debe subir una prueba o enlace que demuestre la obtención de la competencia.</p>
+                        <p class="text-xs font-semibold text-gray-700">Evidence Submission</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5">You must upload proof or a link demonstrating that you have obtained the competency.</p>
                     </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@
                 @endif
                 <span class="flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-100 rounded-xl text-sm text-amber-700 font-medium">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Duración: {{ $badge->validityLabel() }}
+                    Validity: {{ $badge->validityLabel() }}
                 </span>
             </div>
 
@@ -224,16 +224,16 @@
                 @endphp
                 <div class="p-6 border border-emerald-200 bg-emerald-50/50 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h4 class="font-heading font-bold text-emerald-800 text-sm mb-1">🎉 ¡Ganaste esta insignia!</h4>
+                        <h4 class="font-heading font-bold text-emerald-800 text-sm mb-1">🎉 You earned this badge!</h4>
                         <p class="text-xs text-emerald-700">
-                            Otorgada el {{ $earnedPivot->earned_at ? \Carbon\Carbon::parse($earnedPivot->earned_at)->format('d M Y') : now()->format('d M Y') }}.
+                            Awarded on {{ $earnedPivot->earned_at ? \Carbon\Carbon::parse($earnedPivot->earned_at)->format('d M Y') : now()->format('d M Y') }}.
                             @if($individualExpiry)
-                                · Vence el {{ $individualExpiry->format('d M Y') }}
+                                · Expires on {{ $individualExpiry->format('d M Y') }}
                                 @if($individualExpiry->isPast())
-                                    <span class="text-rose-600 font-bold">(Expirada)</span>
+                                    <span class="text-rose-600 font-bold">(Expired)</span>
                                 @endif
                             @else
-                                · Permanente
+                                · Permanent
                             @endif
                         </p>
                     </div>
@@ -243,45 +243,45 @@
                     @if(!$myEvidence)
                         <div class="p-6 border border-gray-200 bg-gray-50/50 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div>
-                                <h4 class="font-heading font-bold text-gray-800 text-sm mb-1">Evidencia de Certificación Requerida</h4>
-                                <p class="text-xs text-gray-500">{{ $badge->evidence_instructions ?? 'Sube tu evidencia de certificación para que el administrador la apruebe y active tu insignia.' }}</p>
+                                <h4 class="font-heading font-bold text-gray-800 text-sm mb-1">Evidence of Certification Required</h4>
+                                <p class="text-xs text-gray-500">{{ $badge->evidence_instructions ?? 'Upload your certification evidence for the administrator to approve and activate your badge.' }}</p>
                             </div>
                             <a href="{{ route('badge-evidence.create', $badge) }}" class="px-5 py-2.5 bg-ans-dark-green text-white text-xs font-bold rounded-xl hover:bg-ans-seal-green transition-all shadow-md whitespace-nowrap">
-                                📎 Subir Evidencia
+                                📎 Upload Evidence
                             </a>
                         </div>
                     @elseif($myEvidence->isPending())
                         <div class="p-6 border border-amber-200 bg-amber-50/30 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div>
-                                <h4 class="font-heading font-bold text-amber-800 text-sm mb-1">⏳ Evidencia en Revisión</h4>
-                                <p class="text-xs text-amber-700">Tu evidencia ha sido recibida y está en espera de validación por el administrador.</p>
+                                <h4 class="font-heading font-bold text-amber-800 text-sm mb-1">⏳ Evidence Under Review</h4>
+                                <p class="text-xs text-amber-700">Your evidence has been received and is awaiting validation by the administrator.</p>
                                 @if($myEvidence->notes)
-                                    <p class="text-[11px] text-amber-600/80 mt-1 italic">Tus notas: "{{ $myEvidence->notes }}"</p>
+                                    <p class="text-[11px] text-amber-600/80 mt-1 italic">Your notes: "{{ $myEvidence->notes }}"</p>
                                 @endif
                             </div>
-                            <span class="px-5 py-2.5 bg-amber-100 text-amber-700 text-xs font-bold rounded-xl whitespace-nowrap">En Proceso</span>
+                            <span class="px-5 py-2.5 bg-amber-100 text-amber-700 text-xs font-bold rounded-xl whitespace-nowrap">In Progress</span>
                         </div>
                     @elseif($myEvidence->isRejected())
                         <div class="p-6 border border-rose-200 bg-rose-50/50 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex-1">
-                                <h4 class="font-heading font-bold text-rose-800 text-sm mb-1">❌ Evidencia Rechazada</h4>
-                                <p class="text-xs text-rose-700 font-medium">El administrador ha rechazado tu evidencia. Puedes subir una nueva evidencia corregida.</p>
+                                <h4 class="font-heading font-bold text-rose-800 text-sm mb-1">❌ Evidence Rejected</h4>
+                                <p class="text-xs text-rose-700 font-medium">The administrator has rejected your evidence. You can upload a new, corrected evidence.</p>
                                 @if($myEvidence->admin_notes)
                                     <div class="mt-2 p-3 bg-white rounded-xl border border-rose-100">
-                                        <p class="text-xs font-bold text-rose-800">Comentario del Administrador:</p>
+                                        <p class="text-xs font-bold text-rose-800">Administrator Comment:</p>
                                         <p class="text-[11px] text-rose-700/90 mt-0.5">"{{ $myEvidence->admin_notes }}"</p>
                                     </div>
                                 @endif
                             </div>
                             <a href="{{ route('badge-evidence.create', $badge) }}" class="px-5 py-2.5 bg-rose-600 text-white text-xs font-bold rounded-xl hover:bg-rose-700 transition-all shadow-md whitespace-nowrap">
-                                📎 Reenviar Evidencia
+                                📎 Resubmit Evidence
                             </a>
                         </div>
                     @endif
                 @else
                     <div class="p-6 border border-gray-200 bg-gray-50/50 rounded-2xl">
                         <p class="text-sm text-gray-500 text-center">
-                            <a href="{{ route('login') }}" class="text-ans-dark-green font-semibold hover:underline">Inicia sesión</a> para obtener esta insignia.
+                            <a href="{{ route('login') }}" class="text-ans-dark-green font-semibold hover:underline">Log in</a> to earn this badge.
                         </p>
                     </div>
                 @endauth

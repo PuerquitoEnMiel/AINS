@@ -57,10 +57,10 @@ class BadgeEvidence extends Model
     public function statusLabel(): string
     {
         return match($this->status) {
-            'pending'  => 'Pendiente',
-            'approved' => 'Aprobada',
-            'rejected' => 'Rechazada',
-            default    => 'Desconocido',
+            'pending'  => 'Pending',
+            'approved' => 'Approved',
+            'rejected' => 'Rejected',
+            default    => 'Unknown',
         };
     }
 

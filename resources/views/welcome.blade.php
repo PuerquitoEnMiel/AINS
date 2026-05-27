@@ -186,16 +186,37 @@
                         <div class="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-lg transition-all duration-300 flex flex-col justify-between group shadow-sm">
                             <div>
                                 <div class="flex items-center justify-between mb-3">
-                                    <span class="text-[10px] font-bold bg-indigo-50 text-indigo-600 px-2.5 py-0.5 rounded-full uppercase tracking-wider">{{ $prompt->category }}</span>
                                     @php
+                                        $catMap = [
+                                            'Evaluación' => 'Evaluation',
+                                            'Planificación' => 'Planning',
+                                            'Administración' => 'Administration',
+                                            'Retroalimentación' => 'Feedback',
+                                            'Investigación' => 'Research',
+                                            'Diseño de Actividades' => 'Activity Design',
+                                            'Desarrollo Profesional' => 'Professional Development'
+                                        ];
+                                        $displayCategory = $catMap[$prompt->category] ?? $prompt->category;
+
+                                        $compMap = [
+                                            'Baja' => 'Low',
+                                            'Media' => 'Medium',
+                                            'Alta' => 'High',
+                                            'Básico' => 'Basic',
+                                            'Intermedio' => 'Intermediate',
+                                            'Avanzado' => 'Advanced'
+                                        ];
+                                        $displayComplexity = $compMap[$prompt->complexity] ?? $prompt->complexity;
+
                                         $compColor = match($prompt->complexity) {
-                                            'Baja' => 'bg-green-50 text-green-600',
-                                            'Media' => 'bg-yellow-50 text-yellow-600',
-                                            'Alta' => 'bg-red-50 text-red-600',
+                                            'Baja', 'Básico' => 'bg-green-50 text-green-600',
+                                            'Media', 'Intermedio' => 'bg-yellow-50 text-yellow-600',
+                                            'Alta', 'Avanzado' => 'bg-red-50 text-red-600',
                                             default => 'bg-gray-50 text-gray-600'
                                         };
                                     @endphp
-                                    <span class="text-[10px] font-bold {{ $compColor }} px-2.5 py-0.5 rounded-full uppercase tracking-wider">{{ $prompt->complexity }}</span>
+                                    <span class="text-[10px] font-bold bg-indigo-50 text-indigo-600 px-2.5 py-0.5 rounded-full uppercase tracking-wider">{{ $displayCategory }}</span>
+                                    <span class="text-[10px] font-bold {{ $compColor }} px-2.5 py-0.5 rounded-full uppercase tracking-wider">{{ $displayComplexity }}</span>
                                 </div>
                                 <h4 class="font-heading font-bold text-gray-900 text-base leading-tight mb-2 group-hover:text-indigo-600 transition-colors">{{ $prompt->title }}</h4>
                                 <p class="text-xs text-gray-500 leading-relaxed mb-4 line-clamp-3">{{ $prompt->description }}</p>
@@ -372,9 +393,9 @@
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center gap-2">
                                 <svg class="w-5 h-5 text-ans-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                                <h3 class="font-heading font-bold text-gray-900 text-lg">Insignias EdTech</h3>
+                                <h3 class="font-heading font-bold text-gray-900 text-lg">EdTech Badges</h3>
                             </div>
-                            <a href="{{ route('badges.index') }}" class="text-xs font-bold text-ans-orange hover:underline">Insignias ➔</a>
+                            <a href="{{ route('badges.index') }}" class="text-xs font-bold text-ans-orange hover:underline">Badges ➔</a>
                         </div>
                         
                         <div class="my-4 text-center">
@@ -383,7 +404,7 @@
                                     {{ $progressPercent }}%
                                 </div>
                             </div>
-                            <p class="text-xs text-gray-500 mt-2 font-medium">Has completado {{ $earnedBadgesCount }} de {{ $totalBadgesCount }} certificaciones</p>
+                            <p class="text-xs text-gray-500 mt-2 font-medium">You have completed {{ $earnedBadgesCount }} of {{ $totalBadgesCount }} certifications</p>
                         </div>
 
                         <!-- Progress Bar -->
@@ -394,7 +415,7 @@
 
                     <div class="space-y-2">
                         <a href="{{ route('badge-suggestions.create') }}" class="block text-center text-xs font-bold text-gray-600 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 border border-gray-200 py-2.5 rounded-xl transition-all">
-                            💡 Sugerir Nueva Insignia
+                            💡 Suggest New Badge
                         </a>
                     </div>
                 </div>
@@ -414,16 +435,37 @@
                         <div class="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-lg transition-all duration-300 flex flex-col justify-between group shadow-sm">
                             <div>
                                 <div class="flex items-center justify-between mb-3">
-                                    <span class="text-[10px] font-bold bg-ans-dark-green/10 text-ans-dark-green px-2.5 py-0.5 rounded-full uppercase tracking-wider">{{ $prompt->category }}</span>
                                     @php
+                                        $catMap = [
+                                            'Evaluación' => 'Evaluation',
+                                            'Planificación' => 'Planning',
+                                            'Administración' => 'Administration',
+                                            'Retroalimentación' => 'Feedback',
+                                            'Investigación' => 'Research',
+                                            'Diseño de Actividades' => 'Activity Design',
+                                            'Desarrollo Profesional' => 'Professional Development'
+                                        ];
+                                        $displayCategory = $catMap[$prompt->category] ?? $prompt->category;
+
+                                        $compMap = [
+                                            'Baja' => 'Low',
+                                            'Media' => 'Medium',
+                                            'Alta' => 'High',
+                                            'Básico' => 'Basic',
+                                            'Intermedio' => 'Intermediate',
+                                            'Avanzado' => 'Advanced'
+                                        ];
+                                        $displayComplexity = $compMap[$prompt->complexity] ?? $prompt->complexity;
+
                                         $compColor = match($prompt->complexity) {
-                                            'Baja' => 'bg-green-50 text-green-600',
-                                            'Media' => 'bg-yellow-50 text-yellow-600',
-                                            'Alta' => 'bg-red-50 text-red-600',
+                                            'Baja', 'Básico' => 'bg-green-50 text-green-600',
+                                            'Media', 'Intermedio' => 'bg-yellow-50 text-yellow-600',
+                                            'Alta', 'Avanzado' => 'bg-red-50 text-red-600',
                                             default => 'bg-gray-50 text-gray-600'
                                         };
                                     @endphp
-                                    <span class="text-[10px] font-bold {{ $compColor }} px-2.5 py-0.5 rounded-full uppercase tracking-wider">{{ $prompt->complexity }}</span>
+                                    <span class="text-[10px] font-bold bg-ans-dark-green/10 text-ans-dark-green px-2.5 py-0.5 rounded-full uppercase tracking-wider">{{ $displayCategory }}</span>
+                                    <span class="text-[10px] font-bold {{ $compColor }} px-2.5 py-0.5 rounded-full uppercase tracking-wider">{{ $displayComplexity }}</span>
                                 </div>
                                 <h4 class="font-heading font-bold text-gray-900 text-base leading-tight mb-2 group-hover:text-ans-dark-green transition-colors">{{ $prompt->title }}</h4>
                                 <p class="text-xs text-gray-500 leading-relaxed mb-4 line-clamp-3">{{ $prompt->description }}</p>

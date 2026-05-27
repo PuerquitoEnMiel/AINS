@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('header-title', 'Mis Sugerencias de Insignias')
-@section('header-subtitle', 'Monitorea las insignias que has sugerido al equipo administrativo')
+@section('header-title', 'My Badge Suggestions')
+@section('header-subtitle', 'Monitor the badges you have suggested to the administrative team')
 
 @section('content')
 <div class="max-w-4xl mx-auto">
@@ -10,11 +10,11 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
-            <span>Volver a Insignias</span>
+            <span>Back to Badges</span>
         </a>
 
         <a href="{{ route('badge-suggestions.create') }}" class="px-4 py-2 bg-ans-dark-green text-white text-xs font-semibold rounded-xl hover:bg-ans-seal-green transition-all shadow-md">
-            + Sugerir Otra Insignia
+            + Suggest Another Badge
         </a>
     </div>
 
@@ -27,20 +27,20 @@
             <table class="w-full text-sm">
                 <thead class="bg-gray-50 border-b border-gray-100">
                     <tr>
-                        <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Nombre de Insignia</th>
-                        <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Descripción</th>
-                        <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Estado</th>
-                        <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Enviada</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Badge Name</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Description</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Submitted</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
                     @forelse($suggestions as $suggestion)
                     <tr class="hover:bg-gray-50/50 transition-colors">
                         <td class="px-6 py-4 font-semibold text-gray-800">
-                            {{ $suggestion->name }}
-                            @if($suggestion->certification_url)
-                            <a href="{{ $suggestion->certification_url }}" target="_blank" class="block text-[11px] text-blue-600 hover:underline mt-0.5">Enlace Oficial</a>
-                            @endif
+                             {{ $suggestion->name }}
+                             @if($suggestion->certification_url)
+                             <a href="{{ $suggestion->certification_url }}" target="_blank" class="block text-[11px] text-blue-600 hover:underline mt-0.5">Official Link</a>
+                             @endif
                         </td>
                         <td class="px-6 py-4 text-xs text-gray-600 max-w-xs truncate">{{ $suggestion->description }}</td>
                         <td class="px-6 py-4">
@@ -52,17 +52,17 @@
                                     default => 'bg-gray-100 text-gray-800 border-gray-200'
                                 };
                                 $statusText = match($suggestion->status) {
-                                    'pending' => 'Pendiente',
-                                    'approved' => 'Aprobada',
-                                    'rejected' => 'Rechazada',
-                                    default => 'Desconocido'
+                                    'pending' => 'Pending',
+                                    'approved' => 'Approved',
+                                    'rejected' => 'Rejected',
+                                    default => 'Unknown'
                                 };
                             @endphp
                             <span class="px-2.5 py-1 rounded-lg text-xs font-bold capitalize border {{ $statusColor }}">
                                 {{ $statusText }}
                             </span>
                             @if($suggestion->admin_notes)
-                            <p class="text-[11px] text-gray-400 mt-1 italic">Nota Admin: "{{ $suggestion->admin_notes }}"</p>
+                            <p class="text-[11px] text-gray-400 mt-1 italic">Admin Note: "{{ $suggestion->admin_notes }}"</p>
                             @endif
                         </td>
                         <td class="px-6 py-4 text-xs text-gray-400">{{ $suggestion->created_at->diffForHumans() }}</td>
@@ -70,7 +70,7 @@
                     @empty
                     <tr>
                         <td colspan="4" class="px-6 py-12 text-center text-gray-500 italic">
-                            Aún no has sugerido ninguna insignia.
+                            You have not suggested any badges yet.
                         </td>
                     </tr>
                     @endforelse

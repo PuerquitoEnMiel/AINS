@@ -26,7 +26,7 @@
     <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
             <h3 class="text-2xl font-heading font-extrabold mb-2">Your Certification Path</h3>
-            <p class="text-white/70 text-sm max-w-md">Envía evidencias para desbloquear prestigiosas credenciales profesionales.</p>
+            <p class="text-white/70 text-sm max-w-md">Submit evidence to unlock prestigious professional credentials.</p>
         </div>
         
         <div class="flex-1 max-w-md w-full bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10">
@@ -56,7 +56,7 @@
         
         <div class="flex flex-wrap items-center gap-3">
             <a href="{{ route('badge-suggestions.create') }}" class="px-4 py-2 bg-ans-dark-green text-white text-xs font-semibold rounded-xl hover:bg-ans-seal-green transition-all shadow-sm">
-                💡 Sugerir Insignia
+                💡 Suggest Badge
             </a>
             
             <!-- Filter Tabs (Vanilla dynamic filtering via simple JS) -->
@@ -99,20 +99,20 @@
                 @if($isEarned && $expiry)
                     @if($expiry['status'] === 'expired')
                         <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-red-100 text-red-600 border border-red-200 animate-pulse">
-                            ⚠ Expirada
+                            ⚠ Expired
                         </div>
                     @elseif($expiry['status'] === 'warning')
                         <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider border animate-pulse"
                              style="background-color: #FF830015; color: #FF8300; border-color: #FF830040;">
-                            ⏰ {{ $expiry['days_remaining'] }}d restantes
+                            ⏰ {{ $expiry['days_remaining'] }}d remaining
                         </div>
                     @elseif($expiry['status'] === 'active')
                         <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-emerald-50 text-emerald-600 border border-emerald-200">
-                            ✓ Vigente
+                            ✓ Active
                         </div>
                     @elseif($expiry['status'] === 'permanent')
                         <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider bg-gray-50 text-gray-400 border border-gray-200">
-                            ∞ Permanente
+                            ∞ Permanent
                         </div>
                     @endif
                 @endif
@@ -126,7 +126,7 @@
                         </span>
                         @if($badge->is_mandatory)
                         <span class="px-2 py-0.5 rounded bg-red-100 text-red-700 text-[9px] font-extrabold uppercase tracking-wider">
-                            Obligatorio
+                            Mandatory
                         </span>
                         @endif
                     </div>
@@ -167,12 +167,12 @@
                             };
                         @endphp
                         <div class="flex justify-between items-center mb-1.5">
-                            <span class="text-[10px] font-semibold text-gray-500">Validez: {{ $badge->validityLabel() }}</span>
+                            <span class="text-[10px] font-semibold text-gray-500">Validity: {{ $badge->validityLabel() }}</span>
                             @if($expiry['status'] === 'expired')
-                                <span class="text-[10px] font-bold text-red-500">Expirada</span>
+                                <span class="text-[10px] font-bold text-red-500">Expired</span>
                             @else
                                 <span class="text-[10px] font-bold" style="color: {{ $expiry['status'] === 'warning' ? '#FF8300' : '#10B981' }}">
-                                    {{ $expiry['days_remaining'] }} días restantes
+                                    {{ $expiry['days_remaining'] }} days remaining
                                 </span>
                             @endif
                         </div>
@@ -182,7 +182,7 @@
                         </div>
                         @if($expiry['expires_at'])
                             <div class="text-[9px] text-gray-400 mt-1">
-                                Expira: {{ $expiry['expires_at']->format('d M Y') }}
+                                Expires: {{ $expiry['expires_at']->format('d M Y') }}
                             </div>
                         @endif
                     </div>
@@ -207,12 +207,12 @@
                                class="w-full text-center px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm border"
                                style="background-color: #FF830012; color: #FF8300; border-color: #FF830030;"
                                onmouseenter="this.style.backgroundColor='#FF830025'" onmouseleave="this.style.backgroundColor='#FF830012'">
-                                🔄 Próxima a expirar — Re-certifícate
+                                🔄 Expiring soon — Re-certify
                             </a>
                         @elseif($expiry && $expiry['status'] === 'expired')
                             <a href="{{ route('badges.show', $badge->slug) }}" 
                                class="w-full text-center px-3.5 py-2 bg-red-50 text-red-600 border border-red-200 rounded-xl text-xs font-bold hover:bg-red-100 transition-all shadow-sm">
-                                📋 Certificación expirada — Enviar nueva evidencia
+                                📋 Certification expired — Submit new evidence
                             </a>
                         @endif
                     @else
@@ -222,7 +222,7 @@
                             </div>
                             
                             <a href="{{ route('badges.show', $badge->slug) }}" class="px-3.5 py-1.5 bg-ans-dark-green text-white text-xs font-bold rounded-xl hover:bg-ans-seal-green transition-all shadow-sm">
-                                Ver Detalles
+                                View Details
                             </a>
                         </div>
                     @endif

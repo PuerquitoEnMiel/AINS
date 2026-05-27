@@ -57,7 +57,7 @@
 
                 <!-- Icon Image Upload -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Subir Imagen de Icono (Opcional)</label>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Upload Icon Image (Optional)</label>
                     <input type="file" name="icon_image" class="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-ans-dark-green/20 focus:border-ans-dark-green outline-none transition-all file:mr-4 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-ans-dark-green/10 file:text-ans-dark-green hover:file:bg-ans-dark-green/20">
                     @error('icon_image') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
@@ -66,8 +66,8 @@
                 <div class="md:col-span-2 flex items-center gap-3 bg-red-50/50 p-4 border border-red-100 rounded-xl">
                     <input type="checkbox" name="is_mandatory" id="is_mandatory" value="1" {{ old('is_mandatory') ? 'checked' : '' }} class="w-4 h-4 text-ans-dark-green border-gray-300 rounded focus:ring-ans-dark-green/20">
                     <div>
-                        <label for="is_mandatory" class="block text-xs font-bold text-red-800">¿Es credencial obligatoria?</label>
-                        <p class="text-[11px] text-red-600/80">Las credenciales obligatorias se destacan con borde distintivo y se posicionan arriba en la galería.</p>
+                        <label for="is_mandatory" class="block text-xs font-bold text-red-800">Is this a mandatory credential?</label>
+                        <p class="text-[11px] text-red-600/80">Mandatory credentials are highlighted with a distinctive border and positioned at the top of the gallery.</p>
                     </div>
                 </div>
 
@@ -111,19 +111,19 @@
                     </div>
                     <!-- Validity Duration -->
                     <div class="md:col-span-2">
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Duración de Validez <span class="text-gray-400 font-normal">(dejar vacío = permanente)</span></label>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Validity Duration <span class="text-gray-400 font-normal">(leave empty = permanent)</span></label>
                         <div class="flex gap-3 items-center">
-                            <input type="number" name="validity_days" id="validity_days" value="{{ old('validity_days') }}" placeholder="Ej: 1095" min="1" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-amber-300 focus:border-amber-400 outline-none transition-all">
-                            <span class="text-xs text-gray-400 whitespace-nowrap" id="validity_label">días</span>
+                            <input type="number" name="validity_days" id="validity_days" value="{{ old('validity_days') }}" placeholder="e.g. 1095" min="1" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-amber-300 focus:border-amber-400 outline-none transition-all">
+                            <span class="text-xs text-gray-400 whitespace-nowrap" id="validity_label">days</span>
                         </div>
                         <div class="flex flex-wrap gap-2 mt-2">
-                            <button type="button" onclick="setValidity(365)" class="px-3 py-1 text-[11px] font-medium bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all">1 Año</button>
-                            <button type="button" onclick="setValidity(730)" class="px-3 py-1 text-[11px] font-medium bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all">2 Años</button>
-                            <button type="button" onclick="setValidity(1095)" class="px-3 py-1 text-[11px] font-medium bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all">3 Años</button>
-                            <button type="button" onclick="setValidity(1825)" class="px-3 py-1 text-[11px] font-medium bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all">5 Años</button>
-                            <button type="button" onclick="setValidity('')" class="px-3 py-1 text-[11px] font-medium bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 transition-all">Permanente</button>
+                            <button type="button" onclick="setValidity(365)" class="px-3 py-1 text-[11px] font-medium bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all">1 Year</button>
+                            <button type="button" onclick="setValidity(730)" class="px-3 py-1 text-[11px] font-medium bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all">2 Years</button>
+                            <button type="button" onclick="setValidity(1095)" class="px-3 py-1 text-[11px] font-medium bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all">3 Years</button>
+                            <button type="button" onclick="setValidity(1825)" class="px-3 py-1 text-[11px] font-medium bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all">5 Years</button>
+                            <button type="button" onclick="setValidity('')" class="px-3 py-1 text-[11px] font-medium bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 transition-all">Permanent</button>
                         </div>
-                        <p class="text-xs text-gray-400 mt-1">Cada docente tendrá su propia fecha de expiración individual, contada desde que se le aprueba la evidencia.</p>
+                        <p class="text-xs text-gray-400 mt-1">Each teacher will have their own individual expiration date, calculated from when the evidence is approved.</p>
                         @error('validity_days') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
@@ -155,11 +155,11 @@
 
     function updateValidityLabel(days) {
         const label = document.getElementById('validity_label');
-        if (!days || days === '') { label.textContent = 'permanente'; return; }
+        if (!days || days === '') { label.textContent = 'permanent'; return; }
         days = parseInt(days);
-        if (days % 365 === 0) { label.textContent = '= ' + (days/365) + (days/365 === 1 ? ' año' : ' años'); }
-        else if (days % 30 === 0) { label.textContent = '= ' + (days/30) + (days/30 === 1 ? ' mes' : ' meses'); }
-        else { label.textContent = 'días'; }
+        if (days % 365 === 0) { label.textContent = '= ' + (days/365) + (days/365 === 1 ? ' year' : ' years'); }
+        else if (days % 30 === 0) { label.textContent = '= ' + (days/30) + (days/30 === 1 ? ' month' : ' months'); }
+        else { label.textContent = 'days'; }
     }
 
     document.getElementById('validity_days').addEventListener('input', function(e) {

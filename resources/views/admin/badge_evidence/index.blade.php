@@ -45,9 +45,9 @@
                             <span class="font-medium text-gray-800">{{ $evidence->badge->name }}</span>
                         </div>
                         @if($evidence->badge->hasExpiry())
-                        <p class="text-xs text-gray-400 mt-0.5">Duración: {{ $evidence->badge->validityLabel() }} desde aprobación</p>
+                        <p class="text-xs text-gray-400 mt-0.5">Validity: {{ $evidence->badge->validityLabel() }} from approval</p>
                         @else
-                        <p class="text-xs text-green-600 mt-0.5">Insignia permanente</p>
+                        <p class="text-xs text-green-600 mt-0.5">Permanent badge</p>
                         @endif
                     </td>
                     <td class="px-6 py-4">
@@ -92,7 +92,7 @@
                                 @csrf
                                 <div>
                                     <label class="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
-                                        Fecha de Certificación
+                                        Certification Date
                                     </label>
                                     <input type="date" name="certified_at" value="{{ date('Y-m-d') }}" 
                                            class="w-full px-2 py-1 text-xs border border-gray-200 rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 outline-none transition-all">
