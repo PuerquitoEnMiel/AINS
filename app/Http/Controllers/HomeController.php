@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Tool;
+use App\Models\LessonPlan;
+use App\Models\PromptTip;
+use App\Models\ToolRequest;
+use App\Models\BadgeEvidence;
+use App\Models\BadgeSuggestion;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -15,6 +20,58 @@ class HomeController extends Controller
     public function index(\Illuminate\Http\Request $request)
     {
         $canSeeDetection = Auth::check() && (Auth::user()->isTeacher() || Auth::user()->isAdmin());
+
+        // Role-specific data
+        $lessonPlanCount = 0;
+        $badgeCount = 0;
+        $latestBadges = collect();
+        $favoriteTools = collect();
+        $favoriteToolsCount = 0;
+        $recentLessonPlans = collect();
+        $studentPrompts = collect();
+        $teacherPrompts = collect();
+
+        // Admin approval queue
+        $pendingRequests = collect();
+        $pendingEvidence = collect();
+        $pendingSuggestions = collect();
+        $pendingRequestsCount = 0;
+        $pendingEvidenceCount = 0;
+        $pendingSuggestionsCount = 0;
+
+        if (Auth::check()) {
+            $user = Auth::user();
+            if ($user->isTeacher()) {
+                $lessonPlanCount = LessonPlan::where('user_id', $user->id)->count();
+                $badgeCount = $user->badges()->count();
+                $latestBadges = $user->badges()->latest('earned_at')->limit(3)->get();
+                $favoriteToolsCount = $user->favorites()->count();
+                $recentLessonPlans = LessonPlan::where('user_id', $user->id)->latest()->limit(3)->get();
+                $teacherPrompts = PromptTip::where('target_role', 'docentes')
+                    ->where('is_approved', true)
+                    ->orderBy('sort_order')
+                    ->latest()
+                    ->limit(4)
+                    ->get();
+            } elseif ($user->isStudent()) {
+                $favoriteTools = $user->favorites()->with('categoryRelation')->limit(6)->get();
+                $favoriteToolsCount = $user->favorites()->count();
+                $studentPrompts = PromptTip::where('target_role', 'estudiantes')
+                    ->where('is_approved', true)
+                    ->orderBy('sort_order')
+                    ->latest()
+                    ->limit(4)
+                    ->get();
+            } elseif ($user->isAdmin()) {
+                $pendingRequests = ToolRequest::where('status', 'pending')->latest()->limit(5)->get();
+                $pendingEvidence = BadgeEvidence::with(['user', 'badge'])->where('status', 'pending')->latest()->limit(5)->get();
+                $pendingSuggestions = BadgeSuggestion::with('user')->where('status', 'pending')->latest()->limit(5)->get();
+
+                $pendingRequestsCount = ToolRequest::where('status', 'pending')->count();
+                $pendingEvidenceCount = BadgeEvidence::where('status', 'pending')->count();
+                $pendingSuggestionsCount = BadgeSuggestion::where('status', 'pending')->count();
+            }
+        }
 
         // Basic query for catalog tools (excluding official tools as they have their own section)
         $query = Tool::approved()
@@ -125,6 +182,12 @@ class HomeController extends Controller
             ]);
         }
 
-        return view('welcome', compact('tools', 'categories', 'latestTool', 'trendingTools', 'officialTools'));
+        return view('welcome', compact(
+            'tools', 'categories', 'latestTool', 'trendingTools', 'officialTools', 
+            'lessonPlanCount', 'badgeCount', 'latestBadges', 'favoriteTools', 'favoriteToolsCount',
+            'recentLessonPlans', 'studentPrompts', 'teacherPrompts',
+            'pendingRequests', 'pendingEvidence', 'pendingSuggestions',
+            'pendingRequestsCount', 'pendingEvidenceCount', 'pendingSuggestionsCount'
+        ));
     }
 }

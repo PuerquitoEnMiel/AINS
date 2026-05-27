@@ -32,8 +32,9 @@ class ChatController extends Controller
 
         // Graceful fallback if API key is not configured
         if (! $apiKey) {
+            $firstName = explode(' ', Auth::user()->name)[0];
             return response()->json([
-                'reply' => "👋 **Hello! I am AINS AI Companion**, your personal EdTech advisor at ANS.\n\nTo activate my real-time language intelligence, please ask the administrator to configure the `GEMINI_API_KEY` variable in the `.env` file.\n\nIn the meantime, I can recommend excellent approved tools from our catalog! \n- Use **Stitch** for flawless curriculum planning.\n- Use **Pomelo** to automate your school management tasks.\n- Try **NotebookLM** to interactively analyze and summarize academic articles.",
+                'reply' => "👋 **Hello, {$firstName}! I am AINS AI Companion**, your personal EdTech advisor at ANS.\n\nTo activate my real-time language intelligence, please ask the administrator to configure the `GEMINI_API_KEY` variable in the `.env` file.\n\nIn the meantime, I can recommend excellent approved tools from our catalog! \n- Use **Stitch** for flawless curriculum planning.\n- Use **Pomelo** to automate your school management tasks.\n- Try **NotebookLM** to interactively analyze and summarize academic articles.",
             ]);
         }
 
@@ -128,7 +129,13 @@ class ChatController extends Controller
         $baseInstruction = file_get_contents($instructionFile);
 
         // Dynamic user role context and response behavior instructions
-        $roleContext = "\n\nThe current user is logged in with the role: " . strtoupper($user->role) . ".\n";
+        $firstName = explode(' ', $user->name)[0];
+        $roleContext = "\n\nThe current user is logged in. Here is their profile:\n" .
+                       "- Name: " . $user->name . "\n" .
+                       "- First Name: " . $firstName . "\n" .
+                       "- Role: " . strtoupper($user->role) . "\n\n" .
+                       "Please address the user directly by their first name (" . $firstName . ") in your responses to make the interaction personal and friendly.\n";
+
         if ($user->isStudent()) {
             $roleContext .= "Since the user is a student, focus on recommending tools for their homework, tasks, and projects. Do NOT suggest teacher lesson planning tools or professional recognition badges.\n";
         } else {

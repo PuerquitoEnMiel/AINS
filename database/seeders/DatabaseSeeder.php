@@ -85,7 +85,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Gemini',
                 'description' => 'Google\'s most capable AI model for reasoning, coding, and creative tasks.',
                 'url' => 'https://gemini.google.com',
-                'category' => 'AI Assistants',
+
                 'category_id' => $catId('ai-assistants'),
                 'is_google_workspace' => true,
                 'approval_status' => 'approved',
@@ -96,7 +96,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'ChatGPT',
                 'description' => 'OpenAI\'s conversational AI for brainstorming, writing, and problem solving.',
                 'url' => 'https://chat.openai.com',
-                'category' => 'AI Assistants',
+
                 'category_id' => $catId('ai-assistants'),
                 'is_google_workspace' => false,
                 'approval_status' => 'approved',
@@ -107,7 +107,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'NotebookLM',
                 'description' => 'Google\'s AI-powered research notebook that analyzes documents and generates insights.',
                 'url' => 'https://notebooklm.google.com',
-                'category' => 'Research',
+
                 'category_id' => $catId('research'),
                 'is_google_workspace' => true,
                 'approval_status' => 'approved',
@@ -118,7 +118,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Canva AI',
                 'description' => 'Design platform with AI-powered tools for presentations, posters, and visual content.',
                 'url' => 'https://www.canva.com',
-                'category' => 'Content Creation',
+
                 'category_id' => $catId('content-creation'),
                 'is_google_workspace' => false,
                 'approval_status' => 'approved',
@@ -129,7 +129,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Perplexity',
                 'description' => 'AI-powered search engine that provides sourced, research-grade answers.',
                 'url' => 'https://www.perplexity.ai',
-                'category' => 'Research',
+
                 'category_id' => $catId('research'),
                 'is_google_workspace' => false,
                 'approval_status' => 'approved',
@@ -140,7 +140,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Suno AI',
                 'description' => 'AI music generator that creates songs from text prompts.',
                 'url' => 'https://suno.com',
-                'category' => 'Music & Audio',
+
                 'category_id' => $catId('music-audio'),
                 'is_google_workspace' => false,
                 'approval_status' => 'approved',
@@ -151,7 +151,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Stitch',
                 'description' => 'AI-powered lesson planning tool for creating rubrics, outlines, and differentiated lessons.',
                 'url' => 'https://www.stitch.ai',
-                'category' => 'Lesson Planning',
+
                 'category_id' => $catId('lesson-planning'),
                 'is_google_workspace' => false,
                 'is_official' => true,
@@ -163,7 +163,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Pomelo',
                 'description' => 'EdTech automation assistant for administrative workflows and grading.',
                 'url' => 'https://www.pomelo.la',
-                'category' => 'Productivity',
+
                 'category_id' => $catId('productivity'),
                 'is_google_workspace' => false,
                 'is_official' => true,
@@ -175,7 +175,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Google Slides + Gemini',
                 'description' => 'Create AI-enhanced presentations using Gemini integration in Google Slides.',
                 'url' => 'https://slides.google.com',
-                'category' => 'Presentations',
+
                 'category_id' => $catId('presentations'),
                 'is_google_workspace' => true,
                 'is_official' => false,
@@ -187,7 +187,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Antigravity',
                 'description' => 'Custom AI pair-programming assistant and development agent for coding tasks.',
                 'url' => 'https://antigravity.dev',
-                'category' => 'AI Assistants',
+
                 'category_id' => $catId('ai-assistants'),
                 'is_google_workspace' => false,
                 'is_official' => true,
@@ -199,7 +199,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Flow',
                 'description' => 'Collaborative tool for planning, organizing, and tracking educational workflows and school tasks at ANS.',
                 'url' => 'https://flow.ans.edu.ni',
-                'category' => 'Productivity',
+
                 'category_id' => $catId('productivity'),
                 'is_google_workspace' => false,
                 'is_official' => true,
@@ -211,7 +211,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Gamma',
                 'description' => 'AI-powered tool for creating beautiful presentations, documents, and web pages.',
                 'url' => 'https://gamma.app',
-                'category' => 'Presentations',
+
                 'category_id' => $catId('presentations'),
                 'is_google_workspace' => false,
                 'is_official' => false,
@@ -223,7 +223,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Claude',
                 'description' => 'Anthropic\'s AI assistant known for safety, accuracy, and detailed analysis.',
                 'url' => 'https://claude.ai',
-                'category' => 'AI Assistants',
+
                 'category_id' => $catId('ai-assistants'),
                 'is_google_workspace' => false,
                 'is_official' => false,
@@ -236,7 +236,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'GPTZero',
                 'description' => 'AI detection tool that identifies AI-generated text in student submissions. Analyzes perplexity and burstiness patterns to flag AI-written content.',
                 'url' => 'https://gptzero.me',
-                'category' => 'AI Detection',
+
                 'category_id' => $catId('ai-detection'),
                 'is_google_workspace' => false,
                 'is_official' => false,
@@ -248,7 +248,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Turnitin AI',
                 'description' => 'Industry-standard academic integrity platform with AI writing detection. Integrates directly with LMS platforms and provides detailed originality reports.',
                 'url' => 'https://www.turnitin.com/solutions/ai-writing',
-                'category' => 'AI Detection',
+
                 'category_id' => $catId('ai-detection'),
                 'is_google_workspace' => false,
                 'is_official' => false,
@@ -260,7 +260,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Copyleaks',
                 'description' => 'AI-powered plagiarism and AI content detection platform supporting 100+ languages. Detects ChatGPT, Gemini, and other generative AI outputs in student work.',
                 'url' => 'https://copyleaks.com',
-                'category' => 'AI Detection',
+
                 'category_id' => $catId('ai-detection'),
                 'is_google_workspace' => false,
                 'is_official' => false,

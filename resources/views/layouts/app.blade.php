@@ -120,6 +120,16 @@
         body.sidebar-collapsed #toggle-sidebar svg {
             transform: rotate(180deg);
         }
+        
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { opacity: 0.9; transform: scale(1.1); }
+            80% { transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .animate-bounce-in {
+            animation: bounceIn 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans antialiased min-h-screen flex overflow-hidden">
@@ -496,7 +506,7 @@
         </button>
 
         <!-- Mobile Search Button -->
-        <button id="open-mobile-search" onclick="toggleMobileSearch(true)" class="lg:hidden flex w-9 h-9 items-center justify-center rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 hover:text-ans-dark-green transition-all shadow-sm flex-shrink-0 mr-4" title="Search">
+        <button id="open-mobile-search" onclick="toggleMobileSearch(true)" class="lg:hidden {{ (request()->is('/') && Auth::check() && Auth::user()->isStudent()) ? 'hidden' : 'flex' }} w-9 h-9 items-center justify-center rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 hover:text-ans-dark-green transition-all shadow-sm flex-shrink-0 mr-4" title="Search">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
@@ -536,7 +546,7 @@
         </div>
 
         <!-- Center: Search -->
-        <div class="flex-1 max-w-md hidden lg:block mx-8">
+        <div class="flex-1 max-w-md {{ (request()->is('/') && Auth::check() && Auth::user()->isStudent()) ? 'lg:hidden' : 'hidden lg:block' }} mx-8">
             <div class="relative group">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <svg class="h-5 w-5 text-gray-400 group-focus-within:text-ans-dark-green transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -751,8 +761,13 @@ function toggleMobileDrawer() {
 document.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        const searchInput = document.getElementById('global-search');
-        if (searchInput) searchInput.focus();
+        const heroSearch = document.getElementById('hero-ai-search');
+        if (heroSearch && !heroSearch.closest('.hidden')) {
+            heroSearch.focus();
+        } else {
+            const searchInput = document.getElementById('global-search');
+            if (searchInput) searchInput.focus();
+        }
     }
 });
 
@@ -1055,21 +1070,53 @@ document.addEventListener('DOMContentLoaded', () => {
         <!-- Chat Feed -->
         <div id="chatbot-feed" class="flex-1 p-4 overflow-y-auto space-y-4 bg-gray-50/30">
             <!-- Welcome Message -->
-            <div class="flex justify-start mb-3 items-end gap-2">
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-ans-dark-green to-ans-light-green flex-shrink-0 flex items-center justify-center text-white text-[10px] font-bold shadow-md shadow-ans-dark-green/10">
-                    AI
+            @auth
+                @php
+                    $firstName = explode(' ', Auth::user()->name)[0];
+                    $roleLabel = Auth::user()->isStudent() ? 'student' : (Auth::user()->isTeacher() ? 'teacher' : 'administrator');
+                @endphp
+                <div class="flex justify-start mb-3 items-end gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-ans-dark-green to-ans-light-green flex-shrink-0 flex items-center justify-center text-white text-[10px] font-bold shadow-md shadow-ans-dark-green/10">
+                        AI
+                    </div>
+                    <div class="max-w-[78%] px-4 py-3 bg-white border border-gray-100 rounded-2xl rounded-bl-none text-xs leading-relaxed shadow-sm text-gray-800">
+                        <p class="font-bold text-ans-dark-green mb-1">Hello, {{ $firstName }}! 👋</p>
+                        I am <strong>AINS AI Companion</strong>, your personal digital advisor at ANS.
+                        @if(Auth::user()->isStudent())
+                            I can help you as a <strong>student</strong> to:
+                            <ul class="list-disc list-inside mt-1.5 space-y-1 text-gray-600">
+                                <li>Find the best <strong>approved tools</strong> for your homework and projects.</li>
+                                <li>Develop <strong>learning prompts</strong> for studying.</li>
+                                <li>Get answers and guidance for your classes.</li>
+                            </ul>
+                        @else
+                            I can help you as a <strong>{{ $roleLabel }}</strong> to:
+                            <ul class="list-disc list-inside mt-1.5 space-y-1 text-gray-600">
+                                <li>Design lesson plans under the <strong>SAMR</strong> or <strong>TPACK</strong> models.</li>
+                                <li>Write <strong>efficient prompts</strong> for teaching and assessments.</li>
+                                <li>Recommend approved <strong>AI and EdTech tools</strong> for your classes.</li>
+                            </ul>
+                        @endif
+                        <p class="mt-2 text-gray-500 italic text-[10px]">What would you like to talk about today?</p>
+                    </div>
                 </div>
-                <div class="max-w-[78%] px-4 py-3 bg-white border border-gray-100 rounded-2xl rounded-bl-none text-xs leading-relaxed shadow-sm text-gray-800">
-                    <p class="font-bold text-ans-dark-green mb-1">Hello!</p>
-                    I am <strong>AINS AI Companion</strong>, your digital advisor at ANS. I can help you to:
-                    <ul class="list-disc list-inside mt-1.5 space-y-1 text-gray-600">
-                        <li>Design lesson plans under the <strong>SAMR</strong> model.</li>
-                        <li>Write <strong>efficient prompts</strong> for your classes.</li>
-                        <li>Recommend the best <strong>approved apps</strong> in the portal.</li>
-                    </ul>
-                    <p class="mt-2 text-gray-500 italic text-[10px]">What would you like to talk about today?</p>
+            @else
+                <div class="flex justify-start mb-3 items-end gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-ans-dark-green to-ans-light-green flex-shrink-0 flex items-center justify-center text-white text-[10px] font-bold shadow-md shadow-ans-dark-green/10">
+                        AI
+                    </div>
+                    <div class="max-w-[78%] px-4 py-3 bg-white border border-gray-100 rounded-2xl rounded-bl-none text-xs leading-relaxed shadow-sm text-gray-800">
+                        <p class="font-bold text-ans-dark-green mb-1">Hello!</p>
+                        I am <strong>AINS AI Companion</strong>, your digital advisor at ANS. I can help you to:
+                        <ul class="list-disc list-inside mt-1.5 space-y-1 text-gray-600">
+                            <li>Design lesson plans under the <strong>SAMR</strong> model.</li>
+                            <li>Write <strong>efficient prompts</strong> for your classes.</li>
+                            <li>Recommend the best <strong>approved apps</strong> in the portal.</li>
+                        </ul>
+                        <p class="mt-2 text-gray-500 italic text-[10px]">What would you like to talk about today?</p>
+                    </div>
                 </div>
-            </div>
+            @endauth
 
             <!-- Suggested Quick Links -->
             <div class="space-y-2 pl-10">
@@ -1079,13 +1126,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 @if($suggestedTools->count() > 0)
                     @foreach($suggestedTools as $sTool)
                         @php
-                            $promptText = "Write a structured prompt for the teacher to generate an activity with " . $sTool->name . ".";
-                            if (str_contains(strtolower($sTool->category), 'plan') || str_contains(strtolower($sTool->name), 'stitch')) {
-                                $promptText = "How can I integrate " . $sTool->name . " in a lesson plan under the SAMR model?";
-                            } elseif (str_contains(strtolower($sTool->category), 'assist') || str_contains(strtolower($sTool->name), 'antigravity')) {
-                                $promptText = "How does " . $sTool->name . " help me as a virtual assistant in my classes?";
-                            } elseif (str_contains(strtolower($sTool->category), 'product') || str_contains(strtolower($sTool->name), 'flow') || str_contains(strtolower($sTool->name), 'pomelo')) {
-                                $promptText = "How do I optimize my administrative workflow using " . $sTool->name . "?";
+                            $isStudent = Auth::check() && Auth::user()->isStudent();
+                            if ($isStudent) {
+                                $promptText = "How can I use " . $sTool->name . " to help me with my study and class tasks?";
+                                if (str_contains(strtolower($sTool->categoryRelation?->name ?? $sTool->category), 'plan') || str_contains(strtolower($sTool->name), 'stitch')) {
+                                    $promptText = "How can " . $sTool->name . " help me organize my study topics?";
+                                } elseif (str_contains(strtolower($sTool->categoryRelation?->name ?? $sTool->category), 'assist') || str_contains(strtolower($sTool->name), 'antigravity')) {
+                                    $promptText = "How does " . $sTool->name . " help me learn to code as a student?";
+                                } elseif (str_contains(strtolower($sTool->categoryRelation?->name ?? $sTool->category), 'product') || str_contains(strtolower($sTool->name), 'flow') || str_contains(strtolower($sTool->name), 'pomelo')) {
+                                    $promptText = "How do I organize my homework schedule using " . $sTool->name . "?";
+                                }
+                            } else {
+                                $promptText = "Write a structured prompt for the teacher to generate an activity with " . $sTool->name . ".";
+                                if (str_contains(strtolower($sTool->categoryRelation?->name ?? $sTool->category), 'plan') || str_contains(strtolower($sTool->name), 'stitch')) {
+                                    $promptText = "How can I integrate " . $sTool->name . " in a lesson plan under the SAMR model?";
+                                } elseif (str_contains(strtolower($sTool->categoryRelation?->name ?? $sTool->category), 'assist') || str_contains(strtolower($sTool->name), 'antigravity')) {
+                                    $promptText = "How does " . $sTool->name . " help me as a virtual assistant in my classes?";
+                                } elseif (str_contains(strtolower($sTool->categoryRelation?->name ?? $sTool->category), 'product') || str_contains(strtolower($sTool->name), 'flow') || str_contains(strtolower($sTool->name), 'pomelo')) {
+                                    $promptText = "How do I optimize my administrative workflow using " . $sTool->name . "?";
+                                }
                             }
                         @endphp
                         <button onclick="sendPresetPrompt('{{ addslashes($promptText) }}')" class="block w-full text-left text-[11px] px-3 py-2 bg-white hover:bg-ans-light-green/10 border border-gray-100 rounded-xl text-gray-700 hover:text-ans-dark-green hover:border-ans-light-green transition-all shadow-sm truncate">
@@ -1114,6 +1173,14 @@ document.addEventListener('DOMContentLoaded', () => {
         <!-- Icon -->
         <svg class="w-6 h-6 relative z-10 transition-transform duration-300 group-hover:rotate-6 text-ans-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
     </button>
+
+    @if(Auth::user()->isTeacher() || Auth::user()->isAdmin())
+        <!-- Floating Lesson Plan Button (FAB) -->
+        <a id="create-lesson-plan-fab" href="{{ route('lesson-plans.create') }}" class="fixed bottom-24 right-6 z-50 w-14 h-14 bg-gradient-to-tr from-ans-orange to-amber-500 hover:from-amber-500 hover:to-ans-orange text-white rounded-full flex items-center justify-center shadow-xl shadow-ans-orange/20 hover:shadow-2xl hover:scale-105 transition-all duration-300 group pointer-events-auto animate-bounce-in" title="New Lesson Plan">
+            <!-- Icon -->
+            <svg class="w-6 h-6 relative z-10 transition-transform duration-300 group-hover:rotate-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+        </a>
+    @endif
 @endauth
 
 @yield('modals')
