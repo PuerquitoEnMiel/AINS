@@ -6,25 +6,23 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\TaskForceMemberController;
 use App\Http\Controllers\Admin\PromptTipController;
 use App\Http\Controllers\Admin\ToolInsightController;
-use App\Models\TaskForceMember;
-use App\Models\PromptTip;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\FavoriteController;
-use App\Http\Controllers\LessonPlanController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\ToolController;
-use App\Http\Controllers\ToolRequestController;
-use App\Models\Category;
-use App\Models\Tool;
-use App\Models\User;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\SlidesController;
 use App\Http\Controllers\CalendarController;
-use Illuminate\Support\Facades\Cache;
+use App\Http\Controllers\LessonPlanController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PromptLibraryController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\TaskForceController;
+use App\Http\Controllers\ToolController;
+use App\Http\Controllers\ToolRequestController;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // ═════════════════════════════════════════════════════════════════════════
@@ -33,42 +31,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/lang/{locale}', [App\Http\Controllers\LanguageController::class, 'switch'])->name('lang.switch');
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::middleware('throttle:60,1')->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Tool detail page (public, tracks views)
-Route::get('/tools/{tool}', [ToolController::class, 'show'])->name('tools.show');
-Route::post('/tools/{tool}/click', [ToolController::class, 'trackClick'])->name('tools.click');
+    // Tool detail page (public, tracks views)
+    Route::get('/tools/{tool}', [ToolController::class, 'show'])->name('tools.show');
+    Route::post('/tools/{tool}/click', [ToolController::class, 'trackClick'])->name('tools.click');
 
-// Educational Platform Static Pages
+    Route::get('/task-force', [TaskForceController::class, 'index'])->name('task-force');
+    Route::get('/tips', [PromptLibraryController::class, 'index'])->name('tips');
+});
+
 Route::get('/policy', function () {
     return view('policy');
 })->name('policy');
-
-Route::get('/task-force', function () {
-    $members = TaskForceMember::orderBy('sort_order')->get();
-    return view('task_force', compact('members'));
-})->name('task-force');
-
-Route::get('/tips', function () {
-    $userId = auth()->id();
-    $isAdmin = auth()->check() && auth()->user()->isAdmin();
-
-    $prompts = PromptTip::with(['author', 'comments.user', 'votes'])
-        ->when(!$isAdmin, function ($q) use ($userId) {
-            $q->where(function ($sub) use ($userId) {
-                $sub->where('is_approved', true);
-                if ($userId) {
-                    $sub->orWhere('user_id', $userId);
-                }
-            });
-        })
-        ->orderByDesc('is_approved') // Show pending at top for admin
-        ->orderBy('sort_order')
-        ->latest()
-        ->get();
-
-    return view('tips', compact('prompts'));
-})->name('tips');
 
 // ═════════════════════════════════════════════════════════════════════════
 //  GOOGLE SSO

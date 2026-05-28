@@ -29,8 +29,8 @@ class ReviewController extends Controller
             $data
         );
 
-        // Recalculate cached average
-        $tool->recalculateRating();
+        // Refresh tool instance to get updated avg_rating from model event
+        $tool->refresh();
 
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([

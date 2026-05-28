@@ -11,6 +11,45 @@ use Illuminate\Support\Facades\Auth;
 class PromptLibraryController extends Controller
 {
     /**
+     * Show the community prompt library.
+     * (Moved from route closure in web.php)
+     */
+    public function index(\Illuminate\Http\Request $request)
+    {
+        $userId  = auth()->id();
+        $isAdmin = auth()->check() && auth()->user()->isAdmin();
+        $tab     = $request->input('tab', 'docentes');
+
+        if (!in_array($tab, ['docentes', 'estudiantes', 'comunidad'])) {
+            $tab = 'docentes';
+        }
+
+        $query = PromptTip::with(['author', 'comments.user', 'votes'])
+            ->when(! $isAdmin, function ($q) use ($userId) {
+                $q->where(function ($sub) use ($userId) {
+                    $sub->where('is_approved', true);
+                    if ($userId) {
+                        $sub->orWhere('user_id', $userId);
+                    }
+                });
+            });
+
+        if ($tab === 'comunidad') {
+            $query->where('is_community', true);
+        } else {
+            $query->where('target_role', $tab)->where('is_community', false);
+        }
+
+        $prompts = $query->orderByDesc('is_approved')  // pending at top for admin
+            ->orderBy('sort_order')
+            ->latest()
+            ->paginate(12)
+            ->withQueryString();
+
+        return view('tips', compact('prompts', 'tab'));
+    }
+
+    /**
      * Cast or update a vote on a prompt.
      */
     public function vote(Request $request, PromptTip $prompt)

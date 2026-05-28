@@ -210,6 +210,8 @@ class DashboardController extends Controller
         
         file_put_contents($instructionFile, $request->input('instructions'));
 
+        \Illuminate\Support\Facades\Cache::forget(\App\Support\CacheKeys::CHATBOT_INSTRUCTION);
+
         return redirect()->route('admin.chatbot-settings')
             ->with('success', 'Chatbot instructions updated successfully!');
     }

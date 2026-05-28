@@ -1249,7 +1249,24 @@ function fetchCatalogData(page = 1) {
     favs.forEach(fav => url.searchParams.append('favs[]', fav));
 
     const grid = document.getElementById('catalog-grid');
-    if (grid) grid.style.opacity = '0.6';
+    if (grid) {
+        grid.style.opacity = '0.7';
+        let skeletons = '';
+        for (let i = 0; i < 8; i++) {
+            skeletons += `
+                <div class="animate-pulse bg-white rounded-2xl border border-gray-100 p-6 space-y-4 shadow-sm">
+                    <div class="w-14 h-14 bg-gray-200/80 rounded-2xl"></div>
+                    <div class="h-4 bg-gray-200/80 rounded w-2/3"></div>
+                    <div class="space-y-2">
+                        <div class="h-3 bg-gray-200/80 rounded"></div>
+                        <div class="h-3 bg-gray-200/80 rounded w-5/6"></div>
+                    </div>
+                    <div class="h-6 bg-gray-200/80 rounded-full w-1/4 mt-4"></div>
+                </div>
+            `;
+        }
+        grid.innerHTML = skeletons;
+    }
 
     fetch(url)
         .then(res => res.json())

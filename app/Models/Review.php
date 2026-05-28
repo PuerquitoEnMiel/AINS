@@ -18,6 +18,17 @@ class Review extends Model
         'rating' => 'integer',
     ];
 
+    protected static function booted(): void
+    {
+        static::saved(function ($review) {
+            $review->tool?->recalculateRating();
+        });
+
+        static::deleted(function ($review) {
+            $review->tool?->recalculateRating();
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

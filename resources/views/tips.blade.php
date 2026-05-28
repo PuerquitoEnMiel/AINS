@@ -68,13 +68,13 @@
 
             <!-- Filtros por Rol -->
             <div class="flex bg-gray-100 p-1.5 rounded-2xl border border-gray-200/50 shadow-inner">
-                <button onclick="switchTab('docentes')" id="tab-docentes" class="tab-btn active px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
+                <button onclick="switchTab('docentes')" id="tab-docentes" class="tab-btn @if($tab === 'docentes') active @else text-gray-600 hover:text-gray-900 @endif px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
                     <span class="mr-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path></svg></span> Teachers
                 </button>
-                <button onclick="switchTab('estudiantes')" id="tab-estudiantes" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:text-gray-900 flex items-center gap-1.5">
+                <button onclick="switchTab('estudiantes')" id="tab-estudiantes" class="tab-btn @if($tab === 'estudiantes') active @else text-gray-600 hover:text-gray-900 @endif px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
                     <span class="mr-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg></span> Students
                 </button>
-                <button onclick="switchTab('comunidad')" id="tab-comunidad" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:text-gray-900 flex items-center gap-1.5">
+                <button onclick="switchTab('comunidad')" id="tab-comunidad" class="tab-btn @if($tab === 'comunidad') active @else text-gray-600 hover:text-gray-900 @endif px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
                     <span class="mr-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg></span> Community
                 </button>
             </div>
@@ -92,10 +92,9 @@
     @php
         $colors = ['border-ans-dark-green', 'border-ans-orange', 'border-blue-500', 'border-purple-500'];
         
-        // Filter subsets
-        $docentesPrompts = $prompts->where('target_role', 'docentes')->where('is_community', false)->groupBy('category');
-        $estudiantesPrompts = $prompts->where('target_role', 'estudiantes')->where('is_community', false)->groupBy('category');
-        $comunidadPrompts = $prompts->where('is_community', true);
+        // Filter subsets (already filtered by controller, so just group)
+        $docentesPrompts = $tab === 'docentes' ? $prompts->groupBy('category') : collect();
+        $estudiantesPrompts = $tab === 'estudiantes' ? $prompts->groupBy('category') : collect();
 
         // Mapeo de categorías a Inglés
         $catMap = [
@@ -110,6 +109,7 @@
     @endphp
 
     <!-- 2. Contenedor de Vista: Para Docentes -->
+    @if($tab === 'docentes')
     <div id="view-docentes" class="space-y-8">
         @php $categoryIndex = 0; @endphp
         @forelse($docentesPrompts as $category => $categoryPrompts)
@@ -135,10 +135,16 @@
                 There are no official prompts for teachers at this time.
             </div>
         @endforelse
+
+        <div class="mt-8 flex justify-center">
+            {{ $prompts->links() }}
+        </div>
     </div>
+    @endif
 
     <!-- 3. Contenedor de Vista: Para Estudiantes -->
-    <div id="view-estudiantes" class="space-y-8 hidden">
+    @if($tab === 'estudiantes')
+    <div id="view-estudiantes" class="space-y-8">
         @php $categoryIndex = 0; @endphp
         @forelse($estudiantesPrompts as $category => $categoryPrompts)
             @php 
@@ -163,10 +169,16 @@
                 There are no official prompts for students at this time.
             </div>
         @endforelse
+
+        <div class="mt-8 flex justify-center">
+            {{ $prompts->links() }}
+        </div>
     </div>
+    @endif
 
     <!-- 4. Contenedor de Vista: Comunidad -->
-    <div id="view-comunidad" class="space-y-8 hidden">
+    @if($tab === 'comunidad')
+    <div id="view-comunidad" class="space-y-8">
         <div class="prompt-category-group space-y-6">
             <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                 <h4 class="font-heading font-extrabold text-gray-800 text-lg">Shared by Teachers</h4>
@@ -174,7 +186,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @forelse($comunidadPrompts as $prompt)
+                @forelse($prompts as $prompt)
                     @include('partials.prompt_card', ['prompt' => $prompt])
                 @empty
                     <div class="col-span-full py-12 bg-white rounded-3xl border border-gray-200/50 text-center text-gray-500 shadow-sm">
@@ -183,7 +195,12 @@
                 @endforelse
             </div>
         </div>
+
+        <div class="mt-8 flex justify-center">
+            {{ $prompts->links() }}
+        </div>
     </div>
+    @endif
 
 </div>
 
@@ -308,24 +325,7 @@
     let activePromptId = null;
 
     function switchTab(roleKey) {
-        // Desactivar botones de pestañas
-        document.getElementById('tab-docentes').className = "tab-btn px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:text-gray-900 flex items-center gap-1.5";
-        document.getElementById('tab-estudiantes').className = "tab-btn px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:text-gray-900 flex items-center gap-1.5";
-        document.getElementById('tab-comunidad').className = "tab-btn px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:text-gray-900 flex items-center gap-1.5";
-        
-        // Activar el correspondiente
-        document.getElementById('tab-' + roleKey).className = "tab-btn active px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5";
-
-        // Ocultar todas las vistas
-        document.getElementById('view-docentes').classList.add('hidden');
-        document.getElementById('view-estudiantes').classList.add('hidden');
-        document.getElementById('view-comunidad').classList.add('hidden');
-
-        // Mostrar la vista activa
-        document.getElementById('view-' + roleKey).classList.remove('hidden');
-
-        // Aplicar búsqueda al cambiar de pestaña
-        filterPrompts();
+        window.location.href = "{{ route('tips') }}?tab=" + roleKey;
     }
 
     function filterPrompts() {

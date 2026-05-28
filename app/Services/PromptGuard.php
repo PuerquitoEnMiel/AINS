@@ -16,12 +16,12 @@ class PromptGuard
      */
     protected static array $injectionPatterns = [
         // Direct instruction override attempts
-        '/ignor(?:a|e)\s+(tus|las|mis|your|all|previous|prior)\s+(instrucciones|instructions|rules|reglas)/iu',
-        '/olvid(?:a|e)\s+(tus|las|mis|your|all|previous|prior)\s+(instrucciones|instructions|rules|reglas)/iu',
-        '/forget\s+(your|all|previous|prior|the)\s+(instructions|rules|constraints|guidelines|prompt|role)/iu',
-        '/ignore\s+(your|all|previous|prior|the)\s+(instructions|rules|constraints|guidelines|prompt|role)/iu',
-        '/disregard\s+(your|all|previous|prior|the)\s+(instructions|rules|constraints|guidelines|prompt|role)/iu',
-        '/override\s+(your|all|previous|prior|the)\s+(instructions|rules|constraints|guidelines|prompt|role)/iu',
+        '/ignor(?:a|e)\s+(?:\w+\s+){0,3}(instrucciones|instructions|rules|reglas)/iu',
+        '/olvid(?:a|e)\s+(?:\w+\s+){0,3}(instrucciones|instructions|rules|reglas)/iu',
+        '/forget\s+(?:\w+\s+){0,3}(instructions|rules|constraints|guidelines|prompt|role)/iu',
+        '/ignore\s+(?:\w+\s+){0,3}(instructions|rules|constraints|guidelines|prompt|role)/iu',
+        '/disregard\s+(?:\w+\s+){0,3}(instructions|rules|constraints|guidelines|prompt|role)/iu',
+        '/override\s+(?:\w+\s+){0,3}(instructions|rules|constraints|guidelines|prompt|role)/iu',
 
         // Role reassignment / jailbreaks
         '/you\s+are\s+now\s+(a|an|my|the)\s+/iu',
@@ -131,8 +131,38 @@ class PromptGuard
     {
         return match ($category) {
             'injection' => "🛡️ **{$firstName}**, that request appears to contain instructions that could alter my behavior. As your AINS AI Companion, I'm designed to stay focused on helping you with educational technology and approved tools. Please rephrase your question and I'll be happy to assist! 😊",
-            'harmful' => "⚠️ **{$firstName}**, I can't help with that type of request. My purpose is to support your educational journey at ANS. Let me know if you have questions about approved tools, study strategies, or tech integration! 📚",
-            default => "🤖 **{$firstName}**, I couldn't process that request. Please try rephrasing your question about educational technology or approved tools.",
+            'harmful'   => "⚠️ **{$firstName}**, I can't help with that type of request. My purpose is to support your educational journey at ANS. Let me know if you have questions about approved tools, study strategies, or tech integration! 📚",
+            default     => "🤖 **{$firstName}**, I couldn't process that request. Please try rephrasing your question about educational technology or approved tools.",
         };
+    }
+
+    /**
+     * Gemini API safety settings payload.
+     *
+     * Injected into every generateContent request so the model-level
+     * safety filters act as a second layer on top of PromptGuard regex.
+     *
+     * @return array<int, array{category: string, threshold: string}>
+     */
+    public static function geminiSafetySettings(): array
+    {
+        return [
+            [
+                'category'  => 'HARM_CATEGORY_HARASSMENT',
+                'threshold' => 'BLOCK_MEDIUM_AND_ABOVE',
+            ],
+            [
+                'category'  => 'HARM_CATEGORY_HATE_SPEECH',
+                'threshold' => 'BLOCK_MEDIUM_AND_ABOVE',
+            ],
+            [
+                'category'  => 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+                'threshold' => 'BLOCK_MEDIUM_AND_ABOVE',
+            ],
+            [
+                'category'  => 'HARM_CATEGORY_DANGEROUS_CONTENT',
+                'threshold' => 'BLOCK_MEDIUM_AND_ABOVE',
+            ],
+        ];
     }
 }

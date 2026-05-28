@@ -29,8 +29,20 @@ return [
     ],
 
     'google' => [
-        'client_id' => env('GOOGLE_CLIENT_ID'),
-        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => env('GOOGLE_REDIRECT_URI', 'http://127.0.0.1:8000/auth/google/callback'),
+        'client_id'          => env('GOOGLE_CLIENT_ID'),
+        'client_secret'      => env('GOOGLE_CLIENT_SECRET'),
+        'redirect'           => env('GOOGLE_REDIRECT_URI', 'http://127.0.0.1:8000/auth/google/callback'),
+        'disable_ssl_verify' => env('GOOGLE_DOCS_DISABLE_SSL_VERIFY', false),
+    ],
+
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+        'models'  => [
+            'gemini-2.5-flash',
+            'gemini-2.0-flash',
+            'gemini-1.5-flash',
+        ],
+        'timeout'      => (int) env('GEMINI_TIMEOUT', 60),
+        'chat_timeout' => (int) env('GEMINI_CHAT_TIMEOUT', 25),
     ],
 ];

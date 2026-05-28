@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use App\Support\CacheKeys;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tool extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name',
         'description',
@@ -38,13 +42,13 @@ class Tool extends Model
     protected static function booted(): void
     {
         static::saved(function ($tool) {
-            \Illuminate\Support\Facades\Cache::forget('welcome_tools');
-            \Illuminate\Support\Facades\Cache::forget('welcome_categories');
+            \Illuminate\Support\Facades\Cache::forget(CacheKeys::WELCOME_TOOLS);
+            \Illuminate\Support\Facades\Cache::forget(CacheKeys::WELCOME_CATEGORIES);
         });
 
         static::deleted(function ($tool) {
-            \Illuminate\Support\Facades\Cache::forget('welcome_tools');
-            \Illuminate\Support\Facades\Cache::forget('welcome_categories');
+            \Illuminate\Support\Facades\Cache::forget(CacheKeys::WELCOME_TOOLS);
+            \Illuminate\Support\Facades\Cache::forget(CacheKeys::WELCOME_CATEGORIES);
         });
     }
 
@@ -120,9 +124,9 @@ class Tool extends Model
     {
         $this->increment('click_count');
         $this->views()->create([
-            'user_id' => $userId,
+            'user_id'    => $userId,
             'ip_address' => $ip,
         ]);
-        \Illuminate\Support\Facades\Cache::forget('welcome_tools');
+        \Illuminate\Support\Facades\Cache::forget(CacheKeys::WELCOME_TOOLS);
     }
 }

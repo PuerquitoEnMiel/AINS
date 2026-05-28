@@ -160,13 +160,29 @@ class User extends Authenticatable
 
     // ── Badge Helpers ───────────────────────────────────────────
 
+    /**
+     * Check if user has a badge by slug.
+     * Uses in-memory collection if badges already eager-loaded (avoids N+1).
+     */
     public function hasBadge(string $slug): bool
     {
+        if ($this->relationLoaded('badges')) {
+            return $this->badges->contains('slug', $slug);
+        }
+
         return $this->badges()->where('slug', $slug)->exists();
     }
 
+    /**
+     * Count earned badges.
+     * Uses in-memory collection if badges already eager-loaded.
+     */
     public function badgeCount(): int
     {
+        if ($this->relationLoaded('badges')) {
+            return $this->badges->count();
+        }
+
         return $this->badges()->count();
     }
 
