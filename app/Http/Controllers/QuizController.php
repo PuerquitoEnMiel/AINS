@@ -27,7 +27,7 @@ class QuizController extends Controller
         
         $totalQuestions = count($questions);
         if ($totalQuestions === 0) {
-            return back()->with('error', 'El cuestionario no tiene preguntas.');
+            return back()->with('error', 'The quiz has no questions.');
         }
         
         $correctCount = 0;
@@ -84,32 +84,32 @@ class QuizController extends Controller
         }
         
         return redirect()->route('badges.show', $badge->slug)
-            ->with('success', $passed ? '¡Felicidades! Has ganado la insignia.' : 'Cuestionario no aprobado. ¡Sigue intentando!');
+            ->with('success', $passed ? 'Congratulations! You earned the badge.' : 'Quiz not passed. Keep trying!');
     }
 
     public function generateQuiz(Badge $badge)
     {
         $apiKey = env('GEMINI_API_KEY');
         if (! $apiKey) {
-            return response()->json(['error' => 'API Key de Gemini no configurada.'], 500);
+            return response()->json(['error' => 'Gemini API Key is not configured.'], 500);
         }
 
-        $prompt = "Genera un cuestionario educativo y profesional de 5 preguntas de opción múltiple en español sobre el tema o herramienta pedagógica: \"{$badge->name}\" ({$badge->description}).\n\n" .
-                  "El formato debe ser estrictamente un arreglo JSON de objetos con la siguiente estructura y llaves exactas en minúscula:\n" .
+        $prompt = "Generate an educational and professional quiz of 5 multiple-choice questions in English about the topic or pedagogical tool: \"{$badge->name}\" ({$badge->description}).\n\n" .
+                  "The format must be strictly a JSON array of objects with the following structure and exact keys in lowercase:\n" .
                   "[\n" .
                   "  {\n" .
-                  "    \"question\": \"¿Cuál es la pregunta...?\",\n" .
+                  "    \"question\": \"What is the question...?\",\n" .
                   "    \"options\": {\n" .
-                  "      \"a\": \"Opción A\",\n" .
-                  "      \"b\": \"Opción B\",\n" .
-                  "      \"c\": \"Opción C\",\n" .
-                  "      \"d\": \"Opción D\"\n" .
+                  "      \"a\": \"Option A\",\n" .
+                  "      \"b\": \"Option B\",\n" .
+                  "      \"c\": \"Option C\",\n" .
+                  "      \"d\": \"Option D\"\n" .
                   "    },\n" .
                   "    \"correct\": \"a\",\n" .
-                  "    \"explanation\": \"Explicación pedagógica de la respuesta correcta.\"\n" .
+                  "    \"explanation\": \"Pedagogical explanation of the correct answer.\"\n" .
                   "  }\n" .
                   "]\n\n" .
-                  "Asegúrate de que la llave 'correct' contenga únicamente una sola letra ('a', 'b', 'c' o 'd'). Responde ÚNICAMENTE con el código JSON válido. No uses bloques de código markdown, no agregues texto antes ni después del JSON.";
+                  "Ensure that the 'correct' key contains only a single letter ('a', 'b', 'c', or 'd'). Respond ONLY with valid JSON. Do not use markdown code blocks, do not add text before or after the JSON.";
 
         try {
             $response = Http::timeout(30)->withoutVerifying()->post(
@@ -144,7 +144,7 @@ class QuizController extends Controller
                         ['badge_id' => $badge->id],
                         [
                             'title' => 'Quiz: ' . $badge->name,
-                            'description' => 'Demuestra tus conocimientos sobre ' . $badge->name,
+                            'description' => 'Demonstrate your knowledge about ' . $badge->name,
                             'questions' => $questions,
                             'passing_score' => 80,
                         ]
@@ -157,15 +157,15 @@ class QuizController extends Controller
                 }
                 
                 Log::error('Gemini Quiz Invalid JSON Structure: ' . $rawJson);
-                return response()->json(['error' => 'La respuesta de IA no tiene un formato estructurado de preguntas válido.'], 500);
+                return response()->json(['error' => 'The AI response does not have a valid structured question format.'], 500);
             }
 
             Log::error('Gemini Quiz API Error: ' . $response->body());
-            return response()->json(['error' => 'Error de respuesta del servidor de IA.'], 500);
+            return response()->json(['error' => 'AI server response error.'], 500);
 
         } catch (\Exception $e) {
             Log::error('Gemini Quiz Exception: ' . $e->getMessage());
-            return response()->json(['error' => 'Excepción de IA: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'AI Exception: ' . $e->getMessage()], 500);
         }
     }
 }

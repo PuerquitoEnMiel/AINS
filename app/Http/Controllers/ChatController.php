@@ -34,7 +34,7 @@ class ChatController extends Controller
         $guardResult = PromptGuard::analyze($message);
         if (! $guardResult['safe']) {
             $firstName = explode(' ', Auth::user()->name)[0];
-            Log::warning('Intento de Prompt Injection detectado', [
+            Log::warning('Prompt injection attempt detected', [
                 'user_id' => Auth::id(),
                 'prompt'  => $message,
             ]);
@@ -42,8 +42,8 @@ class ChatController extends Controller
             // Create notification for admin
             \App\Models\AdminNotification::create([
                 'user_id' => Auth::id(),
-                'title' => 'Intento de Prompt Injection detectado',
-                'message' => 'El usuario ' . Auth::user()->name . ' intentó bypass o hackear el chatbot.',
+                'title' => 'Prompt Injection Attempt Detected',
+                'message' => 'User ' . Auth::user()->name . ' attempted to bypass or exploit the chatbot.',
                 'type' => 'security',
                 'data' => [
                     'prompt' => $message,

@@ -89,7 +89,7 @@ class PromptLibraryController extends Controller
             'title' => 'required|string|max:255',
             'target_role' => 'required|string|max:255',
             'category' => 'required|string|max:255',
-            'complexity' => 'required|in:Básico,Intermedio,Avanzado',
+            'complexity' => 'required|in:Básico,Intermedio,Avanzado,Basic,Intermediate,Advanced',
             'description' => 'required|string|max:1000',
             'prompt_text' => 'required|string',
         ]);
@@ -107,7 +107,7 @@ class PromptLibraryController extends Controller
             'sort_order' => 99,
         ]);
 
-        return redirect()->back()->with('success', 'Prompt enviado con éxito. Estará visible tras la aprobación del administrador.');
+        return redirect()->back()->with('success', 'Prompt submitted successfully. It will be visible after administrator approval.');
     }
 
     /**
@@ -128,14 +128,14 @@ class PromptLibraryController extends Controller
 
         $prompt->update(['is_approved' => !$prompt->is_approved]);
 
-        $status = $prompt->is_approved ? 'aprobado' : 'desaprobado';
-        return redirect()->back()->with('success', "Prompt {$status} con éxito.");
+        $status = $prompt->is_approved ? 'approved' : 'disapproved';
+        return redirect()->back()->with('success', "Prompt {$status} successfully.");
     }
 
     private function authorizeAdmin()
     {
         if (!Auth::check() || !Auth::user()->isAdmin()) {
-            abort(403, 'Acción no autorizada.');
+            abort(403, 'Unauthorized action.');
         }
     }
 }

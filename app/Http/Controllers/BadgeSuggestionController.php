@@ -37,8 +37,8 @@ class BadgeSuggestionController extends Controller
         // Notify admins
         \App\Models\AdminNotification::create([
             'user_id' => auth()->id(),
-            'title' => 'Nueva Sugerencia de Insignia',
-            'message' => 'El docente ' . auth()->user()->name . ' ha sugerido una nueva insignia: "' . $request->name . '".',
+            'title' => 'New Badge Suggestion',
+            'message' => 'Teacher ' . auth()->user()->name . ' has suggested a new badge: "' . $request->name . '".',
             'type' => 'suggestion',
             'data' => [
                 'suggestion_id' => $suggestion->id,
@@ -47,6 +47,6 @@ class BadgeSuggestionController extends Controller
         ]);
 
         return redirect()->route('badge-suggestions.index')
-            ->with('success', '¡Tu sugerencia de insignia ha sido enviada con éxito! La administración la revisará.');
+            ->with('success', 'Your badge suggestion has been submitted successfully! The administration will review it.');
     }
 }

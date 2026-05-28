@@ -241,7 +241,7 @@ class BadgeController extends Controller
             'name' => $suggestion->name,
             'description' => $suggestion->description,
             'certification_url' => $suggestion->certification_url,
-        ])->with('success', 'Sugerencia aprobada. Completa la creación de la insignia aquí.');
+        ])->with('success', 'Suggestion approved. Complete badge creation here.');
     }
 
     /**
@@ -254,6 +254,6 @@ class BadgeController extends Controller
             'admin_notes' => $request->admin_notes,
         ]);
 
-        return back()->with('success', 'Sugerencia rechazada.');
+        return back()->with('success', 'Suggestion rejected.');
     }
 }
