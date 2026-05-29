@@ -41,11 +41,6 @@ class Badge extends Model
             ->withTimestamps();
     }
 
-    public function quiz()
-    {
-        return $this->hasOne(Quiz::class);
-    }
-
     public function evidences()
     {
         return $this->hasMany(BadgeEvidence::class);

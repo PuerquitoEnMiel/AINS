@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header-title', 'EdTech Badges Management')
-@section('header-subtitle', 'Manage micro-credentials and AI generated quizzes')
+@section('header-subtitle', 'Manage micro-credentials and certifications')
 
 @section('content')
 

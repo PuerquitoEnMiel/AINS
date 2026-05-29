@@ -135,14 +135,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Quiz attempts by this user.
-     */
-    public function quizAttempts(): HasMany
-    {
-        return $this->hasMany(QuizAttempt::class);
-    }
-
-    /**
      * Badge evidence submissions by this user.
      */
     public function badgeEvidences(): HasMany
@@ -156,6 +148,16 @@ class User extends Authenticatable
     public function badgeSuggestions(): HasMany
     {
         return $this->hasMany(BadgeSuggestion::class);
+    }
+
+    /**
+     * Resources bookmarked/saved by this user.
+     */
+    public function savedResources(): BelongsToMany
+    {
+        return $this->belongsToMany(Resource::class, 'resource_user')
+                    ->withPivot('saved_at')
+                    ->withTimestamps();
     }
 
     // ── Badge Helpers ───────────────────────────────────────────

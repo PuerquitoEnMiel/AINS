@@ -122,4 +122,23 @@ class GeminiServiceTest extends TestCase
             return isset($body['safetySettings']) && count($body['safetySettings']) === 4;
         });
     }
+
+    public function test_generation_config_included_when_provided(): void
+    {
+        Http::fake([
+            '*' => Http::response([
+                'candidates' => [[
+                    'content' => ['parts' => [['text' => 'ok']]],
+                ]],
+            ], 200),
+        ]);
+
+        $service = new GeminiService();
+        $service->generate([['text' => 'test']], null, ['responseMimeType' => 'application/json']);
+
+        Http::assertSent(function (Request $request) {
+            $body = $request->data();
+            return isset($body['generationConfig']) && $body['generationConfig']['responseMimeType'] === 'application/json';
+        });
+    }
 }

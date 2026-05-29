@@ -82,7 +82,7 @@
             </div>
             @if($badges->isEmpty())
                 <div class="text-center py-6">
-                    <p class="text-sm text-gray-400">No badges earned yet. Take quizzes in the gallery to earn them!</p>
+                    <p class="text-sm text-gray-400">No badges earned yet. Earn badges by submitting evidence in the gallery!</p>
                     <a href="{{ route('badges.index') }}" class="inline-block mt-3 px-4 py-2 bg-ans-dark-green text-white text-xs font-semibold rounded-xl hover:bg-ans-seal-green transition-all shadow-sm">Explore Badges</a>
                 </div>
             @else

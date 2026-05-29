@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\TaskForceMemberController;
 use App\Http\Controllers\Admin\PromptTipController;
 use App\Http\Controllers\Admin\ToolInsightController;
+use App\Http\Controllers\Admin\ResourceController as AdminResourceController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ConversationController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\LessonPlanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PromptLibraryController;
+use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TaskForceController;
 use App\Http\Controllers\ToolController;
@@ -40,6 +42,10 @@ Route::middleware('throttle:60,1')->group(function () {
 
     Route::get('/task-force', [TaskForceController::class, 'index'])->name('task-force');
     Route::get('/tips', [PromptLibraryController::class, 'index'])->name('tips');
+
+    // ── Learning Hub (public browse) ────────────────────────────
+    Route::get('/resources', [ResourceController::class, 'index'])->name('resources.index');
+    Route::get('/resources/{resource}', [ResourceController::class, 'show'])->name('resources.show');
 });
 
 Route::get('/policy', function () {
@@ -76,6 +82,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
+    // ── Learning Hub (auth actions) ──────────────────────────────
+    Route::post('/resources/{resource}/save', [ResourceController::class, 'save'])->name('resources.save');
+    Route::get('/propose-resource', [ResourceController::class, 'create'])->name('resources.propose');
+    Route::post('/propose-resource', [ResourceController::class, 'store'])->name('resources.propose.store');
+
     // ── Chat Conversations (JSON API) ───────────────────────────
     Route::get('/api/conversations', [ConversationController::class, 'index']);
     Route::post('/api/conversations', [ConversationController::class, 'store']);
@@ -94,11 +105,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/tips/submit', [App\Http\Controllers\PromptLibraryController::class, 'submit'])->name('tips.submit');
     Route::post('/tips/{prompt}/copy', [App\Http\Controllers\PromptLibraryController::class, 'trackCopy'])->name('tips.copy');
 
-    // ── EdTech Badges & Quizzes ─────────────────────────────────
+    // ── EdTech Badges ───────────────────────────────────────────
     Route::get('/badges', [App\Http\Controllers\BadgeController::class, 'index'])->name('badges.index');
     Route::get('/badges/{slug}', [App\Http\Controllers\BadgeController::class, 'show'])->name('badges.show');
-    Route::get('/quizzes/{quiz}', [App\Http\Controllers\QuizController::class, 'show'])->name('quizzes.show');
-    Route::post('/quizzes/{quiz}/submit', [App\Http\Controllers\QuizController::class, 'submit'])->name('quizzes.submit');
 });
 
 // ── Teacher/Admin Routes ───────────────────────────────────────
@@ -175,8 +184,7 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::resource('prompt-tips', PromptTipController::class)->except(['show']);
     Route::post('/prompt-tips/{prompt}/toggle-approval', [App\Http\Controllers\PromptLibraryController::class, 'toggleApproval'])->name('prompt-tips.toggleApproval');
 
-    // ── Badges CRUD & AI Quiz Generation ────────────────────────
-    Route::post('/badges/{badge}/generate-quiz', [App\Http\Controllers\Admin\BadgeController::class, 'generateQuizWithAI'])->name('badges.generateQuiz');
+    // ── Badges CRUD ─────────────────────────────────────────────
     Route::resource('badges', App\Http\Controllers\Admin\BadgeController::class);
 
     // ── Badge Evidence Review ────────────────────────────────────
@@ -198,6 +206,10 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/notification-templates', [App\Http\Controllers\Admin\NotificationTemplateController::class, 'index'])->name('notification-templates.index');
     Route::get('/notification-templates/{template}/edit', [App\Http\Controllers\Admin\NotificationTemplateController::class, 'edit'])->name('notification-templates.edit');
     Route::put('/notification-templates/{template}', [App\Http\Controllers\Admin\NotificationTemplateController::class, 'update'])->name('notification-templates.update');
+
+    // ── Resources CRUD + Approve ─────────────────────────────────
+    Route::resource('resources', AdminResourceController::class);
+    Route::post('/resources/{resource}/approve', [AdminResourceController::class, 'approve'])->name('resources.approve');
 });
 
 // ═════════════════════════════════════════════════════════════════════════

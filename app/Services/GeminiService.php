@@ -48,9 +48,10 @@ class GeminiService
      *
      * @param  array<int, array>  $parts  Gemini parts array (text + optional inlineData)
      * @param  int|null  $timeoutOverride  Custom timeout in seconds
+     * @param  array  $generationConfig  Optional generation configuration (e.g. responseMimeType)
      * @return string|null  Generated text, or null on failure
      */
-    public function generate(array $parts, ?int $timeoutOverride = null): ?string
+    public function generate(array $parts, ?int $timeoutOverride = null, array $generationConfig = []): ?string
     {
         $payload = [
             'contents' => [
@@ -61,6 +62,10 @@ class GeminiService
             ],
             'safetySettings' => PromptGuard::geminiSafetySettings(),
         ];
+
+        if (!empty($generationConfig)) {
+            $payload['generationConfig'] = $generationConfig;
+        }
 
         return $this->callWithFallback($payload, $timeoutOverride ?? $this->timeout);
     }

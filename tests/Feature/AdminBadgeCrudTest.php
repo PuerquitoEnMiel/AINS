@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Badge;
-use App\Models\Quiz;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
@@ -113,64 +112,4 @@ class AdminBadgeCrudTest extends TestCase
         ]);
     }
 
-    public function test_admins_can_generate_quiz_with_ai(): void
-    {
-        // Create a test badge
-        $badge = Badge::create([
-            'name' => 'Canva Expert Test',
-            'slug' => 'canva-expert-test',
-            'description' => 'Test description',
-            'icon' => '🎨',
-            'color' => '#7D2AE8',
-            'category' => 'tool_mastery',
-            'difficulty' => 'bronze',
-            'criteria_type' => 'quiz',
-            'sort_order' => 1,
-        ]);
-
-        // Mock Gemini Response
-        $mockQuestions = [
-            [
-                'question' => '¿Cuál es la herramienta de diseño de Canva?',
-                'options' => [
-                    'a' => 'Opción A',
-                    'b' => 'Opción B',
-                    'c' => 'Opción C',
-                    'd' => 'Opción D',
-                ],
-                'correct' => 'a',
-                'explanation' => 'Test explanation',
-            ]
-        ];
-
-        Http::fake([
-            'https://generativelanguage.googleapis.com/*' => Http::response([
-                'candidates' => [
-                    [
-                        'content' => [
-                            'parts' => [
-                                ['text' => json_encode($mockQuestions)]
-                            ]
-                        ]
-                    ]
-                ]
-            ], 200)
-        ]);
-
-        // Post request to generate quiz
-        $response = $this->actingAs($this->adminUser)
-            ->post(route('admin.badges.generateQuiz', $badge));
-
-        $response->assertRedirect(route('admin.badges.index'));
-        $response->assertSessionHas('success');
-
-        $this->assertDatabaseHas('quizzes', [
-            'badge_id' => $badge->id,
-            'title' => 'Quiz: Canva Expert Test',
-        ]);
-
-        $quiz = Quiz::where('badge_id', $badge->id)->first();
-        $this->assertCount(1, $quiz->questions);
-        $this->assertEquals('¿Cuál es la herramienta de diseño de Canva?', $quiz->questions[0]['question']);
-    }
 }

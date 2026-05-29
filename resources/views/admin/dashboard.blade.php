@@ -68,7 +68,7 @@
             <div class="w-10 h-10 rounded-xl bg-gradient-to-br {{ $card['color'] }} flex items-center justify-center text-white shadow-sm shadow-black/10 group-hover:scale-110 transition-transform duration-300">
                 {!! $card['icon'] !!}
             </div>
-            <p class="text-2xl font-heading font-extrabold text-gray-900 mt-4">{{ number_format($card['value']) }}</p>
+            <p class="text-2xl font-heading font-extrabold text-gray-900 mt-4 animate-stat-count" data-target="{{ $card['value'] }}">{{ number_format($card['value']) }}</p>
         </div>
         <p class="text-xs text-gray-500 mt-1.5 font-medium leading-none">{{ $card['label'] }}</p>
     </div>

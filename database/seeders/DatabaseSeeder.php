@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\TaskForceMember;
 use App\Models\PromptTip;
 use App\Models\Badge;
-use App\Models\Quiz;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -413,6 +412,8 @@ class DatabaseSeeder extends Seeder
         //   - certification_url: link to official cert program
         //   - evidence_instructions: instructions for teachers
         //   - expires_in_days: null=permanent, 365=1yr, 730=2yr, etc.
-        //   - Optional AI quiz via "Generate Quiz with AI" button
+
+        // ── Learning Hub Resources ─────────────────────────────────────
+        $this->call(ResourceSeeder::class);
     }
 }

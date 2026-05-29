@@ -37,10 +37,6 @@ class BadgeController extends Controller
         $user = auth()->user();
         
         $isEarned = $user ? $user->hasBadge($badge->slug) : false;
-        $earnedPivot = $isEarned ? $user->badges()->where('slug', $badge->slug)->first()->pivot : null;
-        
-        $quiz = $badge->quiz;
-        
-        return view('badges.show', compact('badge', 'isEarned', 'earnedPivot', 'quiz'));
+        return view('badges.show', compact('badge', 'isEarned', 'earnedPivot'));
     }
 }
